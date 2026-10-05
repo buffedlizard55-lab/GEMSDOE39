@@ -30,15 +30,26 @@
 </section>
 
 <section>
+<h2>Latest local validation: H39Y-01</h2>
+<p>This is a public-catalogue proxy result, <b>not</b> a DrivenData leaderboard score. The sole preregistered radiometric–conductivity candidate had 11 eligible cells. The locked SPRT consumed the first five and stopped at its lower boundary: <b>0 wins, 5 losses</b>; LLR <b>−2.554128</b> versus lower boundary −2.302585, decision <code>accept_H0</code>. Pooled DTI on those five tiles was 0.035772 for H39Y-01 versus 0.168755 for the H39-A-model incumbent.</p>
+<div class="alert"><strong>No H39Y-01 submission TIFF was generated; no weekly slot is recommended.</strong> Retain the incumbent. No later cell was fit or scored after the boundary crossed.</div>
+<ul class="source-list">
+<li><a href="reports/h39y01-validation-20261005.md">Detailed validation report and per-tile DTI table</a> · <a href="reports/h39y01-validation-20261005.json">machine-readable report</a></li>
+<li><a href="reports/h39y01-preflight-20261005.json">Committed pre-score lock</a> · <a href="preregistration-h39y-20261005.md">ranked hypotheses and frozen recipe</a></li>
+</ul>
+<p class="small">SPRT nominal error guarantees are conditional on independent Bernoulli tile outcomes or the registered conditional-supermartingale model. The 15-pixel collar reduces leakage but cannot prove geological independence.</p>
+</section>
+
+<section>
 <h2>Source register and evidence class</h2>
 <div class="table-wrap"><table><thead><tr><th>Fact used</th><th>Source</th><th>Verification status</th></tr></thead><tbody>
-<tr><td>Task, DTI metric (α=.2, β=.8; 300 m triangular support), and submission GeoTIFF requirements</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/" target="_blank" rel="noopener">Official DrivenData problem page</a></td><td>Official source opened 2026-10-05. Float32, EPSG:32611, 100 m grid, `[0,1]` in footprint, null/NaN outside bounds.</td></tr>
+<tr><td>Task, DTI metric (α=.2, β=.8; 300 m triangular support), and submission GeoTIFF requirements</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/" target="_blank" rel="noopener">Official DrivenData problem page</a></td><td>Official source opened 2026-10-05. Float32, EPSG:32611, 100 m grid, `[0,1]` in footprint, null/NaN outside bounds. The featured incumbent is all-finite with zero outside to avoid the reported range rejection and has a NaN twin; portal acceptance of either local file is not confirmed.</td></tr>
 <tr><td>Public ranks and scores above</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/" target="_blank" rel="noopener">Official leaderboard</a></td><td>Rendered public page snapshot on 2026-10-05; time-sensitive and not a private score.</td></tr>
 <tr><td>Submission limits and AI-use disclosure requirement</td><td><a href="https://www.nlr.gov/docs/fy26osti/96647.pdf" target="_blank" rel="noopener">Official NLR rules PDF</a></td><td>Official rules PDF reviewed 2026-10-05. This project did not upload a file.</td></tr>
 <tr><td>Core competition rasters and external mirror files</td><td><a href="https://github.com/buffedlizard55-lab/GEMSDOE39/blob/main/registry/data_manifest.json" target="_blank" rel="noopener">Repository SHA-256 manifest</a> · <a href="https://github.com/buffedlizard55-lab/GEMSDOE" target="_blank" rel="noopener">owner mirror</a></td><td>Restored from pinned owner-controlled GitHub commits and hashes match. Hashes prove mirror integrity, not organizer authentication.</td></tr>
-<tr><td>USGS GeoDAWN source for future radiometric hypothesis</td><td><a href="https://www.usgs.gov/data/geodawn-airborne-magnetic-and-radiometric-surveys-northwestern-great-basin-nevada-and" target="_blank" rel="noopener">USGS release</a> · <a href="https://doi.org/10.5066/P93LGLVQ" target="_blank" rel="noopener">DOI 10.5066/P93LGLVQ</a></td><td>Official USGS source. The local aligned/quantized derivative is owner-mirrored, not a raw direct download made for this candidate.</td></tr>
+<tr><td>USGS GeoDAWN source/context for H39Y-01 radiometric ratios</td><td><a href="https://www.usgs.gov/data/geodawn-airborne-magnetic-and-radiometric-surveys-northwestern-great-basin-nevada-and" target="_blank" rel="noopener">USGS release</a> · <a href="https://doi.org/10.5066/P93LGLVQ" target="_blank" rel="noopener">DOI 10.5066/P93LGLVQ</a> · <a href="https://pubs.usgs.gov/fs/2020/3055/fs20203055.pdf" target="_blank" rel="noopener">USGS FS 2020-3055</a></td><td>Official USGS sources; support radiometric mapping plausibility only. H39Y-01 used an owner-mirrored aligned/quantized derivative, not raw bytes newly retrieved for this run.</td></tr>
 <tr><td>Great Basin structure and geothermal context</td><td><a href="https://www.usgs.gov/publications/structural-discontinuities-and-their-control-hydrothermal-systems-great-basin-usa" target="_blank" rel="noopener">USGS publication</a></td><td>Supports geological plausibility only; does not validate the candidate.</td></tr>
-<tr><td>Known catalogue fault pixels are masked in scoring</td><td><a href="https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/2" target="_blank" rel="noopener">DrivenData staff reply</a></td><td>Staff clarification supports exact known-cell masking; it does not establish an additional 200 m mask.</td></tr>
+<tr><td>Known-fault score mask is pixel-exact; adjacent predictions are scored normally</td><td><a href="https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/4" target="_blank" rel="noopener">DrivenData staff clarification, post 4</a></td><td>Staff states the mask equals provided training labels, with no 300 m halo; new-fault truth may occur within 300 m of a known trace. H39Y-01 applied a 2 px buffer only in prediction emission, not the DTI mask.</td></tr>
 <tr><td>Terms on automated monitoring/copying</td><td><a href="https://www.drivendata.org/termsofuse/" target="_blank" rel="noopener">DrivenData Terms of Use</a></td><td>Manual review; page restricts robots, spiders, and automatic devices for monitoring/copying. No scheduled scraper is used.</td></tr>
 </tbody></table></div>
 </section>
@@ -49,8 +60,10 @@
 <li>The official competition data page requires login in this environment. Inputs were restored from owner-controlled mirrors at pinned commits; organizer provenance is not independently authenticated.</li>
 <li>The local feature raster has 19 tagged bands and the sample grid is 3,730 × 3,292, EPSG:32611, 100 m. These are measurements of the restored mirror, not a direct organizer-authenticated download.</li>
 <li>H39X-01's exact formula was recorded only after its four-block holdout result. The test is exploratory; its fixed SPRT settings do not retroactively preregister the formula. It returned `continue` and is not approved for a weekly slot.</li>
+<li>H39Y-01 was preregistered, evaluated once, and rejected at H0 after 5 losses in 5 tiles; no new TIFF/ZIP or weekly slot was produced. Its report is linked above.</li>
+<li>The H39Y evaluator reached its registered stopping boundary, then encountered a duplicate-key error while assembling its final report. Saved outcomes were verified and the report recovered without rescoring; the irregularity is documented in the report.</li>
 <li>Exact duplicate comparison included 17 local/retrieved prior TIFFs and found no exact match. It is not an exhaustive scan of all sibling projects or public artifacts.</li>
-<li>No upload, leaderboard score, or private score is associated with the H39X-01 file.</li>
+<li>No upload, leaderboard score, or private score is associated with the H39X-01 or H39Y-01 work.</li>
 </ul>
 <p class="small">The full Markdown source register, complete result details, and citations are in <a href="current-feed.md">current-feed.md</a>. Read the <a href="executive-summary.html">submission guide</a> before considering any later candidate.</p>
 </section>

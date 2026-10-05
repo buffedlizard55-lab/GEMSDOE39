@@ -1,0 +1,7 @@
+# Pre-score amendment 2: training-only catalogue for H39Y-01 folds
+
+**Registered:** 2026-10-05 UTC, before any H39Y-01 holdout DTI values were computed. This addendum closes a potential label-leakage path in the execution details; it does not change the detector, comparator, held-out cells, eligibility, emitter, scoring rule, SPRT, or promotion gate.
+
+For each tile, construct a **training-only catalogue** by removing every complete 8-connected component selected as hidden for that fold. Derive the H39-A comparator's distance-to-catalogue hard-negative band (1–6 pixels) and its 8-iteration-dilated background pool from this training-only catalogue, not from the full label raster. Then intersect positive and negative pools with the preregistered train mask (outside the expanded cell collar and hidden components). Use that same training-only catalogue for prediction-emitter exclusion and as the exact visible-catalogue `known` mask for scoring. Hidden truth labels are used only to define the held-out components and calculate that tile's outcome; they do not affect feature construction, negative sampling, or emitted predictions.
+
+This is the leakage-safe interpretation of the original requirement to fit using only labels outside the held-out component/collar set. The checked-in H39-A negative-pool definitions and hyperparameters remain unchanged; only the fold's visible catalogue is the source for those pools.

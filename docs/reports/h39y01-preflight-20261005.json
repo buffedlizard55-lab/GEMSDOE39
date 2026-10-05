@@ -1,0 +1,451 @@
+{
+  "candidate_id": "H39Y-01",
+  "checked_utc": "2026-10-05T04:46:45.485344+00:00",
+  "candidate_score_computed": false,
+  "holdout_dti_computed": false,
+  "candidate_tif_generated": false,
+  "registration_files": [
+    "docs/preregistration-h39y-20261005.md",
+    "docs/preregistration-addendum-h39y-20261005.md",
+    "docs/preregistration-addendum2-h39y-20261005.md"
+  ],
+  "implementation_sha256": {
+    "evaluator": "e18c665385082169d24373232377451f796a52765d68a7d3d30ddc000ffb2b7d",
+    "radiometric": "8d1c0392dedc314b0d33ffd30582f11449c7e53e63f74e099047f3bd278412f0",
+    "stack": "96cded55eb24b700ec39058b592ea4698625fa504407d7a3bd57f933105d7d56",
+    "emission": "fb10d01a9693f2e066678b65807b49bcac836da7b71f3e6730721a09a15872dd",
+    "metric": "935dd9d235442723e8295c580b183c55c7488483ea246e281fd4506a244181aa",
+    "sprt": "acf3e74d757ea8b940421de1183300b672147fee5759d21717e26796f83b3bd1"
+  },
+  "input_sha256": {
+    "sample_submission.tif": "2176d08e485aa2cd2860ce8df539db4faf4d76163b38a4dd8c30a40454d35cbc",
+    "labels.tif": "7ba308ccdc4418b31a178f4f1ef21aaa6e152e4028f2f6f64b01f7eb25ae4093",
+    "training_features.tif": "4371c82e3b8339b807bdffcf4ef59a225520fe2988d521be208ae33743123bc5",
+    "geodawn_extensions_u8.tif": "a35a9c6d2a14786f4dab85481ee59769213072f5dab5b2535ea82ae4d9bb7d9b"
+  },
+  "grid": {
+    "height": 3730,
+    "width": 3292,
+    "crs": "EPSG:32611",
+    "transform": [
+      100.0,
+      0.0,
+      243350.0,
+      0.0,
+      -100.0,
+      4508550.0
+    ],
+    "bounds": [
+      243350.0,
+      4135550.0,
+      572550.0,
+      4508550.0
+    ]
+  },
+  "footprint_pixels": 5167373,
+  "catalogue_pixels": 60988,
+  "row_edges": [
+    0,
+    466,
+    932,
+    1398,
+    1865,
+    2331,
+    2797,
+    3263,
+    3730
+  ],
+  "col_edges": [
+    0,
+    411,
+    822,
+    1234,
+    1645,
+    2056,
+    2468,
+    2879,
+    3291
+  ],
+  "cells": [
+    {
+      "ordinal": 0,
+      "row": 0,
+      "col": 0,
+      "bbox": [
+        0,
+        466,
+        0,
+        411
+      ],
+      "seed": 20261005,
+      "active_pixels": 26139,
+      "truth_pixels": 320,
+      "eligible": true,
+      "hidden_component_count": 43
+    },
+    {
+      "ordinal": 1,
+      "row": 0,
+      "col": 2,
+      "bbox": [
+        0,
+        466,
+        822,
+        1234
+      ],
+      "seed": 20261006,
+      "active_pixels": 166552,
+      "truth_pixels": 1670,
+      "eligible": true,
+      "hidden_component_count": 158
+    },
+    {
+      "ordinal": 2,
+      "row": 0,
+      "col": 4,
+      "bbox": [
+        0,
+        466,
+        1645,
+        2056
+      ],
+      "seed": 20261007,
+      "active_pixels": 166116,
+      "truth_pixels": 926,
+      "eligible": true,
+      "hidden_component_count": 87
+    },
+    {
+      "ordinal": 3,
+      "row": 0,
+      "col": 6,
+      "bbox": [
+        0,
+        466,
+        2468,
+        2879
+      ],
+      "seed": 20261008,
+      "active_pixels": 161726,
+      "truth_pixels": 1729,
+      "eligible": true,
+      "hidden_component_count": 114
+    },
+    {
+      "ordinal": 4,
+      "row": 2,
+      "col": 0,
+      "bbox": [
+        932,
+        1398,
+        0,
+        411
+      ],
+      "seed": 20261009,
+      "active_pixels": 61956,
+      "truth_pixels": 996,
+      "eligible": true,
+      "hidden_component_count": 99
+    },
+    {
+      "ordinal": 5,
+      "row": 2,
+      "col": 2,
+      "bbox": [
+        932,
+        1398,
+        822,
+        1234
+      ],
+      "seed": 20261010,
+      "active_pixels": 147013,
+      "truth_pixels": 1633,
+      "eligible": true,
+      "hidden_component_count": 113
+    },
+    {
+      "ordinal": 6,
+      "row": 2,
+      "col": 4,
+      "bbox": [
+        932,
+        1398,
+        1645,
+        2056
+      ],
+      "seed": 20261011,
+      "active_pixels": 20919,
+      "truth_pixels": 307,
+      "eligible": true,
+      "hidden_component_count": 44
+    },
+    {
+      "ordinal": 7,
+      "row": 2,
+      "col": 6,
+      "bbox": [
+        932,
+        1398,
+        2468,
+        2879
+      ],
+      "seed": 20261012,
+      "active_pixels": 0,
+      "truth_pixels": 0,
+      "eligible": false,
+      "hidden_component_count": 0
+    },
+    {
+      "ordinal": 8,
+      "row": 4,
+      "col": 0,
+      "bbox": [
+        1865,
+        2331,
+        0,
+        411
+      ],
+      "seed": 20261013,
+      "active_pixels": 0,
+      "truth_pixels": 0,
+      "eligible": false,
+      "hidden_component_count": 0
+    },
+    {
+      "ordinal": 9,
+      "row": 4,
+      "col": 2,
+      "bbox": [
+        1865,
+        2331,
+        822,
+        1234
+      ],
+      "seed": 20261014,
+      "active_pixels": 92634,
+      "truth_pixels": 728,
+      "eligible": true,
+      "hidden_component_count": 48
+    },
+    {
+      "ordinal": 10,
+      "row": 4,
+      "col": 4,
+      "bbox": [
+        1865,
+        2331,
+        1645,
+        2056
+      ],
+      "seed": 20261015,
+      "active_pixels": 76750,
+      "truth_pixels": 979,
+      "eligible": true,
+      "hidden_component_count": 67
+    },
+    {
+      "ordinal": 11,
+      "row": 4,
+      "col": 6,
+      "bbox": [
+        1865,
+        2331,
+        2468,
+        2879
+      ],
+      "seed": 20261016,
+      "active_pixels": 0,
+      "truth_pixels": 0,
+      "eligible": false,
+      "hidden_component_count": 0
+    },
+    {
+      "ordinal": 12,
+      "row": 6,
+      "col": 0,
+      "bbox": [
+        2797,
+        3263,
+        0,
+        411
+      ],
+      "seed": 20261017,
+      "active_pixels": 0,
+      "truth_pixels": 0,
+      "eligible": false,
+      "hidden_component_count": 0
+    },
+    {
+      "ordinal": 13,
+      "row": 6,
+      "col": 2,
+      "bbox": [
+        2797,
+        3263,
+        822,
+        1234
+      ],
+      "seed": 20261018,
+      "active_pixels": 3099,
+      "truth_pixels": 214,
+      "eligible": true,
+      "hidden_component_count": 28
+    },
+    {
+      "ordinal": 14,
+      "row": 6,
+      "col": 4,
+      "bbox": [
+        2797,
+        3263,
+        1645,
+        2056
+      ],
+      "seed": 20261019,
+      "active_pixels": 164637,
+      "truth_pixels": 1383,
+      "eligible": true,
+      "hidden_component_count": 66
+    },
+    {
+      "ordinal": 15,
+      "row": 6,
+      "col": 6,
+      "bbox": [
+        2797,
+        3263,
+        2468,
+        2879
+      ],
+      "seed": 20261020,
+      "active_pixels": 0,
+      "truth_pixels": 0,
+      "eligible": false,
+      "hidden_component_count": 0
+    }
+  ],
+  "eligible_cell_ordinals": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    9,
+    10,
+    13,
+    14
+  ],
+  "eligible_count": 11,
+  "required_eligible_count": 9,
+  "full_catalogue_component_count": 3199,
+  "training_pools": {
+    "0": {
+      "train_positive": 60524,
+      "train_negative": 4920248,
+      "train_hard_negative": 760130,
+      "train_background_negative": 4160118
+    },
+    "1": {
+      "train_positive": 58863,
+      "train_negative": 4764214,
+      "train_hard_negative": 734908,
+      "train_background_negative": 4029306
+    },
+    "2": {
+      "train_positive": 59360,
+      "train_negative": 4762783,
+      "train_hard_negative": 744621,
+      "train_background_negative": 4018162
+    },
+    "3": {
+      "train_positive": 58853,
+      "train_negative": 4765324,
+      "train_hard_negative": 738473,
+      "train_background_negative": 4026851
+    },
+    "4": {
+      "train_positive": 59302,
+      "train_negative": 4872036,
+      "train_hard_negative": 745025,
+      "train_background_negative": 4127011
+    },
+    "5": {
+      "train_positive": 58671,
+      "train_negative": 4770960,
+      "train_hard_negative": 738018,
+      "train_background_negative": 4032942
+    },
+    "6": {
+      "train_positive": 60133,
+      "train_negative": 4925540,
+      "train_hard_negative": 756921,
+      "train_background_negative": 4168619
+    },
+    "9": {
+      "train_positive": 59853,
+      "train_negative": 4840293,
+      "train_hard_negative": 751770,
+      "train_background_negative": 4088523
+    },
+    "10": {
+      "train_positive": 59295,
+      "train_negative": 4863554,
+      "train_hard_negative": 745763,
+      "train_background_negative": 4117791
+    },
+    "13": {
+      "train_positive": 60324,
+      "train_negative": 4960042,
+      "train_hard_negative": 760670,
+      "train_background_negative": 4199372
+    },
+    "14": {
+      "train_positive": 58700,
+      "train_negative": 4760258,
+      "train_hard_negative": 743107,
+      "train_background_negative": 4017151
+    }
+  },
+  "checked_feature_band_order": [
+    "mag_anom",
+    "rtp",
+    "tmi_hg",
+    "geod_2ndinv",
+    "iso_grav_anom_slope",
+    "tc",
+    "geod_shearrate",
+    "geod_dilaterate",
+    "tmi_vg",
+    "deq_n100a15",
+    "iso_grav_anom_vg",
+    "det_elev",
+    "iso_grav_anom",
+    "tmi",
+    "depth_to_base_surf",
+    "ieq_n100a15",
+    "cond_surf",
+    "iso_grav_anom_hg",
+    "det_elev_slope"
+  ],
+  "checked_ratio_ranges_0_1": {
+    "thk": [
+      0.0,
+      1.0
+    ],
+    "uk": [
+      0.0,
+      1.0
+    ],
+    "uth": [
+      0.0,
+      1.0
+    ]
+  },
+  "checked_raw_conductivity_range": [
+    0.1937037855386734,
+    4.969292640686035
+  ],
+  "status": "preflight_passed_no_candidate_scores"
+}

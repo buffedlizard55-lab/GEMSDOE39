@@ -40,8 +40,8 @@ footer{margin-top:3em;padding-top:1.2em;border-top:1px solid var(--line);font-si
 <p class="small">DrivenData competition #306 · DOE GEMS Prize · generated 2026-10-05</p>
 
 <div class="download">
-<h2 style="margin-top:0;border:0;padding:0"><span class="pill ok">READY</span> &nbsp;The file</h2>
-<p><b>Click download, then upload it.</b> That is the whole submission.</p>
+<h2 style="margin-top:0;border:0;padding:0"><span class="pill ok">INCUMBENT</span> &nbsp;Current downloadable file</h2>
+<p>This is the current H39-A/R39A incumbent GeoTIFF. It remains downloadable and format-validated; the latest H39Y-01 test did not approve a replacement or recommend spending a weekly slot.</p>
 <a class="btn" href="downloads/gemsdoe39-h39-a-model-r39a-zeros.tif">⬇ Download the GeoTIFF (110 KB)</a>
 <a class="btn alt" href="downloads/gemsdoe39-h39-a-model-r39a-zeros.zip">Or the ZIP with that one GeoTIFF</a>
 <table>
@@ -50,6 +50,10 @@ footer{margin-top:3em;padding-top:1.2em;border-top:1px solid var(--line);font-si
 <tr><th>Format</th><td>Single-band <code>float32</code> GeoTIFF · EPSG:32611 · 100&nbsp;m · 3730&nbsp;×&nbsp;3292 · geotransform identical to the template</td></tr>
 <tr><th>Values</th><td>min 0.0 · max 1.0 · <b>0 of 12,279,160 cells outside [0,&nbsp;1]</b> · <b>0 non-finite</b> · outside the footprint = <code>0.0</code></td></tr>
 </table>
+</div>
+
+<div class="bad">
+<b>Latest preregistered test — H39Y-01 did not pass.</b> On the locked public-catalogue proxy it lost the first five eligible cells (0 wins, 5 losses); the SPRT crossed its lower boundary at LLR −2.554128 (boundary −2.302585), accepting H0. No H39Y-01 GeoTIFF was generated and no weekly slot is recommended. The incumbent above remains the current download. <a href="reports/h39y01-validation-20261005.md">Read the full result and limitations.</a>
 </div>
 
 <h2>The six clicks</h2>

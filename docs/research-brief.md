@@ -176,3 +176,22 @@ recorded.
   private chunk; the Final Prize Round re-scores the same file against an expanded label set. Optimising
   hard for the public number is not the same as optimising for the prize.
 - Hypothesis 5 is blocked on data, not on ideas, and its obtainability is deliberately unverified.
+
+---
+
+## 8. H39Y-01 preregistered portfolio and observed result (2026-10-05)
+
+A separate, single-candidate cycle registered four geological hypotheses before implementation or H39Y scoring. The first-ranked and only candidate tested was **H39Y-01**, a co-located GeoDAWN `ThK`, `UK`, or `UTh` ratio-gradient corroborated by the `cond_surf` gradient. Its frozen detector was `sqrt(R*C) * abs(cos(theta_R-theta_C))`, with 2-pixel Gaussian gradients and footprint quantiles 0.02/0.995. Geological plausibility was informed by the official [USGS GeoDAWN release](https://www.usgs.gov/data/geodawn-airborne-magnetic-and-radiometric-surveys-northwestern-great-basin-nevada-and) and [USGS Fact Sheet 2020-3055](https://pubs.usgs.gov/fs/2020/3055/fs20203055.pdf); these sources do not demonstrate candidate skill. The aligned/quantized GeoDAWN TIFF is an owner mirror, not raw USGS bytes retrieved for this run.
+
+The frozen 8×8 spatial plan yielded 11 eligible even/even cells. The H39-A-model comparator used 40 checked-in fields, fold-specific training-only catalogue masks and negatives, and the existing HistGradientBoosting hyperparameters. Candidate and comparator used matched per-cell Poisson-disk emission (2.8-pixel spacing, 2-pixel prediction buffer, prorated 24,000-pixel budget). **H39Y-01 lost all first five eligible cells;** its SPRT crossed the lower boundary after tile 5 (`LLR = −2.554128`, lower boundary `−2.302585`, `accept_H0`). Pooled local proxy DTI over those five tiles was 0.035772 for H39Y-01 versus 0.168755 for H39-A-model. The candidate is rejected for this holdout; the incumbent is retained, no H39Y TIFF was created, and **no weekly submission slot is recommended**. No later eligible cell was fit or scored.
+
+The scoring-mask details were amended before testing to match the [DrivenData staff clarification](https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/4): exact known-fault pixels are masked, but adjacent predictions are scored normally. The 2-pixel collar applies only to emission. Two pre-score addenda also specify fold seeds and remove hidden labels from negative-pool construction. The full plan, inputs, and results are archived in [`preregistration-h39y-20261005.md`](preregistration-h39y-20261005.md), [`preregistration-addendum-h39y-20261005.md`](preregistration-addendum-h39y-20261005.md), [`preregistration-addendum2-h39y-20261005.md`](preregistration-addendum2-h39y-20261005.md), [`h39y01-preflight-20261005.json`](reports/h39y01-preflight-20261005.json), and [`h39y01-validation-20261005.md`](reports/h39y01-validation-20261005.md).
+
+**Reporting irregularity:** the evaluator correctly stopped at the H0 boundary, then its final report assembly raised a duplicate-key `TypeError`. The per-tile outcomes had already been atomically saved. The report was recovered from those outcomes and the committed pre-score plan without refitting or recomputing DTI. The start timestamp and candidate-field digest were not saved and are marked unavailable. This does not change the observed SPRT outcome, but the report-generation defect is recorded.
+
+### Next steps after H39Y-01
+
+- Do **not** tune or score H39Y-01 again on these exposed cells. A new recipe needs a fresh holdout or a predeclared family-wise alpha allocation.
+- Keep the current H39-A-model/R39A incumbent as the downloadable artifact; this H39Y-01 result is not a leaderboard score and does not authorize spending a weekly slot.
+- H39Y-02 (thermal-fluid well/spring geochemistry) and H39Y-03 (volcanic-vent alignment with magnetic lineaments) remain untested. H39Y-04 remains deferred until the official shallow-probe archive bytes and schema are available.
+- Do not infer no geological relationship from this result. It rejects only the frozen detector relative to the incumbent under this public-catalogue proxy and the stated sequential model.
