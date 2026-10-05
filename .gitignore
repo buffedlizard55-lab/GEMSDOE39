@@ -1,4 +1,26 @@
-/data/
-*.tif
-!artifacts/demo_unique_submission.tif
+# Python
 __pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+
+# Competition rasters (restored via restore_data.py; too large for git)
+data/training_features.tif
+data/labels.tif
+data/sample_submission.tif
+data/external/
+data/raw_parts/
+data/restore_receipt.json
+data/prepared_manifest.json
+
+# Local dev
+*.log
+.DS_Store
+
+# Data files (restored; do not commit)
+data/*.tif
+data/*.csv
+data/*.pdf
+data/*.json
+data/external/*.tif
+data/scored/*.tif
