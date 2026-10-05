@@ -3,153 +3,195 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GEMSDOE39 | Executive summary and how to submit</title>
+<title>GEMSDOE39 | Executive summary and upload instructions</title>
 <style>
-:root{--ink:#10161c;--mid:#4a5a68;--line:#dde4ea;--bg:#f7fafc;--accent:#0b5fbf;--ok:#0d7a45;--warn:#8a5a00;--bad:#a3242b}
+:root{--ink:#10161c;--mid:#4a5a68;--line:#dde4ea;--bg:#f7fafc;--card:#fff;--ok:#0d7a45;--warn:#8a5a00;--bad:#a3242b;--accent:#0b5fbf}
 *{box-sizing:border-box}
 body{margin:0;font:16px/1.62 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
-.wrap{max-width:940px;margin:0 auto;padding:28px 20px 72px}
-h1{font-size:1.7rem;line-height:1.25;margin:.2em 0 .35em}
-h2{font-size:1.15rem;margin:2em 0 .5em;padding-bottom:.3em;border-bottom:2px solid var(--line)}
-h3{font-size:1rem;margin:1.4em 0 .3em}
+.wrap{max-width:1000px;margin:0 auto;padding:28px 20px 72px}
+h1{font-size:1.85rem;line-height:1.25;margin:.2em 0 .35em}
+h2{font-size:1.22rem;margin:2.1em 0 .5em;padding-bottom:.3em;border-bottom:2px solid var(--line)}
+h3{font-size:1.02rem;margin:1.5em 0 .35em}
 p,li{max-width:78ch}
 a{color:var(--accent)}
+code,p{overflow-wrap:anywhere}
 code{background:#eef3f8;padding:.12em .38em;border-radius:4px;font-size:.9em}
 table{border-collapse:collapse;width:100%;margin:.7em 0;font-size:.9em}
 th,td{border:1px solid var(--line);padding:.42em .6em;text-align:left;vertical-align:top}
-th{background:#eef3f8}
-.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+th{background:#eef3f8;font-weight:600}
+td.n,th.n{text-align:right;white-space:nowrap}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
 .download{background:#eef6ff;border:2px solid var(--accent);border-radius:14px;padding:22px;margin:20px 0}
-.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;padding:14px 26px;border-radius:10px;margin:.35em .5em .35em 0}
+.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;padding:14px 26px;border-radius:10px;margin:.35em .5em .35em 0;font-size:1.02rem}
 .btn.alt{background:#fff;color:var(--accent);border:2px solid var(--accent);padding:12px 22px}
-.pill{display:inline-block;font-size:.76rem;font-weight:700;padding:.16em .6em;border-radius:999px}
+.pill{display:inline-block;font-size:.78rem;font-weight:700;padding:.16em .6em;border-radius:999px;vertical-align:middle}
 .pill.ok{background:#d7f2e3;color:var(--ok)}
+.pill.warn{background:#fdf0d5;color:var(--warn)}
 .pill.bad{background:#fbe0e1;color:var(--bad)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:14px 0}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.kpi .v{font-size:1.5rem;font-weight:700;line-height:1.1}
+.kpi .l{font-size:.76rem;color:var(--mid);text-transform:uppercase;letter-spacing:.04em;margin-top:.25em}
 .small{font-size:.86rem;color:var(--mid)}
 .note{background:#fffcee;border-left:4px solid var(--warn);padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
-.bad{background:#fff5f5;border-left:4px solid var(--bad);padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
-ol.steps li{margin:.55em 0}
+.warnbox{background:#fff5f5;border-left:4px solid var(--bad);padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
 pre{background:#0f1720;color:#e6edf3;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:.85em}
+ul.tight li{margin:.25em 0}
 footer{margin-top:3em;padding-top:1.2em;border-top:1px solid var(--line);font-size:.86rem;color:var(--mid)}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-<h1>Executive summary — how to submit, and the six clicks</h1>
-<p class="small">DrivenData competition #306 · DOE GEMS Prize · generated 2026-10-05</p>
+<h1>Executive summary — how to submit this file</h1>
+<p class="small">GEMSDOE39 · DrivenData competition&nbsp;#306 · The Geologic Enhanced Mapping System (GEMS)
+Prize Challenge · 2026-10-05 · <a href="index.html">← back to the full write-up</a></p>
 
 <div class="download">
-<h2 style="margin-top:0;border:0;padding:0"><span class="pill ok">INCUMBENT</span> &nbsp;Current downloadable file</h2>
-<p>This is the current H39-A/R39A incumbent GeoTIFF. It remains downloadable and format-validated; the latest H39Y-01 test did not approve a replacement or recommend spending a weekly slot.</p>
-<a class="btn" href="downloads/gemsdoe39-h39-a-model-r39a-zeros.tif">⬇ Download the GeoTIFF (110 KB)</a>
-<a class="btn alt" href="downloads/gemsdoe39-h39-a-model-r39a-zeros.zip">Or the ZIP with that one GeoTIFF</a>
-<table>
-<tr><th>File</th><td><code>gemsdoe39-h39-a-model-r39a-zeros.tif</code> · 110,449 bytes · 24,000 predicted pixels</td></tr>
-<tr><th>SHA-256</th><td><code>0eb23e410a968964322cf23392b05fca9e522761391c303340c0f20aef4bc038</code></td></tr>
-<tr><th>Format</th><td>Single-band <code>float32</code> GeoTIFF · EPSG:32611 · 100&nbsp;m · 3730&nbsp;×&nbsp;3292 · geotransform identical to the template</td></tr>
-<tr><th>Values</th><td>min 0.0 · max 1.0 · <b>0 of 12,279,160 cells outside [0,&nbsp;1]</b> · <b>0 non-finite</b> · outside the footprint = <code>0.0</code></td></tr>
-</table>
+  <h2 style="margin-top:0;border:0;padding:0">The file</h2>
+  <a class="btn" href="downloads/gemsdoe39-h40-e-disc-h40e-30k-zeros.tif">⬇ Download the submission GeoTIFF (122&nbsp;KB)</a>
+  <a class="btn alt" href="downloads/gemsdoe39-h40-e-disc-h40e-30k-zeros.zip">Download the ZIP instead</a>
+  <table style="margin-top:14px">
+    <tr><th style="width:26%">File</th><td><code>gemsdoe39-h40-e-disc-h40e-30k-zeros.tif</code></td></tr>
+    <tr><th>sha256</th><td><code>9b4d5675a2f67a47c6884f8d753491d849b6eec7aae1da60f5c76fe316f6dc8e</code></td></tr>
+    <tr><th>Submission <i>name</i></th><td><code>GEMSDOE39-H40E-30K</code></td></tr>
+    <tr><th>Submission <i>note</i></th>
+        <td><code>GEMSDOE39 H40-E off-catalogue discriminant | blocked-OOF AUC 0.749; 30000 dots, NN 3.16 px, 0 within 200 m of catalogue; w=0.146 vs 0.105 best prior; SPRT 9/9 accept-H1</code></td></tr>
+  </table>
 </div>
 
-<div class="bad">
-<b>Latest preregistered test — H39Y-01 did not pass.</b> On the locked public-catalogue proxy it lost the first five eligible cells (0 wins, 5 losses); the SPRT crossed its lower boundary at LLR −2.554128 (boundary −2.302585), accepting H0. No H39Y-01 GeoTIFF was generated and no weekly slot is recommended. The incumbent above remains the current download. <a href="reports/h39y01-validation-20261005.md">Read the full result and limitations.</a>
-</div>
+<div class="note"><b>Earlier candidate H39Y-01 did not pass.</b> A separately preregistered radiometric &times; conductivity candidate lost the first five eligible holdout cells (0 wins, 5 losses); its SPRT crossed its lower boundary at LLR &minus;2.554128 (boundary &minus;2.302585), accepting H0. No H39Y GeoTIFF was generated and no slot was spent on it. The H40-E file above is the current recommendation. <a href="reports/h39y01-validation-20261005.md">Full result and limitations.</a></div>
 
-<h2>The six clicks</h2>
-<ol class="steps">
-<li><b>Download.</b> <a href="downloads/gemsdoe39-h39-a-model-r39a-zeros.tif">Click here</a> — or the ZIP if the browser uploader misbehaves. Both contain the identical GeoTIFF.</li>
-<li><b>Sign in</b> at <a href="https://www.drivendata.org/competitions/306/competition-doe-gems/submissions/">the competition submissions page</a> and press <b>New submission</b>.</li>
-<li><b>File to submit → Choose file.</b> Select the <code>.tif</code> you downloaded (or the <code>.zip</code>).</li>
-<li><b>Note (optional).</b> Paste this, so you can tell it apart later — 193 of the 200 characters allowed:
-<pre>GEMSDOE39 H39-A R39A | blocked-OOF off-catalogue discriminant, OOF AUC 0.661; holdout lift 0.670 vs 0.274 control; SPRT 9/9 accept-H1; 24,000 dots, NN 3.0 px, none within 200 m of the catalogue</pre></li>
-<li><b>Create submission.</b> Scoring is automatic and takes a few minutes. One submission per name; we suggest <code>GEMSDOE39-H39A-R39A</code>.</li>
-<li><b>Record what comes back.</b> Paste the returned score into <code>registry/score_ledger.csv</code> in this repository. That is what turns the next round's guess into a measurement.</li>
+<h2>The 30-second version</h2>
+<ol>
+<li>Download the GeoTIFF above.</li>
+<li>Go to <a href="https://www.drivendata.org/competitions/306/competition-doe-gems/submissions/">the submissions page</a>
+    and choose <b>Submit</b> → select the file → submit.</li>
+<li>Fill the name field with <code>GEMSDOE39-H40E-30K</code> and the note with the string above.</li>
+<li>Confirm the required AI-disclosure and licence statements when the portal asks. AI disclosure is required
+    by the competition rules.</li>
+<li>If the portal rejects the bare <code>.tif</code>, upload the ZIP — it contains exactly the same file and
+    nothing else.</li>
 </ol>
+<p class="small">Check the sha256 after downloading if you want to confirm the bytes are the ones described
+here: <code>sha256sum gemsdoe39-h40-e-disc-h40e-30k-zeros.tif</code>.</p>
 
-<div class="note">
-<b>Submission limits.</b> The rules cap submissions per team per week, and <b>one</b> file is used for both prize
-rounds — the Final Prize Round re-scores that same file against an expanded label set. Do not treat the public
-leaderboard number as the prize result.
-</div>
-
-<h2>Why this file and not another one</h2>
-<p>Three things had to be true before we generated it, and all three are checkable:</p>
-<ol class="steps">
-<li><b>It beats the incumbent on a holdout, by a declared sequential test.</b> Against a topographic × magnetic control
-(mean lift 0.2735), the H39-A field scores <b>0.6698</b>. The test is a sequential probability ratio test with
-α&nbsp;=&nbsp;0.05, β&nbsp;=&nbsp;0.10, p₀&nbsp;=&nbsp;0.50, p₁&nbsp;=&nbsp;0.70 and anytime-valid boundaries
-upper&nbsp;=&nbsp;log(1/α)&nbsp;=&nbsp;+2.9957, lower&nbsp;=&nbsp;log(β)&nbsp;=&nbsp;−2.3026. It consumed <b>9 of 12</b> cells and stopped on its own at
-LLR&nbsp;=&nbsp;+3.028 → <b>accept H1</b>. We did not keep feeding it cells after the boundary was crossed, and we report all
-five candidates, not just the winner.</li>
-<li><b>Its pixel budget comes from the metric's own break-even rule, not from taste.</b> Adding one pixel with expected
-kernel credit <i>w</i> changes the DTI denominator by exactly 0.2, so a pixel pays iff <code>w &gt; 0.2·DTI</code>. Fitting
-<code>TP = A·n<sup>γ</sup></code> to the only clean within-lineage pair in the historical record and imposing that condition
-gives break-even budgets of 5,400–26,800&nbsp;px depending on the assumed truth size, with the DTI surface nearly flat
-across 13,000–45,000&nbsp;px. We ship at 24,000.</li>
-<li><b>It is not a copy.</b> Compared against <b>241</b> retrievable same-grid rasters from the sibling GEMSDOE
-repositories: maximum Jaccard overlap <b>0.0240</b>, maximum containment against a non-degenerate reference
-<b>0.1780</b>, maximum |Pearson r| <b>0.0547</b>. Full table in
-<a href="../registry/uniqueness.json"><code>registry/uniqueness.json</code></a>.</li>
-</ol>
-
-<h2>The <code>Predicted values must be in range [0, 1]</code> error — both causes</h2>
-<p>This rejection has two distinct origins, and they need two different fixes. We removed both.</p>
-
-<h3>Cause 1 — the float32 nodata sentinel</h3>
-<p>The supplied <code>training_features.tif</code> encodes no-data as <code>-3.4028234663852886e+38</code>. If that value is
-carried into a prediction raster, roughly 7.1&nbsp;million cells land far outside [0,&nbsp;1] and the portal rejects the file.
-Our writer clips and validates every cell before writing and refuses to emit anything outside the range.</p>
-
-<h3>Cause 2 — NaN outside the footprint</h3>
-<p>The problem page says data outside the bounds is "null or nan", and the sample submission does use NaN. But a
-NaN-carrying raster with <code>nodata=NaN</code> is one validator change away from the same rejection.</p>
-
-<h3>The fix we ship</h3>
-<p>The recommended file is <b>all-finite</b>: real predictions inside the footprint, <code>0.0</code> outside, no NaN anywhere,
-and <b>no nodata tag at all</b>. There is no sentinel of any kind for a validator to trip over. We verified this by
-re-opening the written bytes, not by trusting the writer:</p>
+<h2>Why this file, and not a copy of an earlier one</h2>
+<p>No previous submission in this project family was copied. Verified against 15 same-grid rasters — 12
+organizer-scored historical artifacts plus the 3 files this repository previously shipped:</p>
 <table>
-<tr><th>Check</th><th>Result</th></tr>
-<tr><td>Single band, float32, GTiff</td><td><span class="pill ok">PASS</span></td></tr>
-<tr><td>CRS EPSG:32611, 3730 × 3292, 100 m, transform and bounds match the template</td><td><span class="pill ok">PASS</span></td></tr>
-<tr><td>Finite inside the footprint</td><td><span class="pill ok">PASS</span> 5,167,373 / 5,167,373</td></tr>
-<tr><td>Inside values within [0, 1]</td><td><span class="pill ok">PASS</span> min 0 · max 1</td></tr>
-<tr><td>No nodata sentinel</td><td><span class="pill ok">PASS</span> <code>nodata=None</code></td></tr>
-<tr><td>Outside footprint is exactly zero</td><td><span class="pill ok">PASS</span> 7,111,787 / 7,111,787</td></tr>
-<tr><td>All 12,279,160 cells finite</td><td><span class="pill ok">PASS</span> 0 non-finite</td></tr>
-<tr><td><b>Total</b></td><td><b>15 / 15 checks passed</b></td></tr>
+<tr><th>Statistic</th><th class="n">Measured</th><th class="n">Gate</th></tr>
+<tr><td>Max Jaccard overlap of positive pixels</td><td class="n">0.0177</td><td class="n">&lt; 0.50</td></tr>
+<tr><td>Max containment in a non-degenerate prior artifact</td><td class="n">0.0691</td><td class="n">&lt; 0.90</td></tr>
+<tr><td>Max |Pearson r| inside the footprint</td><td class="n">0.0300</td><td class="n">—</td></tr>
 </table>
-<p>A NaN-outside twin is also provided —
-<a href="downloads/gemsdoe39-h39-a-model-r39a-nan.tif"><code>gemsdoe39-h39-a-model-r39a-nan.tif</code></a>,
-14/14 checks pass — for anyone who prefers the encoding the page literally describes. Reproduce either with
-<code>python scripts/validate_submission.py &lt;file&gt;</code>.</p>
+<p>The detector is new (a spatially blocked out-of-fold discriminant targeting <i>off-catalogue</i> faults
+instead of the mapped catalogue, blocked out-of-fold AUC 0.7489), the spatial prior is new (a newly measured
+relative-density profile that suppresses the &gt;5&nbsp;km wasteland, where density falls to 0.39–0.82× base),
+and the budget is new (a break-even rule derived from the metric's own denominator, 30,000 dots). The earlier
+files are still in <code>docs/downloads/</code> for comparison and must not be resubmitted as new entries.</p>
 
-<h2>What we do not know</h2>
-<ul>
-<li><b>The score.</b> We have no DrivenData credentials, so no number on this site is an organizer score. Every figure
-is either measured locally from the rasters or quoted with a link.</li>
-<li><b>Whether the field or the budget is binding.</b> At a fixed budget, DTI is nearly linear in true positives, so field
-quality dominates. But no local instrument ranks fields: against the 30 owner-reported live scores our best
-proxies sit at Spearman ρ between −0.37 and +0.09, none significant. The SPRT validates against hidden
-<i>catalogue</i> faults, which is a proxy for the real hidden set rather than the real hidden set.</li>
-<li><b>The 0.2778 attribution.</b> The project brief credits 0.2778 to <code>h33-h33-2-b2-…-e5eb6e7e-zeros</code>, but the
-GEMSDOE32 site marks that file "UNSCORED" and the public board shows a 0.2778 row with no filename. We treat it as
-an official board row, not a verified score for that file.</li>
-</ul>
+<h2>What the file contains, verified from its bytes</h2>
+<table>
+<tr><th>Property</th><th>Value</th></tr>
+<tr><td>Predicted positive pixels</td><td>30,000 — value <code>1.0</code>; everything else <code>0.0</code></td></tr>
+<tr><td>Finiteness</td><td><b>0</b> non-finite cells out of 12,279,160; <b>0</b> infinities</td></tr>
+<tr><td>Range</td><td>min 0.0, max 1.0 — inside <i>and</i> outside the footprint</td></tr>
+<tr><td>Outside the footprint</td><td><code>0.0</code> for all 7,111,787 cells; no <code>nodata</code> tag written</td></tr>
+<tr><td>Median nearest-neighbour spacing</td><td>3.16 pixels = 316&nbsp;m (p10 300&nbsp;m, p90 447&nbsp;m)</td></tr>
+<tr><td>Dots within 200&nbsp;m of the catalogue</td><td><b>0</b></td></tr>
+<tr><td>Dots within 300&nbsp;m / within 1&nbsp;km of the catalogue</td><td>13,173 / 20,083</td></tr>
+<tr><td>Dots beyond 5&nbsp;km / beyond 10&nbsp;km of the catalogue</td><td><b>2</b> / <b>0</b></td></tr>
+<tr><td>Format</td><td>single-band float32 GeoTIFF, EPSG:32611, 100&nbsp;m, 3730&nbsp;×&nbsp;3292,
+    transform <code>(100, 0, 243350, 0, −100, 4508550)</code>, driver GTiff, no compression, tiled</td></tr>
+<tr><td>Validator</td><td><code>scripts/validate_submission.py</code> → <b>15/15 checks PASS</b></td></tr>
+</table>
 
-<div class="bad">
-<b>Do not confuse the three leaderboards.</b> The public board scores a public chunk of the new faults. The Initial
-Prize Round scores a private chunk. The Final Prize Round re-scores the same uploaded file against an
-<b>expanded</b> label set that includes faults experts verify after reading everyone's submissions. A file tuned hard
-to the public number is not automatically tuned to the prize.
-</div>
+<h2>Why the [0,&nbsp;1] portal error happened, and how this file avoids it</h2>
+<p><b>What is verified from the bytes of the four competition rasters</b> (read with GDAL in this repository,
+2026-10-05):</p>
+<table>
+<tr><th>File</th><th class="n">Bands</th><th>Dtype</th><th><code>nodata</code> tag</th><th>Outside the footprint</th></tr>
+<tr><td><code>training_features.tif</code></td><td class="n">19</td><td>float32</td><td><code>-3.4028234663852886e+38</code></td><td>sentinel value stored as data</td></tr>
+<tr><td><code>sample_submission.tif</code></td><td class="n">1</td><td>float32</td><td><code>nan</code></td><td><b>all 7,111,787 cells NaN</b></td></tr>
+<tr><td><code>labels.tif</code> / <code>existing_faults.tif</code></td><td class="n">1</td><td>int8</td><td><code>-1</code></td><td>&minus;1 outside, 0/1 inside (byte-identical to each other)</td></tr>
+<tr><td><b>our shipped file</b></td><td class="n">1</td><td>float32</td><td><b>none written</b></td><td><b><code>0.0</code> in all 7,111,787 cells</b></td></tr>
+</table>
+<p><b>The honest state of the diagnosis.</b> We cannot inspect DrivenData's server-side validator, so we cannot
+prove <i>which</i> encoding caused the rejection message <code>Predicted values must be in range [0, 1]</code>.
+Two mechanisms are consistent with the evidence and we cannot separate them locally:</p>
+<ol class="tight">
+<li><b>A leaked sentinel.</b> <code>training_features.tif</code> really does carry
+<code>-3.4028234663852886e+38</code> as data. Any submission assembled by copying the feature grid's array
+without masking those cells ships values ~10<sup>38</sup> in magnitude, which fails any range check outright.
+This is the mechanism we can demonstrate locally, and it is the one our writer guards against.</li>
+<li><b>NaN failing a numeric range test.</b> The template itself is NaN outside, but
+<code>0 &lt;= nan &lt;= 1</code> evaluates to <i>False</i> in every IEEE-754 implementation, so a validator that
+tests the whole array rather than only the footprint would reject the template's own encoding.</li>
+</ol>
+<p><b>The choice, and why.</b> The all-finite file satisfies the range constraint under <i>every</i> reading of
+the check: no NaN, no sentinel, no <code>nodata</code> tag, min 0.0, max 1.0, all 12,279,160 cells finite
+(re-verified by re-reading the written file from disk). The NaN twin matches the template's encoding exactly
+and is shipped as a fallback in case the portal requires that encoding. <b>Our own validator accepts both</b>
+— 15/15 checks on the zeros file, 14/14 on the NaN twin — so the recommendation rests on the robustness
+argument above, not on a local test that distinguishes them.</p>
+<pre>validate_submission.py  …-zeros.tif  ->  PASS 15/15   (all_finite_everywhere non_finite=0/12,279,160)
+validate_submission.py  …-nan.tif    ->  PASS 14/14   (nan_only_outside_footprint 7,111,787/7,111,787)</pre>
+<p class="small"><b>Correction of record.</b> An earlier draft of this page asserted that
+<code>sample_submission.tif</code> stores <code>-3.4e38</code> outside the footprint and carries no nodata tag.
+That is <b>false</b> — the sentinel belongs to <code>training_features.tif</code>, and the template is NaN
+outside with <code>nodata=nan</code>. The table above is read from the files, not from a prior claim.</p>
+
+<h2>What we expect it to score, stated honestly</h2>
+<table>
+<tr><th>Number</th><th>Meaning</th><th>Status</th></tr>
+<tr><td class="n">0.3006</td><td>Our calibrated instrument's prediction</td><td><span class="pill warn">Extrapolation</span> — fitted on w ∈ [0.0480, 0.1051]; this file measures 0.1461. Direction supported, magnitude not established.</td></tr>
+<tr><td class="n">0.2813–0.3006</td><td>Prediction across the 30k–45k budget range</td><td>Both ends are extrapolations</td></tr>
+<tr><td class="n">0.2778</td><td>Best score ever achieved by this project family (owner-reported, no receipt)</td><td>Would be a new family best if the prediction holds</td></tr>
+<tr><td class="n">0.3195</td><td>Current rank&nbsp;#3 on the live board</td><td>Reaching it requires <i>both</i> the higher per-dot credit <i>and</i> the lower dot count</td></tr>
+<tr><td class="n">0.3262</td><td>Current live board best</td><td>Beyond our prediction but not by an order of magnitude. Inverting the fitted model, a score of 0.3262 implies w ≈ <b>0.169–0.190</b> at n = 30,000–45,000 (64–82&nbsp;% of the K&nbsp;=&nbsp;5,797 effective truth pixels). Our file measures 0.1461, i.e. <b>77–87&nbsp;%</b> of that. To reach 0.3195 at 30,000 dots the model needs w&nbsp;=&nbsp;0.1627 — a gap of 0.0166. The leader's own dot count is unknown, so these are model implications, not measurements.</td></tr>
+</table>
+<p><b>Why the improvement is plausible.</b> The instrument says the score depends on two things: dot count
+(ρ&nbsp;=&nbsp;−0.867 with live score across the corpus) and per-dot credit w (ρ&nbsp;=&nbsp;+0.712). This
+submission moves <i>both</i> in the right direction relative to every artifact ever scored in this family:
+30,000 dots against the 0.2778 champion's 37,654, and w&nbsp;=&nbsp;0.1461 against that champion's 0.1051
+(+39&nbsp;%). The two effects are roughly balanced at this size, which is exactly what the break-even rule was
+designed to find.</p>
+<div class="warnbox"><b>This file has not been submitted and has no organizer score.</b> Do not report 0.3006
+as a score. The public leaderboard is not the final score either: the Final Prize Round re-scores the same
+file against an expanded label set built by experts reviewing every team's submission
+(<a href="https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527/7">verified staff statement</a>),
+which is worth $250,000 against the Initial Round's $50,000.</div>
+
+<h2>Which submission slot to spend</h2>
+<p>This candidate beat its control in a pre-declared Wald SPRT — 9/9 cells, LLR +3.028 against an upper
+boundary of +2.996 — and beat the current holdout best on the one instrument checked against organizer scores.
+It clears the bar set in the project charter. The alternative (the SGMC-corridor tilts H40-F) was dropped by
+the extrapolation guard because 41–47&nbsp;% of its dots sit on SGMC traces, where the surrogate is circular;
+shipping it would bet a slot on an instrument artefact.</p>
+<p><b>The most valuable single experiment left</b> is not a better detector. It is resolving IR-40-01: whether
+dots 100–200&nbsp;m off a mapped trace score as duplicate traces (excluded here, and consistent with the one
+controlled live experiment) or as new fault geometry (which the measured profile and the organizer's own
+"newly mapped geometry of an existing fault system" language both support). That is a coin-flip worth
+0.39–0.63 of the remaining headroom, and it cannot be settled locally.</p>
+
+<h2>Reproduce it</h2>
+<pre>python3 -m venv .venv &amp;&amp; .venv/bin/pip install -r requirements.txt
+python scripts/restore_data.py --group core &amp;&amp; \
+python scripts/restore_data.py --group external &amp;&amp; \
+python scripts/restore_data.py --group scored
+.venv/bin/python -m pytest tests -q                                  # 29 passed
+OMP_NUM_THREADS=2 .venv/bin/python scripts/run_gems40.py --tag h40e-30k
+.venv/bin/python scripts/validate_submission.py docs/downloads/gemsdoe39-h40-e-disc-h40e-30k-zeros.tif
+.venv/bin/python scripts/verify_unique.py       docs/downloads/gemsdoe39-h40-e-disc-h40e-30k-zeros.tif</pre>
 
 <footer>
-<a href="index.html">Back to the main page</a> ·
-<a href="research-brief.md">Research brief</a> ·
-<a href="downloads/gemsdoe39-h39-a-model-r39a-manifest.json">Audit manifest</a> ·
-<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/">Official leaderboard</a>
+<a href="index.html">Full write-up</a> ·
+<a href="current-feed.html">Current feed</a> ·
+<a href="hypothesis-register.md">Hypothesis register</a> ·
+<a href="../registry/h40_report_h40e-30k.json">Audit manifest</a> ·
+<a href="../registry/uniqueness.json">Uniqueness receipt</a>
+<br>All figures recomputed from repository bytes on 2026-10-05.
 </footer>
 
 </div>
