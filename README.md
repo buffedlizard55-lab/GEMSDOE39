@@ -68,6 +68,10 @@ python scripts/validate_submission.py docs/downloads/<primary>.tif
 The pipeline is deterministic; re-running it reproduces byte-identical GeoTIFFs
 (modulo DEFLATE metadata timestamps).
 
+## Research register and full project brief
+
+The ranked hypotheses, source register, validation gate, and limitations are maintained in [docs/research-brief.md](docs/research-brief.md). The original task brief is preserved in the session request; claims are intentionally not promoted to facts unless locally reproducible or linked to an official source.
+
 ## Core values
 
 - **Maximize P(Win).** Every decision weighs tradeoffs to maximize probability of
