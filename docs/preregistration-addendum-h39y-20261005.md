@@ -1,0 +1,29 @@
+# Pre-score amendment: H39Y-01 mask geometry and execution details
+
+**Registered:** 2026-10-05 UTC, before H39Y-01 holdout outcomes were computed. This addendum narrows implementation details and corrects one scoring-mask statement in the original registration; it does not change the selected hypothesis, detector formula, comparator, candidate order, cell sequence, truth-count eligibility threshold, SPRT, or promotion gate. The original registration remains preserved at [`preregistration-h39y-20261005.md`](preregistration-h39y-20261005.md).
+
+## Correction required to reproduce organizer scoring
+
+The original registration said to exclude a 2-pixel known-fault buffer from both prediction and scoring. That is not the organizer's scoring rule. In a DrivenData staff reply, the organizer states that the evaluation mask is pixel-exact (identical to the provided fault-label pixels), that predictions one to three pixels from a known trace are scored normally against new-fault truth, and that new-fault truth can lie within 300 m of a known trace. See the [staff clarification, post 4](https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/4).
+
+Accordingly, the locked holdout implementation will:
+
+- retain the preregistered 2-pixel known-fault exclusion **for emitted predictions only**, identically for candidate and incumbent;
+- pass only the exact visible-catalogue pixels as `known` to the DTI scorer; it will not dilate that scoring mask;
+- keep the 15-pixel inward evaluation margin and hide whole 8-connected catalogue components touching the cell plus its 15-pixel collar.
+
+This correction is made before looking at candidate or comparator DTI values. It is necessary to match the organizer's documented geometry; it is not an outcome-driven change.
+
+## Frozen execution details
+
+1. **Grid and order.** Anchor an 8×8 grid to the bounding rectangle of finite cells in `sample_submission.tif`. Integer row and column edges are `np.linspace(min_index, max_index_plus_one, 9).astype(int)`. Test only cells `(row, col)` where both indices are even, in row-major order. The footprint outside each rectangle is not treated as valid.
+2. **Inner evaluation mask.** Within each tested rectangle, retain finite-footprint pixels whose Euclidean distance from either the rectangle edge or an invalid footprint cell is strictly greater than 15 pixels. Invalid cells and the rectangle exterior count as background for this distance. Eligibility is the count of hidden catalogue truth pixels in that inner mask; require at least 50 per cell and at least 9 eligible cells, as already registered.
+3. **Hidden labels and train collar.** Label the full public catalogue with 8-connectivity. For each fold, the hidden set is every complete component intersecting the tested rectangle expanded by 15 rows/columns (a Chebyshev collar). Exclude those component IDs everywhere from training, and exclude the expanded rectangle itself from training pixels. The held-out truth is the hidden-component raster intersected with the inner evaluation mask.
+4. **Comparator features and negatives.** Use the checked-in `stack.build_stack(..., quantise=True)` with its complete field set; before construction, assert that the 19 source GeoTIFF band descriptions, normalized to their leading band names, exactly match `stack.BAND_NAMES`. Negative pixels are the checked-in H39-A pools: the union of catalogue-adjacent hard negatives at 1–6 pixels and background pixels outside the 8-iteration binary dilation of the catalogue. Apply the fold train mask to both classes. Draw an equal number from each class without replacement, with `m=min(n_positive, n_negative, 90_000)`; fewer than 200 examples in either class is a data/provenance failure, not a reason to change the fold.
+5. **Comparator fit and fixed randomness.** Use the already checked-in `HistGradientBoostingClassifier` parameters: `max_iter=250`, `learning_rate=0.08`, `max_leaf_nodes=31`, `l2_regularization=1.0`, `early_stopping=False`. For tested-cell ordinal `j` in the 16-cell row-major sequence (including ineligible cells), use `seed=20261005+j` for the sample RNG and classifier `random_state`. This is one fit per evaluated cell; no seed averaging or hyperparameter search.
+6. **Emitter and score.** Emit candidate and comparator separately within the same inner evaluation mask, with `min_dist=2.8`, exact same visible catalogue, and `cat_buffer_px=2`. The integer target is Python `round(24_000 * active_cell_pixels / total_footprint_pixels)`. Evaluate DTI only on that cell's inner mask, with exact visible catalogue pixels passed as `known`; ties are losses. The paired evaluation uses the repository's DTI implementation and fixed 3-pixel triangular kernel.
+7. **Stop discipline.** Determine cell geometry and truth-count eligibility before computing candidate scores. If fewer than nine cells qualify, produce a not-testable report and no slot recommendation. Otherwise traverse only the preregistered eligible cells in order, update the one-candidate SPRT immediately after each paired DTI, and do not fit or score another tile after either boundary. If no boundary is crossed by the last eligible tile, the result is inconclusive and no slot is recommended.
+
+## Explicit limitations
+
+The public USGS/INGENIOUS catalogue is not the private new-fault label set. A component-hidden public-catalogue test is only a spatial proxy. A 15-pixel collar reduces local leakage but cannot establish statistical independence of the Bernoulli tile outcomes; the SPRT's nominal error guarantees remain conditional on the preregistered independent-outcome / valid conditional-supermartingale model. No result in this addendum is a leaderboard measurement.

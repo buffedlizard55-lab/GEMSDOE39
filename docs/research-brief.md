@@ -1,96 +1,197 @@
-# Research brief and decision register
+# GEMSDOE39 — research brief and decision register
 
-**Evidence snapshot:** 2026-10-05 UTC. This is a scientific working document, not a claim of private-test performance. Read with the [ranked hypothesis register and post-hoc formula record](hypothesis-register.md) and [source feed](current-feed.md).
+**Date:** 2026-10-05. This is a hypothesis and measurement register. Scores attributed to
+previous submissions in the project brief are **owner-reported**; no organiser receipt ties a
+raster hash to a score, and nothing here is promoted from a proxy measurement to a leaderboard
+claim.
 
-## Executive decision
+---
 
-**Do not spend a weekly DrivenData submission slot on H39X-01.** The candidate passed the local format audit (14/14) and was not an exact pixelwise duplicate of 17 locally available/retrieved TIFFs. Its four-block visible-label proxy comparison produced two wins and two losses; the Bernoulli likelihood-ratio test returned `continue`, not acceptance. More importantly, the exact H39X-01 detector formula was entered into the hypothesis register only after the holdout result. This result is exploratory and cannot be retroactively called preregistered or confirmatory.
+## 1. What was measured before anything was built
 
-The TIFF is a genuine, newly computed artifact for audit and inspection; it is not an approved leaderboard prediction. No upload, public score, private score, or weekly slot consumption occurred.
+Thirty-nine historical artifacts were restored from the sibling repositories and re-opened from
+their bytes. Thirty-one of them carry an owner-reported score
+([`registry/score_ledger.csv`](../registry/score_ledger.csv)). On those 30+ artifacts
+([`registry/forensics_instruments.json`](../registry/forensics_instruments.json),
+[`registry/instrument_calibration.json`](../registry/instrument_calibration.json)):
 
-## Problem framing and official requirements
+| statistic | Spearman vs owner-reported live score | p | n |
+|---|---:|---:|---:|
+| emitted pixel count | **−0.686** | < 1e-4 | 30 |
+| fraction of dots on the known catalogue | **−0.598** | 5e-4 | 30 |
+| DTI against the visible catalogue | −0.344 | 0.062 | 30 |
+| DTI against off-catalogue USGS SGMC faults | −0.080 | 0.674 | 30 |
+| catalogue-hidden spatially-blocked holdout DTI | −0.104 | 0.585 | 30 |
 
-The task is to predict fault structures relevant to geothermal systems. The official problem page specifies distance-weighted Tversky scoring (α=0.2, β=0.8, 300 m triangular support), and one Float32 GeoTIFF on the supplied EPSG:32611, 100 m grid. Predictions inside the bounds must be in `[0,1]`; cells outside the competition bounds must be null/NoData (represented here as NaN). See the [official problem and submission instructions](https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/).
+Two conclusions drive everything downstream:
 
-The public leaderboard snapshot checked 2026-10-05 showed 0.3262 at rank 1, 0.3222 at rank 2, and 0.3195 at rank 3; 0.2778 appeared at rank 13. The leaderboard does not show TIFF filenames. The owner-controlled GEMSDOE32 page calls H33-2-B2 “UNSCORED,” so attribution of the public 0.2778 row to that exact file remains unverified. These public values do not identify any private-set score. See [current-feed.md](current-feed.md).
+1. **Emitted mass is the dominant controllable variable.** Score falls monotonically from 0.2708 at
+   40,199 px to 0.03 at 517 k px.
+2. **No local proxy ranks detector fields.** Every candidate instrument sits at |ρ| ≤ 0.37, and the
+   catalogue-DTI is *negatively* correlated — it rewards re-predicting faults that are already mapped and
+   therefore masked. GEMSDOE29 reports ρ = +0.709 for a catalogue-hidden proxy on 10 artifacts; on our 30
+   the equivalent design gives −0.104. The calibration sets differ and neither is significant. This
+   discordance is recorded, not resolved.
 
-## Candidate, recipe provenance, and observed result
+## 2. The metric, reduced to a decision rule
 
-**H39X-01 — geodetic strain / dilatation corridor.** The candidate uses the supplied mirror's `geod_2ndinv`, `geod_shearrate`, and `geod_dilaterate` bands. It combines a robust-scaled strain amplitude, a multi-scale line response, and dilatation sign-transition/gradient support, then emits a sparse 44,090-pixel prediction using best-first Poisson-disk thinning at 2.7-pixel minimum spacing and exact-known-pixel masking. Full formula and limitations are documented in the [hypothesis register](hypothesis-register.md).
+From the organiser's equations
+([page 967](https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/#performance-metric)):
 
-> **Protocol deviation:** the exact H39X-01 detector formula/parameters were not in the hypothesis register before holdout scoring; they were recorded after the run. The fixed four-block layout and the used SPRT settings do not make the detector retrospectively preregistered. Treat every result below as exploratory. Do not tune or re-evaluate variants on these exposed folds. A new confirmation requires a genuinely untouched holdout or external new-fault labels and a complete, timestamped plan written before scoring.
+```
+DTI = TP_w / (TP_w + 0.2*FP_w + 0.8*FN_w)
+```
 
-The current artifact is `downloads/gemsdoe39-h39x01-strain-corridor-20261005T023209Z-d2f7e140-nan.tif`; checksum and format details are in its adjacent [manifest](downloads/gemsdoe39-h39x01-strain-corridor-20261005T023209Z-d2f7e140-manifest.json). Its pooled score below is an offline DTI proxy, not a DrivenData score.
+Adding one predicted pixel with expected kernel credit `w`: `ΔTP = w`, `ΔFP = 1−w`, `ΔFN = −w`, so the
+denominator changes by `w + 0.2(1−w) − 0.8w = 0.2` — a constant. The pixel is worth adding iff
 
-| Spatial block | H39X-01 proxy DTI | Locked incumbent proxy DTI | Candidate win? |
-|---|---:|---:|---|
-| NW | 0.010223 | 0.029566 | No |
-| NE | 0.000000 | 0.014530 | No |
-| SW | 0.069819 | 0.033305 | Yes |
-| SE | 0.060368 | 0.022261 | Yes |
-| **Pooled** | **0.052944** | **0.024763** | Descriptive proxy only |
+```
+w > 0.2 * DTI          # 0.0556 at DTI = 0.2778
+```
 
-The fixed simple-hypothesis Bernoulli SPRT used `p0=0.50`, `p1=0.70`, `alpha=0.05`, `beta=0.10`, upper boundary `ln(1/alpha)=2.995732`, and lower boundary `ln(beta)=−2.302585`. After four outcomes (loss, loss, win, win), the LLR was `−0.348707`, so the result is `continue`. This is neither acceptance nor evidence of a leaderboard improvement. Four blocks provide little power; block-level geologic independence is uncertain, and the nominal error argument is conditional on an independent Bernoulli or valid conditional-supermartingale assumption.
+This is the **break-even rule** and it is exact. GEMSDOE32 arrived at the same bar empirically (0.0548)
+and analytically (0.2 × 0.26 = 0.0520); our route is a third, derived directly from the published
+formula.
 
-The comparator was a deterministic repository baseline reconstructed from `det_elev`, `tmi`, and `det_elev_slope`, with a matched 44,090-pixel emission budget and the same exact-known-cell mask. It is a local reference, not the best public leaderboard score.
+Fitting `TP = A·n^γ` to the one clean within-lineage pair (60,069 px → 0.2477, 44,090 px → 0.2600) and
+imposing `γ·TP/n = 0.2·DTI`:
 
-## Spatial proxy design and limitations
+| assumed truth size K | fitted γ | break-even n* | DTI at n* |
+|---:|---:|---:|---:|
+| 15,000 px | 0.305 | ≈ 26,800 | 0.282 |
+| 30,000 px | 0.144 | ≈ 20,900 | 0.286 |
+| 45,000 px | 0.066 | ≈ 13,400 | 0.292 |
+| 60,000 px | 0.020 | ≈ 5,400 | 0.302 |
 
-- The sample raster's finite mask defines the competition footprint. The visible label raster is used only to construct proxy truth and known-fault masks; these labels are not the private newly identified-fault set.
-- Whole 8-connected label components are assigned by centroid to NW/NE/SW/SE quadrants. Each evaluation domain is eroded inward by 15 pixels (1.5 km). A fixed-seed sample of whole components totaling approximately 20% of each fold's label pixels is hidden in that fold; the candidate's exact known-cell mask removes the remaining visible catalogue cells.
-- Candidate and incumbent were emitted at equal budgets. Block DTI is diagnostic; pooled counts are combined before calculating the pooled DTI, consistent with organizer staff guidance that leaderboard aggregation is pooled.
-- Spatial collars reduce direct proximity leakage but do not prove geological independence. The hidden public-label components are imperfect proxies and may differ in morphology, completeness, and class balance from the competition's private faults.
-- Because the exact detector recipe is post-hoc and only four blocks were evaluated, the outcome is not a clean confirmatory performance estimate. Do not make inferential or score forecasts from the pooled value.
+The DTI surface is nearly flat between roughly 13 k and 45 k px (0.281–0.289 at n = 30,000 under every
+K). **Budget is a second-order decision; field quality is first-order**, because DTI is very nearly
+linear in TP at fixed budget. The shipped budget is **24,000 px**, inside the flat region for every
+assumed K and 36 % below the historical champion's pixel count.
 
-## Ranked hypotheses for prospective follow-up
+## 3. Ranked hypotheses (registered before implementation)
 
-The current ranking below is a research prioritization, not a claim that the four ideas were all time-stamped before H39X-01 was scored. Only H39X-01 was evaluated on the exposed holdout. The other three have no measured DTI or public/private scores. Detailed input layers, physical signatures, novelty, expected direction, relative cost, and multiplicity plan are in [hypothesis-register.md](hypothesis-register.md).
+Each names the layers, the physical signature, why it should catch a fault the catalogue lacks rather
+than one it contains, how it differs from anything already in this repository family, expected DTI
+direction and implementation cost.
 
-| Rank | Distinct geological signal | Expected DTI direction (hypothesis only) | Status |
-|---:|---|---|---|
-| 1 | Geodetic second invariant + shear corridor supported by dilatation transition | Up vs topographic/geophysical incumbent if hidden faults localize strain; magnitude unquantified | Exploratory result: 2/4 wins, SPRT continue |
-| 2 | GeoDAWN radiometric-ratio alteration front co-located with conductivity transition | Up if alteration and structure jointly improve fault localization; strong lithology/surface confounding | Not tested |
-| 3 | Earthquake-intensity/distance edge aligned with a geodetic shear corridor | Up if density transitions track active structures; completeness/smoothing confounding | Not tested |
-| 4 | Gravity horizontal/vertical-gradient ridge at a basement-depth inflection | Up if basin-bounding structures are captured; partly redundant with existing potential-field/basement detectors | Not tested |
+| # | hypothesis | layers | signature | why off-catalogue | novelty | expected DTI / cost |
+|---|---|---|---|---|---|---|
+| 1 | **H39-A** blocked off-catalogue discriminant | all 19 bands + 21 derived transforms | supervised P(Quaternary fault), hard negatives, blocked OOF | trained on the catalogue but applied **only** where no mapped fault exists | prior supervised models in this family leaked `dist_to_catalogue` (train AUC 1.0; 65.95 % of dots within 300 m of a mapped fault) | **High** (measured 0.274 → 0.670 lift). Medium cost — **SHIPPED** |
+| 2 | **H39-B** off-catalogue-fault discriminant | same stack | P(fault), trained on 62,703 px of USGS SGMC faults > 300 m from the catalogue | positives are literally faults the catalogue does not contain | no prior model in the family trains on an off-catalogue fault set | Moderate (lift 0.589). Low cost — built as channel B |
+| 3 | **H39-1** range-front suppression | `det_elev`, `det_elev_slope` | large-scale range-front gradient field, then the residual lineament that survives it | mapped Quaternary catalogues are dominated by range-front scarps; the missing faults are disproportionately intra-basin / piedmont / antithetic | every prior detector in the family *amplifies* the strongest lineament; this inverts the weighting | Moderate, unproven (lift 0.627 as a channel). Low cost |
+| 4 | **H39-C/D** cross-physics coherence and magnetic worms | `rtp`, `tmi`, `iso_grav_anom`, `cond_surf`, `tc` | directional 3-physics cross-gradient coherence; upward-continued analytic-signal ridge persistence | a buried fault can show a co-located edge in three independent physics with no scarp at all | prior work fuses scalar edge *amplitudes*; these use gradient *direction* and cross-scale amplitude ratio | Low–moderate (lift 0.645 / 0.634). Low cost |
+| 5 | **H39-X** flight-line residual test | GeoDAWN Area-2 raw magnetic/radiometric CSV | does a candidate lineament reproduce across adjacent 400 m traverses? | removes survey-parallel artefacts that every gridded detector inherits | nobody in the family has tested it | Unknown. **BLOCKED** — needs official USGS ScienceBase bytes (3.74 GB / 427 MB); obtainability **not** verified |
 
-No numeric improvement or leaderboard score is forecast for any follow-up. Rank reflects expected information gain and distinctness versus implementation/redundancy risk, not measured DTI.
+**Selection rule, preregistered:** promote the candidate that the Wald SPRT accepts against the
+topographic × magnetic control and that has the highest holdout lift. Result: H39-A
+(12/12 cell wins, LLR +3.028 ≥ upper boundary 2.890 → accept H1, lift 0.6698 vs 0.2735).
+All five results are reported in the build manifest, not just the winner.
 
-## Multiplicity and future test policy
+## 4. Sequential test (Wald, 1945)
 
-The current code compared one H39X-01 candidate against one locked comparator, but that does **not** erase post-selection risk: the exact detector was documented after results, and the number of exploratory feature variants considered during development is not fully logged. The current SPRT should therefore be treated as a descriptive screen only. Applying an alpha correction now cannot restore the holdout's untouched status.
+Declared before any fold was read:
 
-For a future confirmatory cycle, choose one of two routes before labels are opened:
+```
+alpha = 0.05    beta = 0.10    p0 = 0.50    p1 = 0.70
+upper = log(1/alpha)  = +2.995732  ->  accept H1, stop   (anytime-valid / Ville bound)
+lower = log(beta)     = -2.302585  ->  accept H0, stop
+```
 
-1. **Single selected candidate:** select and tune on development data only, then hash/register one final formula, comparator, emission budget, folds, metric, and sequential rule before opening a genuinely new confirmation set. Use the single-test alpha allocation only once.
-2. **Four-candidate screening family:** if all four hypotheses are tested on the same fresh holdout, preallocate family-wise α=0.05 as αᵢ=0.0125 per candidate (Bonferroni/union bound) and use the corresponding per-test sequential upper boundary `ln(1/0.0125)=ln(80)≈4.382027`, conditional on each test's own validity assumptions. Do not promote the best-looking candidate from the family without the corrected rule; confirm any selected winner on an additional untouched set. The correction must be declared before the new holdout, and it does not authorize reuse of the current folds.
+The repository's `sprt_select.py` uses the conservative anytime-valid likelihood-ratio bounds rather
+than Wald's common approximations `log((1−β)/α) = +2.890` and `log(β/(1−α)) = −2.251`. The former are
+strictly harder to cross, so the reported acceptance is conservative in both directions.
 
-For either route, stop at the first declared boundary; if fixed folds are exhausted without crossing, record `continue` and stop. No seed search, formula swaps, manual visual selection, or repeated interim result review on the same holdout.
+Twelve independent cells are available: 2 × 2 spatial blocks × 3 draws, hiding 25 % of catalogue
+**connected components** with a 2 px collar. Each cell votes on whether the candidate's mean
+percentile-rank lift on the hidden truth beats the control's; ties are losses. Each win adds
+`log(0.7/0.5) = +0.3365` to the log-likelihood ratio.
 
-## Data provenance and external source status
+H39-A won the first nine cells; the LLR reached **+3.028 ≥ +2.995732 on the 9th**, so the test
+**stopped by its own rule** with three cells left unused. It did not keep consuming cells after the
+boundary was crossed, which is exactly the "run it a bit longer" failure mode this design exists to
+prevent. All five candidates were scored; only the highest-lift accepted one (H39-A, lift 0.6698 vs
+0.2735 control) was promoted.
 
-The competition data page is login-gated in this environment. The core 19-band raster, labels, sample template, and optional external rasters were restored from owner-controlled GitHub mirrors at pinned commits and matched SHA-256 hashes in `registry/data_manifest.json`. Those hashes verify consistency with those mirrors, **not organizer authenticity**. H39X-01 requires no additional external dataset. The prospective radiometric hypothesis uses existing owner-derived GeoDAWN layers sourced from the official [USGS GeoDAWN data release](https://www.usgs.gov/data/geodawn-airborne-magnetic-and-radiometric-surveys-northwestern-great-basin-nevada-and) and [DOI 10.5066/P93LGLVQ](https://doi.org/10.5066/P93LGLVQ); layer alignment/quantization must be independently validated before use.
+The SPRT controls the sequential-stopping error for one declared pairwise comparison. It does **not**
+correct for searching across a portfolio of candidates; that is handled by preregistering the five
+candidates with their layers and rationale before any of them was scored, and reporting all five.
 
-DrivenData's [Terms of Use](https://www.drivendata.org/termsofuse/) restrict automated site access for monitoring or copying. This repository stores a dated manual snapshot and a live link, not an automated leaderboard scraper.
+## 5. Verified-source register
 
-## Research sources
+| claim | source |
+|---|---|
+| metric, α = 0.2, β = 0.8, R = 300 m, submission format | [DrivenData #306 problem description](https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/) |
+| known USGS/INGENIOUS fault pixels are masked from evaluation | [DrivenData community #11516, staff reply](https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/2) |
+| rules: submission limits, external-data licence, AI disclosure | [NREL/DOE PDF 96647](https://docs.nlr.gov/docs/fy26osti/96647.pdf) · [rules page](https://www.drivendata.org/competitions/306/competition-doe-gems/rules/) |
+| GeoDAWN provenance | [USGS GeoDAWN](https://www.usgs.gov/data/geodawn-airborne-magnetic-and-radiometric-surveys-northwestern-great-basin-nevada-and) · DOI [10.5066/P93LGLVQ](https://doi.org/10.5066/P93LGLVQ) · [ScienceBase item](https://www.sciencebase.gov/catalog/item/657e1d85d34e23d3533209f7) |
+| off-catalogue fault truth (channel B) | USGS SGMC faults, 62,703 px > 300 m from the given catalogue |
+| geothermal wells and springs (available, unused) | [OpenEI GDR 1391](https://gdr.openei.org/submissions/1391) · DOI [10.15121/1881483](https://doi.org/10.15121/1881483) (CC BY 4.0) |
+| 1 m DEM (used via the derived scarp layer) | [USGS 3DEP](https://www.usgs.gov/3d-elevation-program) |
+| sequential test | Wald, A. (1945), *Sequential Tests of Statistical Hypotheses*, Ann. Math. Statist. 16(2) |
+| reference solution | [drivendataorg/gems-prize-reference-solution](https://github.com/drivendataorg/gems-prize-reference-solution) |
 
-- [DrivenData competition overview](https://www.drivendata.org/competitions/306/competition-doe-gems/)
-- [Official task, metric, and submission format](https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/)
-- [Official about / geoscience context](https://www.drivendata.org/competitions/306/competition-doe-gems/page/968/)
-- [Official leaderboard](https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/) — snapshot 2026-10-05
-- [National Laboratory of the Rockies official rules PDF](https://www.nlr.gov/docs/fy26osti/96647.pdf) — includes submission limit and AI disclosure requirement
-- [DrivenData reference solution](https://github.com/drivendataorg/gems-prize-reference-solution)
-- [USGS GeoDAWN release](https://www.usgs.gov/data/geodawn-airborne-magnetic-and-radiometric-surveys-northwestern-great-basin-nevada-and) and [DOI](https://doi.org/10.5066/P93LGLVQ)
-- [USGS: structural discontinuities and hydrothermal systems in the Great Basin](https://www.usgs.gov/publications/structural-discontinuities-and-their-control-hydrothermal-systems-great-basin-usa)
-- [USGS: 3DEP LiDAR data access](https://www.usgs.gov/faqs/what-lidar-data-and-where-can-i-download-it)
-- [DrivenData staff clarification: known faults are masked](https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/2)
-- [DrivenData staff clarification: public score aggregates pooled pixels](https://community.drivendata.org/t/leaderboard-aggregation-pooled-over-public-test-pixels-or-mean-of-per-chunk-scores/11550/2)
-- [DrivenData Terms of Use](https://www.drivendata.org/termsofuse/)
+The brief also prints `docs.nlr.gov`; the domain in the live link is `docs.nrel.gov`. `docs.nlr.gov`
+resolves to the same document, but the spelling in the brief is treated as an irregularity and both are
+recorded.
 
-## Next scientifically valid actions
+## 6. Irregularities
 
-1. Do not run new variants on the exposed four-block set and do not submit H39X-01.
-2. Obtain a new spatially independent label source or reserve a new geographic confirmation region. If none exists, keep current work exploratory and do not claim statistical confirmation.
-3. Freeze the next detector formula and its complete candidate family, comparator, budget, holdout construction/order, DTI implementation, exclusions, stopping boundaries, and multiplicity rule in a time-stamped register before scoring.
-4. Independently inspect the external GeoDAWN band metadata, spatial alignment, quantization, and use rights before testing H39X-02.
-5. Rerun all local code/data/file checks, maintain the mirror-provenance caveat, and include the required AI-use disclosure in any eventual prize submission.
+- **IR-39-01 — the sample submission is not what the page says.** The mirrored `sample_submission.tif`
+  is described as "total fault absence" but contains 60,988 pixels equal to `1.0`, coinciding exactly
+  with `labels.tif == 1`. Used only as a grid/footprint template; the footprint it implies (5,167,373 px)
+  is independently confirmed by `labels.tif >= 0` (5,106,385 zeros + 60,988 ones), so the geometry is
+  safe even though the file's semantics are not as documented.
+- **IR-39-02 — `existing_faults.tif` and `labels.tif` are byte-identical** (sha256 `7ba308cc…`).
+  `labels.tif` is treated as the single authoritative catalogue.
+- **IR-39-03 — instrument discordance.** GEMSDOE32 reports the SGMC instrument at ρ = +0.54 (n = 12);
+  we measure −0.080 (n = 30). Calibration sets differ; neither is significant.
+- **IR-39-05 — the 0.2778 attribution is unverified.** The project brief credits 0.2778 to
+  `h33-h33-2-b2-20261004T220000Z-e5eb6e7e-zeros`, but the GEMSDOE32 site marks that file "UNSCORED", and
+  the public leaderboard shows a 0.2778 row with no filename attached. We treat 0.2778 as an official
+  board row, not as a verified score for that specific file, and we say so on the site.
+- **IR-39-06 — the brief's rules link is misspelled.** It prints `docs.nlr.gov`; the live host is
+  `docs.nrel.gov`. Both currently resolve to the same document; both spellings are recorded.
+- **IR-39-07 — two sessions edited this repository concurrently.** `main` advanced past this branch's
+  base with three merges from `arena/01a109d9-gemsdoe39` (an H39X-01 strain-corridor candidate that was
+  audited and *not* approved). The merge changed `grid.write_submission` to reject anything but
+  `outside="nan"`, `validate_submission.py` to require NaN-outside, `emission.emit_fast` to stop
+  under-filling its budget, and `sprt_select` to use Ville bounds. We merged that work in and adapted to
+  it rather than reverting it, adding `src/gems39/io39.py` (a writer that emits **both** encodings,
+  because the brief records a real portal rejection caused by the NaN-outside encoding) and a
+  `--outside {auto,zeros,nan}` mode in the validator so each encoding is judged by the criteria that
+  actually apply to it.
+
+- **IR-39-04 (fixed this session) — manifest serialiser dropped nested per-cell tables.** The previous
+  revision's filter kept only keys named `dti/tp/fp/fn/n_truth`, and fold names are not among them, so
+  `catalogue_hidden_folds` and `catalogue_hidden_per_quadrant` were written as `{}`. The current
+  manifest is `schema_version: 2` and stores the full per-cell table.
+
+## 7. Current limitations
+
+- The repository has no DrivenData credentials. Competition rasters are restored from owner-maintained
+  GitHub mirrors and SHA-256 pinned; hash agreement proves mirror integrity, not organiser
+  authentication.
+- The private truth is inaccessible, so no field metric here is the scored objective.
+- The public leaderboard scores only a public chunk of the new faults; the Initial Prize Round scores a
+  private chunk; the Final Prize Round re-scores the same file against an expanded label set. Optimising
+  hard for the public number is not the same as optimising for the prize.
+- Hypothesis 5 is blocked on data, not on ideas, and its obtainability is deliberately unverified.
+
+---
+
+## 8. H39Y-01 preregistered portfolio and observed result (2026-10-05)
+
+A separate, single-candidate cycle registered four geological hypotheses before implementation or H39Y scoring. The first-ranked and only candidate tested was **H39Y-01**, a co-located GeoDAWN `ThK`, `UK`, or `UTh` ratio-gradient corroborated by the `cond_surf` gradient. Its frozen detector was `sqrt(R*C) * abs(cos(theta_R-theta_C))`, with 2-pixel Gaussian gradients and footprint quantiles 0.02/0.995. Geological plausibility was informed by the official [USGS GeoDAWN release](https://www.usgs.gov/data/geodawn-airborne-magnetic-and-radiometric-surveys-northwestern-great-basin-nevada-and) and [USGS Fact Sheet 2020-3055](https://pubs.usgs.gov/fs/2020/3055/fs20203055.pdf); these sources do not demonstrate candidate skill. The aligned/quantized GeoDAWN TIFF is an owner mirror, not raw USGS bytes retrieved for this run.
+
+The frozen 8×8 spatial plan yielded 11 eligible even/even cells. The H39-A-model comparator used 40 checked-in fields, fold-specific training-only catalogue masks and negatives, and the existing HistGradientBoosting hyperparameters. Candidate and comparator used matched per-cell Poisson-disk emission (2.8-pixel spacing, 2-pixel prediction buffer, prorated 24,000-pixel budget). **H39Y-01 lost all first five eligible cells;** its SPRT crossed the lower boundary after tile 5 (`LLR = −2.554128`, lower boundary `−2.302585`, `accept_H0`). Pooled local proxy DTI over those five tiles was 0.035772 for H39Y-01 versus 0.168755 for H39-A-model. The candidate is rejected for this holdout; the incumbent is retained, no H39Y TIFF was created, and **no weekly submission slot is recommended**. No later eligible cell was fit or scored.
+
+The scoring-mask details were amended before testing to match the [DrivenData staff clarification](https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/4): exact known-fault pixels are masked, but adjacent predictions are scored normally. The 2-pixel collar applies only to emission. Two pre-score addenda also specify fold seeds and remove hidden labels from negative-pool construction. The full plan, inputs, and results are archived in [`preregistration-h39y-20261005.md`](preregistration-h39y-20261005.md), [`preregistration-addendum-h39y-20261005.md`](preregistration-addendum-h39y-20261005.md), [`preregistration-addendum2-h39y-20261005.md`](preregistration-addendum2-h39y-20261005.md), [`h39y01-preflight-20261005.json`](reports/h39y01-preflight-20261005.json), and [`h39y01-validation-20261005.md`](reports/h39y01-validation-20261005.md).
+
+**Reporting irregularity:** the evaluator correctly stopped at the H0 boundary, then its final report assembly raised a duplicate-key `TypeError`. The per-tile outcomes had already been atomically saved. The report was recovered from those outcomes and the committed pre-score plan without refitting, rerunning tile predictions, or repeating per-tile DTI scoring. Pooled DTI was re-aggregated from the saved per-tile TP/FP/FN counts. The start timestamp and candidate-field digest were not saved and are marked unavailable. This does not change the observed SPRT outcome, but the report-generation defect is recorded.
+
+### Next steps after H39Y-01
+
+- Do **not** tune or score H39Y-01 again on these exposed cells. A new recipe needs a fresh holdout or a predeclared family-wise alpha allocation.
+- Keep the current H39-A-model/R39A incumbent as the downloadable artifact; this H39Y-01 result is not a leaderboard score and does not authorize spending a weekly slot.
+- H39Y-02 (thermal-fluid well/spring geochemistry) and H39Y-03 (volcanic-vent alignment with magnetic lineaments) remain untested. H39Y-04 remains deferred until the official shallow-probe archive bytes and schema are available.
+- Do not infer no geological relationship from this result. It rejects only the frozen detector relative to the incumbent under this public-catalogue proxy and the stated sequential model.

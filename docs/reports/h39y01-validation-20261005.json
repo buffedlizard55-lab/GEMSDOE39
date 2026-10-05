@@ -1,0 +1,815 @@
+{
+  "schema_version": 1,
+  "candidate_id": "H39Y-01",
+  "status": "accept_H0",
+  "started_utc": null,
+  "completed_utc": "2026-10-05T04:50:12.041864+00:00",
+  "registration_files": [
+    "docs/preregistration-h39y-20261005.md",
+    "docs/preregistration-addendum-h39y-20261005.md",
+    "docs/preregistration-addendum2-h39y-20261005.md"
+  ],
+  "implementation_sha256": {
+    "evaluator": "e18c665385082169d24373232377451f796a52765d68a7d3d30ddc000ffb2b7d",
+    "radiometric": "8d1c0392dedc314b0d33ffd30582f11449c7e53e63f74e099047f3bd278412f0",
+    "stack": "96cded55eb24b700ec39058b592ea4698625fa504407d7a3bd57f933105d7d56",
+    "emission": "fb10d01a9693f2e066678b65807b49bcac836da7b71f3e6730721a09a15872dd",
+    "metric": "935dd9d235442723e8295c580b183c55c7488483ea246e281fd4506a244181aa",
+    "sprt": "acf3e74d757ea8b940421de1183300b672147fee5759d21717e26796f83b3bd1"
+  },
+  "inputs": {
+    "raster_grid": {
+      "height": 3730,
+      "width": 3292,
+      "crs": "EPSG:32611",
+      "transform": [
+        100.0,
+        0.0,
+        243350.0,
+        0.0,
+        -100.0,
+        4508550.0
+      ],
+      "bounds": [
+        243350.0,
+        4135550.0,
+        572550.0,
+        4508550.0
+      ]
+    },
+    "footprint_pixels": 5167373,
+    "catalogue_pixels": 60988,
+    "outside_footprint_label_pixels": 0,
+    "sha256": {
+      "sample_submission.tif": "2176d08e485aa2cd2860ce8df539db4faf4d76163b38a4dd8c30a40454d35cbc",
+      "labels.tif": "7ba308ccdc4418b31a178f4f1ef21aaa6e152e4028f2f6f64b01f7eb25ae4093",
+      "training_features.tif": "4371c82e3b8339b807bdffcf4ef59a225520fe2988d521be208ae33743123bc5",
+      "geodawn_extensions_u8.tif": "a35a9c6d2a14786f4dab85481ee59769213072f5dab5b2535ea82ae4d9bb7d9b"
+    }
+  },
+  "geometry": {
+    "grid_n": 8,
+    "anchor": "bounding rectangle of finite sample-submission footprint",
+    "row_edges": [
+      0,
+      466,
+      932,
+      1398,
+      1865,
+      2331,
+      2797,
+      3263,
+      3730
+    ],
+    "col_edges": [
+      0,
+      411,
+      822,
+      1234,
+      1645,
+      2056,
+      2468,
+      2879,
+      3291
+    ],
+    "tested_cells": "row and column indices both even, row-major",
+    "erosion": {
+      "method": "Euclidean distance transform",
+      "pixels": 15,
+      "active_rule": "footprint cells at distance > 15 px from cell exterior or invalid footprint"
+    },
+    "component_connectivity": 8,
+    "collar_px": 15,
+    "full_catalogue_component_count": 3199,
+    "eligible_truth_min": 50,
+    "eligible_count": 11,
+    "required_eligible_count": 9,
+    "eligible_order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      9,
+      10,
+      13,
+      14
+    ],
+    "cells": [
+      {
+        "ordinal": 0,
+        "row": 0,
+        "col": 0,
+        "bbox": [
+          0,
+          466,
+          0,
+          411
+        ],
+        "seed": 20261005,
+        "active_pixels": 26139,
+        "truth_pixels": 320,
+        "eligible": true,
+        "hidden_component_count": 43
+      },
+      {
+        "ordinal": 1,
+        "row": 0,
+        "col": 2,
+        "bbox": [
+          0,
+          466,
+          822,
+          1234
+        ],
+        "seed": 20261006,
+        "active_pixels": 166552,
+        "truth_pixels": 1670,
+        "eligible": true,
+        "hidden_component_count": 158
+      },
+      {
+        "ordinal": 2,
+        "row": 0,
+        "col": 4,
+        "bbox": [
+          0,
+          466,
+          1645,
+          2056
+        ],
+        "seed": 20261007,
+        "active_pixels": 166116,
+        "truth_pixels": 926,
+        "eligible": true,
+        "hidden_component_count": 87
+      },
+      {
+        "ordinal": 3,
+        "row": 0,
+        "col": 6,
+        "bbox": [
+          0,
+          466,
+          2468,
+          2879
+        ],
+        "seed": 20261008,
+        "active_pixels": 161726,
+        "truth_pixels": 1729,
+        "eligible": true,
+        "hidden_component_count": 114
+      },
+      {
+        "ordinal": 4,
+        "row": 2,
+        "col": 0,
+        "bbox": [
+          932,
+          1398,
+          0,
+          411
+        ],
+        "seed": 20261009,
+        "active_pixels": 61956,
+        "truth_pixels": 996,
+        "eligible": true,
+        "hidden_component_count": 99
+      },
+      {
+        "ordinal": 5,
+        "row": 2,
+        "col": 2,
+        "bbox": [
+          932,
+          1398,
+          822,
+          1234
+        ],
+        "seed": 20261010,
+        "active_pixels": 147013,
+        "truth_pixels": 1633,
+        "eligible": true,
+        "hidden_component_count": 113
+      },
+      {
+        "ordinal": 6,
+        "row": 2,
+        "col": 4,
+        "bbox": [
+          932,
+          1398,
+          1645,
+          2056
+        ],
+        "seed": 20261011,
+        "active_pixels": 20919,
+        "truth_pixels": 307,
+        "eligible": true,
+        "hidden_component_count": 44
+      },
+      {
+        "ordinal": 7,
+        "row": 2,
+        "col": 6,
+        "bbox": [
+          932,
+          1398,
+          2468,
+          2879
+        ],
+        "seed": 20261012,
+        "active_pixels": 0,
+        "truth_pixels": 0,
+        "eligible": false,
+        "hidden_component_count": 0
+      },
+      {
+        "ordinal": 8,
+        "row": 4,
+        "col": 0,
+        "bbox": [
+          1865,
+          2331,
+          0,
+          411
+        ],
+        "seed": 20261013,
+        "active_pixels": 0,
+        "truth_pixels": 0,
+        "eligible": false,
+        "hidden_component_count": 0
+      },
+      {
+        "ordinal": 9,
+        "row": 4,
+        "col": 2,
+        "bbox": [
+          1865,
+          2331,
+          822,
+          1234
+        ],
+        "seed": 20261014,
+        "active_pixels": 92634,
+        "truth_pixels": 728,
+        "eligible": true,
+        "hidden_component_count": 48
+      },
+      {
+        "ordinal": 10,
+        "row": 4,
+        "col": 4,
+        "bbox": [
+          1865,
+          2331,
+          1645,
+          2056
+        ],
+        "seed": 20261015,
+        "active_pixels": 76750,
+        "truth_pixels": 979,
+        "eligible": true,
+        "hidden_component_count": 67
+      },
+      {
+        "ordinal": 11,
+        "row": 4,
+        "col": 6,
+        "bbox": [
+          1865,
+          2331,
+          2468,
+          2879
+        ],
+        "seed": 20261016,
+        "active_pixels": 0,
+        "truth_pixels": 0,
+        "eligible": false,
+        "hidden_component_count": 0
+      },
+      {
+        "ordinal": 12,
+        "row": 6,
+        "col": 0,
+        "bbox": [
+          2797,
+          3263,
+          0,
+          411
+        ],
+        "seed": 20261017,
+        "active_pixels": 0,
+        "truth_pixels": 0,
+        "eligible": false,
+        "hidden_component_count": 0
+      },
+      {
+        "ordinal": 13,
+        "row": 6,
+        "col": 2,
+        "bbox": [
+          2797,
+          3263,
+          822,
+          1234
+        ],
+        "seed": 20261018,
+        "active_pixels": 3099,
+        "truth_pixels": 214,
+        "eligible": true,
+        "hidden_component_count": 28
+      },
+      {
+        "ordinal": 14,
+        "row": 6,
+        "col": 4,
+        "bbox": [
+          2797,
+          3263,
+          1645,
+          2056
+        ],
+        "seed": 20261019,
+        "active_pixels": 164637,
+        "truth_pixels": 1383,
+        "eligible": true,
+        "hidden_component_count": 66
+      },
+      {
+        "ordinal": 15,
+        "row": 6,
+        "col": 6,
+        "bbox": [
+          2797,
+          3263,
+          2468,
+          2879
+        ],
+        "seed": 20261020,
+        "active_pixels": 0,
+        "truth_pixels": 0,
+        "eligible": false,
+        "hidden_component_count": 0
+      }
+    ]
+  },
+  "comparator": {
+    "id": "H39-A-model",
+    "feature_fields": "all sorted fields returned by checked-in stack.build_stack(quantise=True)",
+    "feature_names": [],
+    "feature_field_count": 40,
+    "model": "HistGradientBoostingClassifier",
+    "max_iter": 250,
+    "learning_rate": 0.08,
+    "max_leaf_nodes": 31,
+    "l2_regularization": 1.0,
+    "early_stopping": false,
+    "max_rows_per_class": 90000,
+    "minimum_rows_per_class": 200,
+    "negative_pools": "training-only catalogue 1-6 px hard negatives OR outside its 8-iteration dilation",
+    "training_counts": {
+      "0": {
+        "train_positive": 60524,
+        "train_negative": 4920248,
+        "train_hard_negative": 760130,
+        "train_background_negative": 4160118
+      },
+      "1": {
+        "train_positive": 58863,
+        "train_negative": 4764214,
+        "train_hard_negative": 734908,
+        "train_background_negative": 4029306
+      },
+      "2": {
+        "train_positive": 59360,
+        "train_negative": 4762783,
+        "train_hard_negative": 744621,
+        "train_background_negative": 4018162
+      },
+      "3": {
+        "train_positive": 58853,
+        "train_negative": 4765324,
+        "train_hard_negative": 738473,
+        "train_background_negative": 4026851
+      },
+      "4": {
+        "train_positive": 59302,
+        "train_negative": 4872036,
+        "train_hard_negative": 745025,
+        "train_background_negative": 4127011
+      },
+      "5": {
+        "train_positive": 58671,
+        "train_negative": 4770960,
+        "train_hard_negative": 738018,
+        "train_background_negative": 4032942
+      },
+      "6": {
+        "train_positive": 60133,
+        "train_negative": 4925540,
+        "train_hard_negative": 756921,
+        "train_background_negative": 4168619
+      },
+      "9": {
+        "train_positive": 59853,
+        "train_negative": 4840293,
+        "train_hard_negative": 751770,
+        "train_background_negative": 4088523
+      },
+      "10": {
+        "train_positive": 59295,
+        "train_negative": 4863554,
+        "train_hard_negative": 745763,
+        "train_background_negative": 4117791
+      },
+      "13": {
+        "train_positive": 60324,
+        "train_negative": 4960042,
+        "train_hard_negative": 760670,
+        "train_background_negative": 4199372
+      },
+      "14": {
+        "train_positive": 58700,
+        "train_negative": 4760258,
+        "train_hard_negative": 743107,
+        "train_background_negative": 4017151
+      }
+    },
+    "feature_names_note": "The evaluator did not persist the sorted feature-name list; the exact stack implementation is SHA-256 pinned."
+  },
+  "candidate": {
+    "id": "H39Y-01",
+    "score": "sqrt(R*C)*abs(cos(theta_R-theta_C))",
+    "ratios": [
+      "ThK",
+      "UK",
+      "UTh"
+    ],
+    "conductivity": "cond_surf",
+    "sigma_px": 2.0,
+    "gradient_quantiles": [
+      0.02,
+      0.995
+    ],
+    "computed_field_sha256": null
+  },
+  "emitter": {
+    "type": "checked-in best-first Poisson disk",
+    "budget_full_footprint": 24000,
+    "min_distance_px": 2.8,
+    "visible_catalogue_buffer_px": 2,
+    "per_tile_target": "round(24,000 * active tile pixels / total footprint pixels)"
+  },
+  "scorer": {
+    "implementation": "src/gems39/metric.py:dti_binary",
+    "known_fault_scoring_mask": "exact visible catalogue pixels only; no buffer, per DrivenData staff clarification",
+    "radius_px": 3.0,
+    "alpha_fp": 0.2,
+    "beta_fn": 0.8,
+    "strict_win": "candidate cell DTI > comparator cell DTI; ties are losses"
+  },
+  "sprt": {
+    "decision": "accept_H0",
+    "n": 5,
+    "llr": -2.5541281188299525,
+    "upper": 2.995732273553991,
+    "lower": -2.3025850929940455,
+    "p0": 0.5,
+    "p1": 0.7,
+    "alpha": 0.05,
+    "beta": 0.1,
+    "wins": 0,
+    "losses": 5,
+    "outcomes": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "boundary_method": "Ville-safe likelihood-ratio bounds",
+    "validity_assumption": "independent Bernoulli block outcomes / valid conditional supermartingale"
+  },
+  "evaluated_tiles": [
+    {
+      "ordinal": 0,
+      "row": 0,
+      "col": 0,
+      "seed": 20261005,
+      "active_pixels": 26139,
+      "truth_pixels": 320,
+      "per_tile_target_pixels": 121,
+      "candidate_emitted_pixels": 121,
+      "comparator_emitted_pixels": 121,
+      "candidate_dti": {
+        "tp": 10.596326889590594,
+        "fp": 114.87215529378538,
+        "fn": 309.4036731104094,
+        "n_truth": 320,
+        "dti": 0.037696778774894
+      },
+      "comparator_dti": {
+        "tp": 71.6756475562842,
+        "fp": 87.17855964894211,
+        "fn": 248.32435244371578,
+        "n_truth": 320,
+        "dti": 0.24907196016580407
+      },
+      "candidate_strict_win": false,
+      "comparator_fit": {
+        "seed": 20261005,
+        "rows_per_class": 60524,
+        "max_iter": 250,
+        "learning_rate": 0.08,
+        "max_leaf_nodes": 31,
+        "l2_regularization": 1.0,
+        "early_stopping": false,
+        "probability_min": 0.002802373142912984,
+        "probability_max": 0.9217262864112854
+      },
+      "sprt_after_tile": {
+        "decision": "continue",
+        "n": 1,
+        "llr": -0.5108256237659905,
+        "upper": 2.995732273553991,
+        "lower": -2.3025850929940455,
+        "p0": 0.5,
+        "p1": 0.7,
+        "alpha": 0.05,
+        "beta": 0.1,
+        "wins": 0,
+        "losses": 1,
+        "outcomes": [
+          false
+        ],
+        "boundary_method": "Ville-safe likelihood-ratio bounds",
+        "validity_assumption": "independent Bernoulli block outcomes / valid conditional supermartingale"
+      },
+      "elapsed_seconds": 7.176852821000011
+    },
+    {
+      "ordinal": 1,
+      "row": 0,
+      "col": 2,
+      "seed": 20261006,
+      "active_pixels": 166552,
+      "truth_pixels": 1670,
+      "per_tile_target_pixels": 774,
+      "candidate_emitted_pixels": 774,
+      "comparator_emitted_pixels": 774,
+      "candidate_dti": {
+        "tp": 74.8111137764666,
+        "fp": 738.0962199509044,
+        "fn": 1595.1888862235335,
+        "n_truth": 1670,
+        "dti": 0.04992128585370582
+      },
+      "comparator_dti": {
+        "tp": 235.69831531091032,
+        "fp": 653.8719346175747,
+        "fn": 1434.3016846890896,
+        "n_truth": 1670,
+        "dti": 0.15568804273474904
+      },
+      "candidate_strict_win": false,
+      "comparator_fit": {
+        "seed": 20261006,
+        "rows_per_class": 58863,
+        "max_iter": 250,
+        "learning_rate": 0.08,
+        "max_leaf_nodes": 31,
+        "l2_regularization": 1.0,
+        "early_stopping": false,
+        "probability_min": 0.0016164487460628152,
+        "probability_max": 0.9283296465873718
+      },
+      "sprt_after_tile": {
+        "decision": "continue",
+        "n": 2,
+        "llr": -1.021651247531981,
+        "upper": 2.995732273553991,
+        "lower": -2.3025850929940455,
+        "p0": 0.5,
+        "p1": 0.7,
+        "alpha": 0.05,
+        "beta": 0.1,
+        "wins": 0,
+        "losses": 2,
+        "outcomes": [
+          false,
+          false
+        ],
+        "boundary_method": "Ville-safe likelihood-ratio bounds",
+        "validity_assumption": "independent Bernoulli block outcomes / valid conditional supermartingale"
+      },
+      "elapsed_seconds": 8.117855084999974
+    },
+    {
+      "ordinal": 2,
+      "row": 0,
+      "col": 4,
+      "seed": 20261007,
+      "active_pixels": 166116,
+      "truth_pixels": 926,
+      "per_tile_target_pixels": 772,
+      "candidate_emitted_pixels": 772,
+      "comparator_emitted_pixels": 772,
+      "candidate_dti": {
+        "tp": 20.513255757344336,
+        "fp": 761.4029416762008,
+        "fn": 905.4867442426556,
+        "n_truth": 926,
+        "dti": 0.022864064835941687
+      },
+      "comparator_dti": {
+        "tp": 166.54291028565873,
+        "fp": 683.1826274846345,
+        "fn": 759.4570897143412,
+        "n_truth": 926,
+        "dti": 0.18286445779866364
+      },
+      "candidate_strict_win": false,
+      "comparator_fit": {
+        "seed": 20261007,
+        "rows_per_class": 59360,
+        "max_iter": 250,
+        "learning_rate": 0.08,
+        "max_leaf_nodes": 31,
+        "l2_regularization": 1.0,
+        "early_stopping": false,
+        "probability_min": 0.0011675821151584387,
+        "probability_max": 0.9489492774009705
+      },
+      "sprt_after_tile": {
+        "decision": "continue",
+        "n": 3,
+        "llr": -1.5324768712979715,
+        "upper": 2.995732273553991,
+        "lower": -2.3025850929940455,
+        "p0": 0.5,
+        "p1": 0.7,
+        "alpha": 0.05,
+        "beta": 0.1,
+        "wins": 0,
+        "losses": 3,
+        "outcomes": [
+          false,
+          false,
+          false
+        ],
+        "boundary_method": "Ville-safe likelihood-ratio bounds",
+        "validity_assumption": "independent Bernoulli block outcomes / valid conditional supermartingale"
+      },
+      "elapsed_seconds": 8.370330000000195
+    },
+    {
+      "ordinal": 3,
+      "row": 0,
+      "col": 6,
+      "seed": 20261008,
+      "active_pixels": 161726,
+      "truth_pixels": 1729,
+      "per_tile_target_pixels": 751,
+      "candidate_emitted_pixels": 751,
+      "comparator_emitted_pixels": 751,
+      "candidate_dti": {
+        "tp": 38.04655041310605,
+        "fp": 736.5952814846614,
+        "fn": 1690.9534495868938,
+        "n_truth": 1729,
+        "dti": 0.024735614559050097
+      },
+      "comparator_dti": {
+        "tp": 329.0464776081104,
+        "fp": 581.6038278206959,
+        "fn": 1399.9535223918897,
+        "n_truth": 1729,
+        "dti": 0.2102090068977998
+      },
+      "candidate_strict_win": false,
+      "comparator_fit": {
+        "seed": 20261008,
+        "rows_per_class": 58853,
+        "max_iter": 250,
+        "learning_rate": 0.08,
+        "max_leaf_nodes": 31,
+        "l2_regularization": 1.0,
+        "early_stopping": false,
+        "probability_min": 0.001176621182821691,
+        "probability_max": 0.9668220281600952
+      },
+      "sprt_after_tile": {
+        "decision": "continue",
+        "n": 4,
+        "llr": -2.043302495063962,
+        "upper": 2.995732273553991,
+        "lower": -2.3025850929940455,
+        "p0": 0.5,
+        "p1": 0.7,
+        "alpha": 0.05,
+        "beta": 0.1,
+        "wins": 0,
+        "losses": 4,
+        "outcomes": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "boundary_method": "Ville-safe likelihood-ratio bounds",
+        "validity_assumption": "independent Bernoulli block outcomes / valid conditional supermartingale"
+      },
+      "elapsed_seconds": 8.101345996999953
+    },
+    {
+      "ordinal": 4,
+      "row": 2,
+      "col": 0,
+      "seed": 20261009,
+      "active_pixels": 61956,
+      "truth_pixels": 996,
+      "per_tile_target_pixels": 288,
+      "candidate_emitted_pixels": 288,
+      "comparator_emitted_pixels": 288,
+      "candidate_dti": {
+        "tp": 37.52014583710357,
+        "fp": 270.9858057764127,
+        "fn": 958.4798541628965,
+        "n_truth": 996,
+        "dti": 0.043704244397145244
+      },
+      "comparator_dti": {
+        "tp": 64.25673481735838,
+        "fp": 257.52170539944973,
+        "fn": 931.7432651826416,
+        "n_truth": 996,
+        "dti": 0.07461686163085854
+      },
+      "candidate_strict_win": false,
+      "comparator_fit": {
+        "seed": 20261009,
+        "rows_per_class": 59302,
+        "max_iter": 250,
+        "learning_rate": 0.08,
+        "max_leaf_nodes": 31,
+        "l2_regularization": 1.0,
+        "early_stopping": false,
+        "probability_min": 0.0073043666779994965,
+        "probability_max": 0.8454862236976624
+      },
+      "sprt_after_tile": {
+        "decision": "accept_H0",
+        "n": 5,
+        "llr": -2.5541281188299525,
+        "upper": 2.995732273553991,
+        "lower": -2.3025850929940455,
+        "p0": 0.5,
+        "p1": 0.7,
+        "alpha": 0.05,
+        "beta": 0.1,
+        "wins": 0,
+        "losses": 5,
+        "outcomes": [
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "boundary_method": "Ville-safe likelihood-ratio bounds",
+        "validity_assumption": "independent Bernoulli block outcomes / valid conditional supermartingale"
+      },
+      "elapsed_seconds": 7.162471648000064
+    }
+  ],
+  "pooled_dti": {
+    "candidate": 0.035771720387823176,
+    "comparator": 0.1687554589501263
+  },
+  "promotion_gate": {
+    "weekly_slot_recommendation": false,
+    "candidate_artifact_created": false,
+    "decision": "recommend only after registered SPRT accept_H1; otherwise keep incumbent and no slot",
+    "artifact": null
+  },
+  "limitation": "The public USGS/INGENIOUS catalogue is a development proxy, not the private new-fault labels. Spatially separated tiles do not prove independent Bernoulli outcomes; the nominal SPRT error guarantees are conditional on the preregistered independence/conditional-supermartingale model. No DrivenData leaderboard score is inferred.",
+  "failure": null,
+  "software": {
+    "python": "3.11.2",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "scikit_learn": "1.9.1",
+    "rasterio": "1.4.4"
+  },
+  "report_finalization": {
+    "original_report_assembly_error": "TypeError: dict() got multiple values for keyword argument 'full_catalogue_component_count'",
+    "recovery": "Reconstructed solely from the committed pre-score plan and data/h39y01-progress.json; no fit, tile prediction, or per-tile DTI scoring was rerun. Pooled DTI was re-aggregated from the saved per-tile TP/FP/FN counts; no TIFF was emitted.",
+    "outcome_replay_verified": true,
+    "start_time_persisted": false,
+    "candidate_field_digest_persisted": false,
+    "finalizer_source_sha256": "dc90b199a47a78c4e01fca15d1fcb3526b8d514995bcbe616ff8827bc83e2b9d"
+  }
+}

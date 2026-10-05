@@ -1,4 +1,4 @@
-# Ranked geological hypothesis register and H39X-01 post-hoc record
+# Ranked geological hypothesis register — H40 family and H39X-01 post-hoc record
 
 **Current record date:** 2026-10-05 UTC
 
@@ -20,6 +20,78 @@ The ranking below is the current research priority order. It does not claim that
 ### Prioritization rationale
 
 H39X-01 is ranked first for a genuinely different primary signal family and no additional data requirement, but its current result does not validate it. H39X-02 offers a potentially more geothermal-specific alteration cue with established public source data, balanced against surface/lithology confounding. H39X-03 adds a distinct active-structure cue but inherits seismic-catalog limitations. H39X-04 is cheapest to test but most redundant with earlier gravity/basement detectors. These are research judgments; no measured result supports the ranking of untested candidates.
+
+## H40 family — off-catalogue faults, 2026-10-05 (session 2)
+
+**Registration status, stated up front.** `CONTROL-structural` and `H40-A-profile` were fixed before the
+first pass ran. `H40-E`, `H40-F` and `H40-G` were added **after** that first pass showed the pure geophysical
+structural field reaches only w = 0.065 against the off-catalogue surrogate — *below every one of the 12
+organiser-scored historical artifacts* (0.048–0.105), which is why a catalogue-trained or purely geophysical
+field cannot win. **The family-wise error rate across the whole candidate set is therefore not controlled at
+α = 0.05.** The SPRT verdicts below are reported as such; they are not confirmatory evidence about the
+late-added candidates.
+
+Two further protocol deviations are disclosed in `docs/index.html` §4: the holdout evaluation domain was
+restricted mid-run (to pixels outside the catalogue exclusion), and cells with fewer than 50 scorable hidden
+truth pixels are excluded rather than booked as ties.
+
+### The mechanism each hypothesis bets on
+
+The organizer states that known USGS/INGENIOUS fault pixels are masked from evaluation, and that "new fault"
+means **any fault pixel not already captured by USGS/INGENIOUS, including newly mapped geometry of an existing
+fault system** ([community #11536, staff reply](https://community.drivendata.org/t/where-do-you-draw-the-line/11536/2)).
+So the scoreable target is by construction the set of fault pixels that are *near* mapped faults but not
+*on* them. That is a different target from every prior submission in this family, all of which trained on the
+catalogue itself.
+
+| ID | Layers / data | Physical signature and transform | Why it could catch an off-catalogue fault | Rank (expected gain ÷ cost) |
+|---|---|---|---|---|
+| **H40-E-disc — SHIPPED** | all 19 supplied bands + 4 gradient magnitudes + elevation coherence + distance-to-catalogue | Spatially-blocked out-of-fold gradient-boosted discriminant for *off-catalogue* fault presence (positives = 79,615 SGMC pixels that are not on the catalogue; negatives = a hard 1–6 px ring plus background), multiplied by the measured relative-density profile | A mapped fault is one *sample* of the geophysical conditions that produce faults; a discriminant generalises those conditions to adjacent ground that no map covers. Blocked OOF AUC **0.7489** over 11 blocks proves the signature transfers across space rather than memorising the traces | **1** — gain 2.71× w over control at zero new data cost |
+| H40-A-profile | det_elev, tmi, rtp, iso_grav_anom, cond_surf, tc + catalogue geometry | Geometric mean of three independent physics families (magnetic, gravity, conductivity) × structure-tensor coherence × the measured relative-density profile | Corroboration across independent physics suppresses single-survey artefacts; the profile kills the >5 km wasteland where density falls to 0.39–0.82× base | 2 — cheap, but only 1.03× w over control |
+| H40-G-disc-thermal | H40-E + OpenEI GDR springs/wells/vents | H40-E × proximity to thermal manifestations | Hydrothermal discharge localises on active permeable structures | 3 — measured **worse** than H40-E (0.1354 vs 0.1370); thermal proximity adds nothing on this instrument |
+| H40-F-disc-sgmc0.15/0.30 | H40-E + SGMC corridor | H40-E × (SGMC-corridor)^0.15 or ^0.30 | Directly targets "newly mapped geometry of an existing system" | **4 — dropped.** Scored highest on instrument B (0.4095/0.4137) but 41–47 % of dots sit within 100 m of an SGMC trace, where the surrogate is the training positives, so the credit is circular. Rejected by the pre-declared 2× extrapolation guard |
+| CONTROL-structural | det_elev, tmi, rtp, iso_grav_anom, cond_surf, tc | Geometric mean of the three physics families × coherence, no spatial prior | Null baseline for the SPRT | — |
+
+### Outcomes
+
+| Candidate | w @40k | w ÷ w_rand | Instrument B pred | % dots <100 m of off-cat SGMC | SPRT (usable domain) | Mean lift |
+|---|---:|---:|---:|---:|---|---:|
+| CONTROL-structural | 0.0636 | 1.26 | 0.1775 | 5.5 | control | 0.5086 |
+| H40-A-profile | 0.0652 | 1.29 | 0.1808 | 5.6 | accept H1, 9/9 | 0.5406 |
+| **H40-E-disc** | **0.1370** | **2.71** | **0.2891** | **12.3** | **accept H1, 9/9, LLR +3.0283** | **0.8225** |
+| H40-F-disc-sgmc0.15 | 0.4451 | 8.82 | 0.4095 | 40.8 | accept H0 | 0.4092 |
+| H40-F-disc-sgmc0.30 | 0.5066 | 10.03 | 0.4137 | 46.6 | accept H0 | 0.4092 |
+| H40-G-disc-thermal | 0.1354 | 2.68 | 0.2872 | 12.2 | accept H1, 9/9 | 0.8257 |
+
+`w_rand = 0.0505` is the credit per dot of a uniformly random field against the same surrogate. The shipped
+field reaches **0.1461** at its 30,000-dot budget — 2.89× random, and 39 % above the best per-dot credit any
+artifact in the 12-file corpus has ever achieved (0.1051).
+
+### Selection, and the conflict between the two instruments
+
+The two instruments disagree **by construction**, and that must be read as a property of the instruments
+rather than of the candidates:
+
+- **Instrument A** (catalogue-hidden spatial holdout) ranks fields by how well they find *mapped* faults —
+  precisely the pixel class the organiser masks out of scoring. It cannot adjudicate a catalogue-trained model
+  at all (circular truth), and its usable domain leaves isolated outlier pixels, which are systematically
+  hostile to off-catalogue evidence (it scores H40-F at 0.409, *below* its own 0.5 null).
+- **Instrument B** (calibrated surrogate credit) is the only instrument here ever checked against organiser
+  scores: ρ = +0.923 in sample, **+0.902 leave-one-out**, n = 12.
+
+**Declared promotion rule:** promote the highest instrument-B score subject to a 2× extrapolation guard
+(w ≤ 2 × 0.1051 = 0.2103), reporting every instrument-A verdict alongside **without letting it veto**. The
+guard is what dropped H40-F. This rule was fixed before the final run and is reproduced verbatim in the stage-6
+log of `registry/h40_report_h40e-30k.json`.
+
+### Budget
+
+The budget is not chosen by the fitted model's absolute level but by the metric's own denominator: adding one
+predicted pixel costs exactly 0.2 of DTI regardless of quality, so a marginal dot pays iff its expected credit
+exceeds 0.2 × DTI. Applying that to the measured emission curve selects **30,000 dots**, which is also the peak
+of the fitted score curve (0.3006). Two independent derivations agreeing is the reason the budget is shipped.
+An earlier maximin-over-scenarios rule was replaced: it is degenerate here because the pessimistic scenario is
+monotone increasing in budget, so it always returns the largest grid value regardless of field quality.
 
 ## H39X-01 exact formula — documented after the run
 

@@ -175,6 +175,68 @@ def emit_fast(field, foot, target_n, min_dist=2.7, catalogue=None, cat_buffer_px
         pool_n = min(allowed_n, max(pool_n + 1, pool_n * 2))
 
 
+def emit_sequence(field, foot, max_n, min_dist=2.7, catalogue=None, cat_buffer_px=0):
+    """Best-first Poisson-disk emission that returns the *acceptance order*.
+
+    Same greedy rule as :func:`emit_fast` (pixels visited in descending field
+    order, accepted when at least ``min_dist`` from every already-accepted
+    point), but instead of stopping at a budget it records the ordered list of
+    accepted pixels up to ``max_n``.  Because the rule is a prefix-stable
+    greedy, ``emit_prefix(seq, k)`` is exactly what ``emit_fast`` would return
+    for budget ``k`` -- so a whole budget sweep costs one emission instead of
+    one per budget.  The candidate pool is always the full allowed set, which
+    is what makes the prefixes identical across budgets.
+    """
+    foot = np.asarray(foot, bool)
+    f = np.asarray(field, np.float32)
+    if f.shape != foot.shape:
+        raise ValueError("field and footprint shape mismatch")
+    if max_n <= 0:
+        return np.zeros((0, 2), np.int32)
+    blocked = _catalogue_block(catalogue, foot, cat_buffer_px)
+    allowed = foot & ~blocked & np.isfinite(f) & (f > 0)
+    ys, xs = np.nonzero(allowed)
+    if ys.size == 0:
+        return np.zeros((0, 2), np.int32)
+    order = np.argsort(-f[ys, xs], kind="stable")
+    ys, xs = ys[order], xs[order]
+    H, W = f.shape
+    r2 = float(min_dist) * float(min_dist)
+    cell = max(1.0, float(min_dist))
+    grid_d: dict = {}
+    out = []
+    for i in range(ys.size):
+        y, x = int(ys[i]), int(xs[i])
+        cy, cx = int(y // cell), int(x // cell)
+        ok = True
+        for gy in range(cy - 2, cy + 3):
+            for gx in range(cx - 2, cx + 3):
+                for ky, kx in grid_d.get((gy, gx), ()):
+                    if (y - ky) ** 2 + (x - kx) ** 2 < r2:
+                        ok = False
+                        break
+                if not ok:
+                    break
+            if not ok:
+                break
+        if ok:
+            out.append((y, x))
+            grid_d.setdefault((cy, cx), []).append((y, x))
+            if len(out) >= max_n:
+                break
+    return np.asarray(out, np.int32).reshape(-1, 2)
+
+
+def emit_prefix(seq, k, shape):
+    """Rasterise the first ``k`` points of an :func:`emit_sequence` result."""
+    m = np.zeros(shape, bool)
+    if len(seq):
+        s = seq[: int(k)]
+        if s.size:
+            m[s[:, 0], s[:, 1]] = True
+    return m
+
+
 def greedy_maxcover(field, foot, max_n, catalogue=None, cat_buffer_px=2, verbose=False):
     """Lazy-greedy max-coverage. Use only for small budgets (≤ 5k) or primaries."""
     f = np.asarray(field, np.float32) * foot

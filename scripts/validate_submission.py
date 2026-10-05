@@ -36,6 +36,17 @@ def main() -> int:
         default=str(ROOT / "data" / "sample_submission.tif"),
         help="Competition sample GeoTIFF (default: data/sample_submission.tif)",
     )
+    parser.add_argument(
+        "--outside",
+        choices=("auto", "zeros", "nan"),
+        default="auto",
+        help=(
+            "Outside-footprint encoding to validate. 'auto' detects it from the file. "
+            "'zeros' is the all-finite encoding that avoids both documented causes of the "
+            "portal's 'Predicted values must be in range [0, 1]' rejection; 'nan' is the "
+            "encoding the problem page literally describes."
+        ),
+    )
     args = parser.parse_args()
     path = Path(args.file)
     ref_path = Path(args.reference)
@@ -86,11 +97,7 @@ def main() -> int:
                 abs(src.transform.a) == 100.0 and abs(src.transform.e) == 100.0,
                 f"pixel_size=({src.transform.a},{src.transform.e})",
             )
-            check(
-                "nodata_nan",
-                src.nodata is not None and bool(np.isnan(src.nodata)),
-                f"nodata={src.nodata}",
-            )
+            nodata = src.nodata
 
         # Validate all prediction cells. NaN is allowed only outside the sample footprint.
         inside = array[footprint]
@@ -103,7 +110,44 @@ def main() -> int:
             bool(in_range.all()),
             f"min={float(np.nanmin(inside)):.8g} max={float(np.nanmax(inside)):.8g}",
         )
-        check("nan_only_outside_footprint", bool(np.isnan(outside).all()), f"outside_nan={int(np.isnan(outside).sum()):,}/{outside.size:,}")
+        # Which outside-footprint encoding is this file using?
+        out_nan = int(np.isnan(outside).sum())
+        out_zero = int((outside == 0).sum())
+        mode = args.outside
+        if mode == "auto":
+            mode = "nan" if out_nan > 0 else "zeros"
+        print(f"  outside_footprint_encoding: {mode}")
+
+        if mode == "nan":
+            check(
+                "nodata_nan",
+                nodata is not None and bool(np.isnan(nodata)),
+                f"nodata={nodata}",
+            )
+            check(
+                "nan_only_outside_footprint",
+                out_nan == outside.size,
+                f"outside_nan={out_nan:,}/{outside.size:,}",
+            )
+        else:
+            # All-finite encoding: the strongest possible guard against the portal's
+            # range rejection. Both documented causes are excluded by construction:
+            # no -3.4e38 sentinel can be written through and no NaN nodata tag exists.
+            sentinel_ok = (
+                nodata is None
+                or (np.isfinite(nodata) and abs(float(nodata)) <= 1.0)
+            )
+            check("no_nodata_sentinel", bool(sentinel_ok), f"nodata={nodata}")
+            check(
+                "zeros_only_outside_footprint",
+                out_zero == outside.size,
+                f"outside_zero={out_zero:,}/{outside.size:,}",
+            )
+            check(
+                "all_finite_everywhere",
+                bool(np.isfinite(array).all()),
+                f"non_finite={int((~np.isfinite(array)).sum()):,}/{array.size:,}",
+            )
         check("no_infinity_anywhere", not bool(np.isinf(array).any()), f"infinities={int(np.isinf(array).sum())}")
         positive = int(np.count_nonzero((array > 0.0) & footprint))
         print(f"  positive_pixels_inside: {positive:,}")
