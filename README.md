@@ -48,6 +48,10 @@ These are hypotheses, not results. The top candidate must beat the current holdo
 
 No score, data download, external research result, or “highest submission” claim is fabricated. The SPRT is for sequential holdout comparison; it does not correct selection among many candidate hypotheses. Use a pre-registered candidate family and account for portfolio selection separately.
 
+## Research register and full project brief
+
+The ranked hypotheses, source register, validation gate, and limitations are maintained in [docs/research-brief.md](docs/research-brief.md). The original task brief is preserved in the session request; claims are intentionally not promoted to facts unless locally reproducible or linked to an official source.
+
 ## Core values
 
 **Maximize P(Win. Own the Outcome.** Every failure is explicit, logged, and actionable; no silent fallback is allowed for a real submission.
