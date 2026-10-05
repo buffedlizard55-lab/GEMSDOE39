@@ -617,3 +617,103 @@ tests/                       smoke tests
    agreement proves mirror *integrity*, not organizer *authentication*.
 5. **AI disclosure** is required by the competition rules; this repository's methods must be described in
    the submission narrative.
+
+
+---
+
+## Merged contribution: the H40-F candidate, and why it is NOT the recommended upload
+
+A second audit ran on this branch in parallel and produced a **different** candidate:
+`docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T080000Z-nan.tif` (45,962 dots,
+SHA-256 `fbb4c10726adfffddcc912513e8e7ffd19bc0c7428d2351106f25524807f7e1a`,
+14/14 format checks, max Jaccard 0.0093 against 22 mirrored artifacts, byte-reproducible).
+Full audit trail: `docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T080000Z-manifest.json`
+and `docs/research/h40-hypotheses.md`.
+
+**It is not recommended, and the reason is a measurement, not a preference.** It was
+selected on instrument **I2 = DTI against off-catalogue USGS SGMC faults**. That
+instrument has no demonstrated predictive validity:
+
+| instrument | Spearman vs 30 owner-reported live scores | p | partial, given log(n_pos) | partial p |
+|---|---|---|---|---|
+| `n_pos` (budget) | **−0.686** | **2.9e−5** | −0.063 | 0.743 |
+| `frac_on_cat` | −0.598 | 4.9e−4 | — | — |
+| `C_cat` (visible-catalogue DTI) | −0.369 | 0.045 | +0.089 | 0.641 |
+| **`C_cat_masked`** | — | — | **+0.499** | **0.0050** |
+| `H_pooled` (catalogue-hidden, blocked) | −0.104 | 0.585 | −0.057 | 0.764 |
+| **`S_sgmc` (= H40-F's instrument I2)** | −0.242 | 0.198 | **+0.010** | **0.960** |
+
+Source: `registry/instrument_calibration.json` (30 artifacts × 12 cells), **reproduced
+independently during this merge** from `registry/forensics_artifacts.csv`
+(`spearman(dti_sgmc_off, score) = −0.080, p = 0.674`). Both computations agree: the
+SGMC-off instrument carries no signal once the budget confound is removed.
+
+Two further facts from the same corpus make the case against H40-F specifically:
+
+* The artifact with the **highest** `dti_sgmc_off` in the corpus (0.4542) scored
+  **0.0297** — near the bottom. The two **highest** live scorers (0.2708, 0.2600) have
+  `dti_sgmc_off` of only 0.0963 and 0.0953, near the low end.
+* `n_pos` is the single strongest predictor and it is **negative**. H40-F emits 45,962
+  dots against the 0.2778 artifact's 37,654 and the recommended file's 30,000 — it
+  moves *against* the strongest signal in the data.
+
+H40-F is a supervised discriminant trained on the same SGMC-off population its
+instrument measures, held out by spatial fold and audited for fold alignment
+(`fold(block) == block mod 4` for all 24 blocks). The fold holdout removes
+*training* leakage; it cannot remove *population* leakage — a model trained to find
+SGMC-off faults will score well against SGMC-off faults whether or not that
+population is what the organizer labels. The parallel audit reached the same
+conclusion by a different route: its extrapolation guard **dropped** its own
+SGMC-trained discriminants (`H40-F-disc-sgmc0.15/0.30`, instrument statistic
+w = 0.445/0.507 against a fitted range of [0.048, 0.105]) for exactly this reason.
+
+**What survives from that audit and is kept:**
+
+1. **The inverse-DTI calibration** (`src/gems39/calibrate.py`). Independent of any
+   instrument: `|G| = 14,143` [13,987–14,434] solved from the nested pair
+   40,199 dots → 0.2708 and 37,654 dots → 0.2778, differing by exactly 2,545 dots at
+   1.414–2.000 px from the catalogue. One two-parameter model reproduces 0.2778
+   exactly and 0.2707 against the observed 0.2708. Denominator at the anchor:
+   `0.2·TP` 5.6%, `0.2·FP` 37.0%, **`0.8·|G|` 57.4% — a fixed cost nobody can move.**
+   Reaching 0.3262 needs +18.6% hit rate; budget tuning cannot do it.
+2. **Binary emission is provably optimal.** `0.8·|G|` is constant, so `DTI(c·p)` is
+   monotone in `c` and the inclusion rule is independent of `p`. Pinned by
+   `tests/test_h40_calibration.py::test_binary_emission_is_never_worse_than_scaling_down`.
+3. **The additive fold statistic.** `fold_score_delta` satisfies the exact identity
+   `delta = D_cand·(s_cand − s_anchor)`, which sums over folds to the pooled change —
+   licensed by staff confirmation that the score is *pooled*
+   ([thread 11550](https://community.drivendata.org/t/leaderboard-aggregation-pooled-over-public-test-pixels-or-mean-of-per-chunk-scores/11550/2)).
+   A per-fold-DTI test is not a test of the pooled claim; this is.
+4. **Wald's normal-mean SPRT** (`sprt_normal_mean`) so fold magnitudes are not
+   discarded by binarisation, reported alongside the sign test.
+5. **Six defects fixed in shared code** — see `docs/research/h40-hypotheses.md` §5
+   items 12–17: the `hit_rate` numerator/denominator mismatch, the H40-F fold-grid
+   misalignment, the I1 collar that swallowed every component, `_robust_unit`
+   clipping ~25,500 pixels into a tie, `trim_to_budget` returning a permuted subset,
+   and the break-even price evaluated at the anchor's score instead of the
+   candidate's. Plus two OOM kills (exit 137) in `read_all_bands` and the ridge
+   backbone, both now streamed.
+6. **The outside-encoding question is settled on evidence, and it favours zeros.**
+   `gemsdoe9-PLACEHOLDER-2314b599.tif` carries **196,132 finite non-zero pixels
+   outside the footprint** with `nodata=None` and still received an organizer score
+   (0.0107), while `8GEMSDOE_Hedge-v2` and the `gems10-*` artifacts are all-NaN
+   outside and also scored. **Both encodings are demonstrably accepted.** Given
+   that, the all-finite zeros twin is strictly safer against the specific error the
+   owner reported — `Predicted values must be in range [0, 1]` — because no cell in
+   it can be NaN or a `-3.4e38` sentinel. This reverses the NaN recommendation that
+   the parallel audit had written into its own pages, and the reversal is recorded
+   here rather than applied silently.
+7. **The H40 hypothesis register** (`docs/research/h40-hypotheses.md`): seven ranked
+   candidates with layers, signatures, literature links and novelty statements, plus
+   the negative results — no play-fairway gate (stress favourability, heat flow,
+   deep reservoir temperature, strain/seismic, tilt, tip corridors) improved on the
+   supervised channel on I2 at any exponent tested, and the tip-continuation channel
+   H40-G is 2.10–2.26× the anchor on the catalogue-hidden instrument while being
+   ~1.05× on I2, exactly what a catalogue-continuation detector should do.
+
+**Multiplicity caveat that applies to both audits.** 19 fusion variants were
+measured on one instrument here and the best promoted; the parallel audit screened
+6 candidates on one instrument. Neither has an untouched confirmation set — none
+exists offline. At α = 0.05 across that many tries a spurious `accept_H1` is
+materially possible. This is the first thing a reviewer should attack, and it is the
+largest statistical caveat on *any* promotion claim in this repository.

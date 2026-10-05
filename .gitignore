@@ -12,11 +12,9 @@ data/external/
 data/raw_parts/
 data/restore_receipt.json
 data/prepared_manifest.json
-
 # Local dev
 *.log
 .DS_Store
-
 # Data files (restored; do not commit)
 data/*.tif
 data/*.csv
@@ -24,6 +22,12 @@ data/*.pdf
 data/*.json
 data/external/*.tif
 data/scored/*.tif
-
+# H40 round: large local-only intermediates and restored mirror payloads
+artifacts/h40_channels.npz
+artifacts/h40_raw_channels.npz
+data/external2/
+data/calib/
+data/scored/
+artifacts/h40f_foldmap.npz
 # Whole data directory is restored regenerable content (822 MB; mirrors, caches, comparison corpus)
 data/
