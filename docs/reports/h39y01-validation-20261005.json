@@ -806,10 +806,10 @@
   },
   "report_finalization": {
     "original_report_assembly_error": "TypeError: dict() got multiple values for keyword argument 'full_catalogue_component_count'",
-    "recovery": "Reconstructed solely from the committed pre-score plan and data/h39y01-progress.json; no fit, candidate scoring, DTI computation, or TIFF emission was rerun.",
+    "recovery": "Reconstructed solely from the committed pre-score plan and data/h39y01-progress.json; no fit, tile prediction, or per-tile DTI scoring was rerun. Pooled DTI was re-aggregated from the saved per-tile TP/FP/FN counts; no TIFF was emitted.",
     "outcome_replay_verified": true,
     "start_time_persisted": false,
     "candidate_field_digest_persisted": false,
-    "finalizer_source_sha256": "32bb2b7c809d81652be696d926e19df581368ed0687fc32f9adeda8ff415c573"
+    "finalizer_source_sha256": "dc90b199a47a78c4e01fca15d1fcb3526b8d514995bcbe616ff8827bc83e2b9d"
   }
 }

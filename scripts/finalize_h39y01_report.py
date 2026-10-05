@@ -5,10 +5,12 @@ The locked evaluator stopped correctly at its SPRT boundary but its final
 report assembly hit a duplicate-key TypeError after the boundary. This recovery
 script verifies the saved per-tile outcomes and SPRT arithmetic, reconstructs
 only the already-registered geometry/metadata, and writes the report. It never
-fits a model, computes candidate DTI, or generates a TIFF.
+fits a model, reruns tile predictions or per-tile DTI scoring, or generates a TIFF.
+Pooled DTI is re-aggregated from the saved per-tile TP/FP/FN counts.
 """
 from __future__ import annotations
 
+import argparse
 import datetime as dt
 import hashlib
 import json
@@ -73,7 +75,7 @@ def _markdown(report: dict[str, Any]) -> str:
         "",
         f"- Pre-score data/grid/training-pool lock: [`h39y01-preflight-20261005.json`](h39y01-preflight-20261005.json).",
         f"- Machine-readable paired outcomes: [`h39y01-validation-20261005.json`](h39y01-validation-20261005.json).",
-        f"- The evaluator reached `accept_H0` and stopped as registered. Its post-stop report assembly then raised a duplicate-key `TypeError`; this report was reconstructed from the saved progress outcomes and pre-score lock. No fold was refit, no DTI was recomputed, and no candidate artifact was generated during recovery.",
+        f"- The evaluator reached `accept_H0` and stopped as registered. Its post-stop report assembly then raised a duplicate-key `TypeError`; this report was reconstructed from the saved progress outcomes and pre-score lock. No fold was refit and no tile predictions or per-tile DTI scoring were rerun. Pooled DTI was re-aggregated from the saved per-tile TP/FP/FN counts; no candidate artifact was generated during recovery.",
         f"- The original evaluator did not persist its start timestamp or continuous candidate-field digest in the progress file; those fields are reported as unavailable rather than reconstructed from outcome data.",
         "",
         "## Source for scoring-mask geometry",
@@ -85,6 +87,13 @@ def _markdown(report: dict[str, Any]) -> str:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--replace-existing",
+        action="store_true",
+        help="Replace an existing report only if its scored outcomes match the saved progress exactly",
+    )
+    args = parser.parse_args()
     if not PRECHECK_PATH.is_file() or not PROGRESS_PATH.is_file():
         raise SystemExit("Required preflight or saved progress file is missing; refusing to infer outcomes")
     preflight = json.loads(PRECHECK_PATH.read_text())
@@ -154,18 +163,24 @@ def main() -> int:
     report["comparator"]["feature_names_note"] = "The evaluator did not persist the sorted feature-name list; the exact stack implementation is SHA-256 pinned."
     report["report_finalization"] = dict(
         original_report_assembly_error="TypeError: dict() got multiple values for keyword argument 'full_catalogue_component_count'",
-        recovery="Reconstructed solely from the committed pre-score plan and data/h39y01-progress.json; no fit, candidate scoring, DTI computation, or TIFF emission was rerun.",
+        recovery="Reconstructed solely from the committed pre-score plan and data/h39y01-progress.json; no fit, tile prediction, or per-tile DTI scoring was rerun. Pooled DTI was re-aggregated from the saved per-tile TP/FP/FN counts; no TIFF was emitted.",
         outcome_replay_verified=True,
         start_time_persisted=False,
         candidate_field_digest_persisted=False,
         finalizer_source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
     )
     if REPORT_PATH.exists() or MARKDOWN_PATH.exists():
-        raise SystemExit("Final report already exists; refusing to overwrite it")
+        if not args.replace_existing or not (REPORT_PATH.is_file() and MARKDOWN_PATH.is_file()):
+            raise SystemExit("Final report exists; use --replace-existing to update it after outcome verification")
+        previous = json.loads(REPORT_PATH.read_text())
+        identity_keys = ("candidate_id", "status", "sprt", "evaluated_tiles", "pooled_dti")
+        if any(previous.get(key) != report.get(key) for key in identity_keys):
+            raise SystemExit("Existing report outcomes differ from replayed saved progress; refusing to replace")
     _write_report(REPORT_PATH, report)
     MARKDOWN_PATH.write_text(_markdown(report))
     print(f"Replayed {len(outcomes)} saved outcomes; SPRT={sprt.decision}, LLR={sprt.llr:.9f}")
-    print(f"No scoring or TIFF generation performed. Report: {REPORT_PATH.relative_to(ROOT)}")
+    print("No model fit, tile prediction, or per-tile DTI scoring rerun; pooled DTI aggregated from saved TP/FP/FN. No TIFF generated.")
+    print(f"Report: {REPORT_PATH.relative_to(ROOT)}")
     return 0
 
 
