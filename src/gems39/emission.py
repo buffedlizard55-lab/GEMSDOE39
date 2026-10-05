@@ -85,64 +85,94 @@ def dot_thin_poisson(support, min_dist=2.8, order=None):
 
 
 def _catalogue_block(catalogue, foot, cat_buffer_px):
-    if catalogue is None or cat_buffer_px <= 0:
-        return np.zeros(foot.shape, bool)
-    d = distance_transform_edt(~(catalogue & foot))
-    return (d <= cat_buffer_px)
+    """Return the exact/near-catalogue cells excluded from emission.
 
-
-def emit_fast(field, foot, target_n, min_dist=2.7, catalogue=None, cat_buffer_px=2):
-    """Match-budget fast best-first Poisson-disk emission.
-
-    Take the top `candidate_mult * target_n` pixels by field value and iterate
-    in descending order, adding each pixel if it is farther than `min_dist`
-    from any already-added dot. This is best-first thinning over a pre-screened
-    candidate set (O(cand_n) with spatial hash grid), much faster than
-    quantile-binary-search raster-order variants.
+    A zero-pixel buffer means exclude the catalogue cells themselves; it does
+    not disable masking. The competition organizer clarified that known-fault
+    pixels are excluded from scoring, but did not say that a 200 m halo is
+    masked. Buffering neighboring pixels can therefore throw away useful DTI
+    credit for a distinct new fault.
     """
-    candidate_mult = 6
+    if catalogue is None:
+        return np.zeros(foot.shape, bool)
+    if cat_buffer_px < 0:
+        raise ValueError("cat_buffer_px must be non-negative")
+    known = np.asarray(catalogue, bool) & np.asarray(foot, bool)
+    if known.shape != foot.shape:
+        raise ValueError("catalogue and footprint shape mismatch")
+    if not known.any():
+        return np.zeros(foot.shape, bool)
+    d = distance_transform_edt(~known)
+    return d <= float(cat_buffer_px)
+
+
+def emit_fast(field, foot, target_n, min_dist=2.7, catalogue=None, cat_buffer_px=0):
+    """Best-first Poisson-disk emission with a matched positive-pixel budget.
+
+    Pixels are ordered by detector score and accepted if they are at least
+    ``min_dist`` pixels from previously accepted points. The top-k pool expands
+    until the requested budget is met or every allowed pixel has been examined;
+    unlike the earlier fixed 6x pool, this does not silently underfill merely
+    because high-ranked points clustered too tightly.
+    """
+    foot = np.asarray(foot, bool)
     f = np.asarray(field, np.float32)
-    f = np.where(foot, f, -np.inf).astype(np.float32)
+    if f.shape != foot.shape:
+        raise ValueError("field and footprint shape mismatch")
+    if target_n < 0:
+        raise ValueError("target_n must be non-negative")
+    if min_dist < 0:
+        raise ValueError("min_dist must be non-negative")
+    if target_n == 0:
+        return np.zeros(foot.shape, bool)
     blocked = _catalogue_block(catalogue, foot, cat_buffer_px)
-    allowed = foot & ~blocked
-    flat = f.reshape(-1)
-    cand_n = int(min(candidate_mult * target_n, int(allowed.sum())))
-    # partial sort for top-k
-    idx = np.argpartition(flat, -cand_n)[-cand_n:]
-    vals = flat[idx]
-    # sort descending
-    order = np.argsort(-vals)
-    idx_sorted = idx[order]
-    r2 = min_dist * min_dist
-    cell = max(1.0, float(min_dist))
-    grid_d = {}
-    out = np.zeros(f.shape, bool)
+    allowed = foot & ~blocked & np.isfinite(f)
+    if not allowed.any():
+        return np.zeros(foot.shape, bool)
+    score = np.where(allowed, f, -np.inf).astype(np.float32, copy=False)
+    flat = score.reshape(-1)
+    allowed_n = int(allowed.sum())
+    target_n = min(int(target_n), allowed_n)
     H, W = f.shape
-    chosen = 0
+    r2 = float(min_dist) * float(min_dist)
+    cell = max(1.0, float(min_dist))
     r = int(np.ceil(min_dist))
-    for flat_i in idx_sorted:
-        y, x = int(flat_i // W), int(flat_i % W)
-        if not allowed[y, x] or f[y, x] <= 0:
-            continue
-        cy, cx = int(y // cell), int(x // cell)
-        ok = True
-        for gy in range(cy - 2, cy + 3):
-            for gx in range(cx - 2, cx + 3):
-                for (ky, kx) in grid_d.get((gy, gx), ()):
-                    if (y - ky) ** 2 + (x - kx) ** 2 < r2:
-                        ok = False
+    pool_n = min(allowed_n, max(target_n, 6 * target_n))
+
+    while True:
+        if pool_n == allowed_n:
+            idx = np.flatnonzero(np.isfinite(flat))
+        else:
+            idx = np.argpartition(flat, -pool_n)[-pool_n:]
+        idx = idx[np.argsort(-flat[idx], kind="stable")]
+        grid_d = {}
+        out = np.zeros(f.shape, bool)
+        chosen = 0
+        for flat_i in idx:
+            y, x = divmod(int(flat_i), W)
+            if flat[y * W + x] <= 0:
+                continue
+            cy, cx = int(y // cell), int(x // cell)
+            ok = True
+            for gy in range(cy - 2, cy + 3):
+                for gx in range(cx - 2, cx + 3):
+                    for ky, kx in grid_d.get((gy, gx), ()):
+                        if (y - ky) ** 2 + (x - kx) ** 2 < r2:
+                            ok = False
+                            break
+                    if not ok:
                         break
                 if not ok:
                     break
-            if not ok:
-                break
-        if ok:
-            out[y, x] = True
-            chosen += 1
-            grid_d.setdefault((cy, cx), []).append((y, x))
-            if chosen >= target_n:
-                break
-    return out
+            if ok:
+                out[y, x] = True
+                chosen += 1
+                grid_d.setdefault((cy, cx), []).append((y, x))
+                if chosen >= target_n:
+                    return out
+        if pool_n == allowed_n:
+            return out
+        pool_n = min(allowed_n, max(pool_n + 1, pool_n * 2))
 
 
 def greedy_maxcover(field, foot, max_n, catalogue=None, cat_buffer_px=2, verbose=False):

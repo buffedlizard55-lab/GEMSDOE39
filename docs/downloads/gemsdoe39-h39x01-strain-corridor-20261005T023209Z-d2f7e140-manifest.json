@@ -1,0 +1,381 @@
+{
+  "schema_version": 2,
+  "name": "gemsdoe39-h39x01-strain-corridor-20261005T023209Z-d2f7e140",
+  "note_for_drivendata": "GEMSDOE39 H39X-01 geodetic strain/dilatation corridor | budget 44090; exact known-fault mask; exploratory post-hoc candidate; not eligible for a weekly submission slot.",
+  "hypothesis_id": "H39X-01-strain-dilatation-corridor",
+  "created_utc": "2026-10-05T02:32:09.890632+00:00",
+  "method": {
+    "detector": "robust-rank geodetic second-invariant and shear amplitude; multi-scale strain-invariant line response; paired local dilatation or dilatation-gradient support",
+    "feature_bands": [
+      "geod_2ndinv",
+      "geod_shearrate",
+      "geod_dilaterate",
+      "det_elev",
+      "tmi",
+      "det_elev_slope"
+    ],
+    "feature_transform_parameters": {
+      "robust_quantiles": [
+        0.02,
+        0.995
+      ],
+      "dilatation_gaussian_sigma_px": 1.5,
+      "dilatation_pair_window_px": 7,
+      "dilatation_gradient_sigma_px": 3.0,
+      "strain_invariant_line_scales_px": [
+        2.0,
+        4.0
+      ],
+      "linear_weights": {
+        "strain_amplitude": 0.5,
+        "line_response": 0.3,
+        "dilatation_support": 0.2
+      }
+    },
+    "emitter": {
+      "type": "best-first Poisson-disk",
+      "target_pixels": 44090,
+      "min_distance_px": 2.7,
+      "known_fault_buffer_px": 0
+    },
+    "prediction_encoding": "binary float32 0/1 inside footprint; NaN outside",
+    "source_prediction_copied": false,
+    "candidate_feature_bands": [
+      "geod_2ndinv",
+      "geod_shearrate",
+      "geod_dilaterate"
+    ],
+    "incumbent_feature_bands": [
+      "det_elev",
+      "tmi",
+      "det_elev_slope"
+    ],
+    "band_preprocessing": {
+      "names_from": "GeoTIFF band_name tag or band description; no numeric-order inference",
+      "valid_cells": "finite and greater than the float32 nodata sentinel threshold",
+      "invalid_in_footprint": "nearest-valid fill",
+      "clip_quantiles": [
+        0.001,
+        0.999
+      ],
+      "outside_footprint_value": 0.0
+    }
+  },
+  "inputs": {
+    "provenance": "SHA-256-pinned owner mirror; hashes verify mirror integrity, not organizer authentication",
+    "sha256": {
+      "training_features": "4371c82e3b8339b807bdffcf4ef59a225520fe2988d521be208ae33743123bc5",
+      "labels": "7ba308ccdc4418b31a178f4f1ef21aaa6e152e4028f2f6f64b01f7eb25ae4093",
+      "existing_faults": "7ba308ccdc4418b31a178f4f1ef21aaa6e152e4028f2f6f64b01f7eb25ae4093",
+      "sample_submission": "2176d08e485aa2cd2860ce8df539db4faf4d76163b38a4dd8c30a40454d35cbc",
+      "ext_lidar_scarp_features_u8": "d580bb8bdcdb941e32fefb8b38044bc5bf04e199bf2e83498c3576e6fc465568",
+      "ext_geodawn_rad_u8": "c22420f75999030d7cc65c9e31e50d232ea6158423bca051613a18a8b20ba682",
+      "ext_geodawn_extensions_u8": "a35a9c6d2a14786f4dab85481ee59769213072f5dab5b2535ea82ae4d9bb7d9b",
+      "ext_derived_sgmc_faults_100m_u8": "643cbe992ef4ba37588fb469163ed8291e3ceb23d6c1f78a3cfaa462430c2da0",
+      "ext_gdr_wellspring_in_footprint": "122718e65bdf55aab0ee12ad20d80062f0deb1de957225a61ad880dd5dc196ea",
+      "ext_gdr_qfaults_traces": "9702f2e5c382a4f472ae834d22b94990983b059677a37adfafd51c50f75e643c",
+      "ext_gdr_volcanic_vents_in_footprint": "f91bafbaccaaf2754e71d60434fc0f9eb2c7b880c6e714883f4974542ff6a0bf",
+      "scored_h19_5": "ec1f9b56b83ce33cad781ceb9f104b18fb4f2ff785263a4e89616af4aabdee8d",
+      "scored_h19_4": "89109a3bd2cd3b12e7a0f388113c519843acfc9c4f46825affefc3e63dd99b22",
+      "scored_h16_1": "055309694ed499ca3d87e76b3f5e81c292aef6e39c418d33ff5a817aa1309bea",
+      "scored_d15_scored": "68d0e2e4fcc594f9a23f56c44b885fee733d026d39be55e18ad2a07289525310",
+      "scored_d28_unscored": "91eae1ca42ec845eaa8c2ba32da49806e24751743459b8a10017c479bbe639b8",
+      "calib_13gems_20261001_r13-lattice-s5_v2_nan-ou": "b4570b406efec198eb2f4d142ad8d0d6184b14b66f2f52b5c4d697f0647dc9b2",
+      "calib_8GEMSDOE_Hedge-v2_submission": "052688eafbc7a55d90caab72252a50304fe5caa8ecf973f8e791b4ae910f0792",
+      "calib_gems10-h25-ctx-ridge-20260927T2329477041": "1381e784fb8b8340beffd0e735ac9eea89ad35d1a807f8a9bab5506e3fc8275e",
+      "calib_gems10-h28-dotted-ridge-20260928T0202562": "7637b72d4c6c3e10226bf46bd72a20272d62ccbe29743062632d10b158b49c58",
+      "calib_gemsdoe-ens12-adopted-7f00890a": "7f00890a62878d612fb5eef67a9a364a2df819433dde74b6762ce4fc0fc4fe15",
+      "calib_gemsdoe9-PLACEHOLDER-2314b599": "2314b59920bfeeaf6a592d4868b25eca62212825620f9945723c2f6d0a2e5b22",
+      "scored_gems27_tgc_v2_d15": "33003374335d84bf885f2d8f5e9dd4c57044c8ec58fa6a0d7fa581e8bc41c11d"
+    }
+  },
+  "holdout": {
+    "proxy_only": true,
+    "description": "Exposed exploratory proxy holdout: four geographic quadrants; hide whole 8-connected catalogue components totaling approximately 20% of each fold's label pixels; 1.5 km inward collar; seed 20261005; not the private expert-label test set. Exact H39X-01 formula was recorded after scoring; do not reuse for confirmation.",
+    "fold_order": [
+      "NW",
+      "NE",
+      "SW",
+      "SE"
+    ],
+    "seed": 20261005,
+    "hide_fraction": 0.2,
+    "collar_px": 15,
+    "candidate_pooled_dti": 0.05294427907166881,
+    "incumbent_pooled_dti": 0.024762851758288674,
+    "candidate_unweighted_fold_mean": 0.03510245293041356,
+    "incumbent_unweighted_fold_mean": 0.024915371202707,
+    "candidate_wins": 2,
+    "fold_results": [
+      {
+        "fold": "NW",
+        "hidden_components": 130,
+        "hidden_truth_pixels": 1905,
+        "candidate": {
+          "tp": 16.848779993884165,
+          "fp": 604.0331843176564,
+          "fn": 1888.1512200061159,
+          "n_truth": 1905,
+          "dti": 0.01022268008864251
+        },
+        "incumbent": {
+          "tp": 93.50867376423493,
+          "fp": 8100.047792605312,
+          "fn": 1811.491326235765,
+          "n_truth": 1905,
+          "dti": 0.029565984717953353
+        },
+        "candidate_wins_fold": false,
+        "sprt_after_fold": {
+          "decision": "continue",
+          "n": 1,
+          "llr": -0.5108256237659905,
+          "upper": 2.995732273553991,
+          "lower": -2.3025850929940455,
+          "p0": 0.5,
+          "p1": 0.7,
+          "alpha": 0.05,
+          "beta": 0.1,
+          "wins": 0,
+          "losses": 1,
+          "outcomes": [
+            false
+          ],
+          "boundary_method": "Ville-safe likelihood-ratio bounds",
+          "validity_assumption": "independent Bernoulli block outcomes / valid conditional supermartingale"
+        },
+        "candidate_emitted_pixels": 44090,
+        "incumbent_emitted_pixels": 44090
+      },
+      {
+        "fold": "NE",
+        "hidden_components": 138,
+        "hidden_truth_pixels": 2337,
+        "candidate": {
+          "tp": 0.0,
+          "fp": 4.0,
+          "fn": 2337.0,
+          "n_truth": 2337,
+          "dti": 0.0
+        },
+        "incumbent": {
+          "tp": 67.79974179694615,
+          "fp": 13915.131595171766,
+          "fn": 2269.2002582030536,
+          "n_truth": 2337,
+          "dti": 0.014530011858016778
+        },
+        "candidate_wins_fold": false,
+        "sprt_after_fold": {
+          "decision": "continue",
+          "n": 2,
+          "llr": -1.021651247531981,
+          "upper": 2.995732273553991,
+          "lower": -2.3025850929940455,
+          "p0": 0.5,
+          "p1": 0.7,
+          "alpha": 0.05,
+          "beta": 0.1,
+          "wins": 0,
+          "losses": 2,
+          "outcomes": [
+            false,
+            false
+          ],
+          "boundary_method": "Ville-safe likelihood-ratio bounds",
+          "validity_assumption": "independent Bernoulli block outcomes / valid conditional supermartingale"
+        },
+        "candidate_emitted_pixels": 44090,
+        "incumbent_emitted_pixels": 44090
+      },
+      {
+        "fold": "SW",
+        "hidden_components": 207,
+        "hidden_truth_pixels": 3707,
+        "candidate": {
+          "tp": 514.2832907104947,
+          "fp": 21487.512286556834,
+          "fn": 3192.716709289505,
+          "n_truth": 3707,
+          "dti": 0.06981891735341707
+        },
+        "incumbent": {
+          "tp": 168.54333464098437,
+          "fp": 10306.807853579397,
+          "fn": 3538.4566653590155,
+          "n_truth": 3707,
+          "dti": 0.033304547960320625
+        },
+        "candidate_wins_fold": true,
+        "sprt_after_fold": {
+          "decision": "continue",
+          "n": 3,
+          "llr": -0.685179010910768,
+          "upper": 2.995732273553991,
+          "lower": -2.3025850929940455,
+          "p0": 0.5,
+          "p1": 0.7,
+          "alpha": 0.05,
+          "beta": 0.1,
+          "wins": 1,
+          "losses": 2,
+          "outcomes": [
+            false,
+            false,
+            true
+          ],
+          "boundary_method": "Ville-safe likelihood-ratio bounds",
+          "validity_assumption": "independent Bernoulli block outcomes / valid conditional supermartingale"
+        },
+        "candidate_emitted_pixels": 44090,
+        "incumbent_emitted_pixels": 44090
+      },
+      {
+        "fold": "SE",
+        "hidden_components": 121,
+        "hidden_truth_pixels": 3191,
+        "candidate": {
+          "tp": 367.0736170642403,
+          "fp": 17271.814843752505,
+          "fn": 2823.9263829357596,
+          "n_truth": 3191,
+          "dti": 0.060368214279594656
+        },
+        "incumbent": {
+          "tp": 94.93081941187728,
+          "fp": 8463.35346892568,
+          "fn": 3096.069180588123,
+          "n_truth": 3191,
+          "dti": 0.022260940274537244
+        },
+        "candidate_wins_fold": true,
+        "sprt_after_fold": {
+          "decision": "continue",
+          "n": 4,
+          "llr": -0.34870677428955515,
+          "upper": 2.995732273553991,
+          "lower": -2.3025850929940455,
+          "p0": 0.5,
+          "p1": 0.7,
+          "alpha": 0.05,
+          "beta": 0.1,
+          "wins": 2,
+          "losses": 2,
+          "outcomes": [
+            false,
+            false,
+            true,
+            true
+          ],
+          "boundary_method": "Ville-safe likelihood-ratio bounds",
+          "validity_assumption": "independent Bernoulli block outcomes / valid conditional supermartingale"
+        },
+        "candidate_emitted_pixels": 44090,
+        "incumbent_emitted_pixels": 44090
+      }
+    ],
+    "sprt": {
+      "decision": "continue",
+      "n": 4,
+      "llr": -0.34870677428955515,
+      "upper": 2.995732273553991,
+      "lower": -2.3025850929940455,
+      "p0": 0.5,
+      "p1": 0.7,
+      "alpha": 0.05,
+      "beta": 0.1,
+      "wins": 2,
+      "losses": 2,
+      "outcomes": [
+        false,
+        false,
+        true,
+        true
+      ],
+      "boundary_method": "Ville-safe likelihood-ratio bounds",
+      "validity_assumption": "independent Bernoulli block outcomes / valid conditional supermartingale"
+    },
+    "statistical_assumption": "SPRT alpha/beta control is conditional on independent Bernoulli block outcomes or a valid conditional supermartingale; spatial collar does not prove this assumption.",
+    "candidate_losses": 2,
+    "exploratory_only": true,
+    "confirmatory": false
+  },
+  "submission_gate": {
+    "eligible_for_weekly_slot": false,
+    "reason": "Not eligible: the exact detector formula was documented after holdout scoring, and the exposed exploratory SPRT returned continue after two wins and two losses. The current folds cannot provide confirmatory evidence.",
+    "leaderboard_score": null
+  },
+  "artifact": {
+    "path": "docs/downloads/gemsdoe39-h39x01-strain-corridor-20261005T023209Z-d2f7e140-nan.tif",
+    "sha256": "a612f66fe640cc6d5dd2333a330a454c2d8affef04f4672961d07bd4415a0b83",
+    "bytes": 175429,
+    "meta": {
+      "crs": "EPSG:32611",
+      "width": 3292,
+      "height": 3730,
+      "transform": [
+        100.0,
+        0.0,
+        243350.0,
+        0.0,
+        -100.0,
+        4508550.0
+      ],
+      "dtype": "float32",
+      "nodata": "NaN"
+    },
+    "grid_ok": true,
+    "nodata_nan": true,
+    "footprint_px": 5167373,
+    "finite_inside": 5167373,
+    "in_range_inside": 5167373,
+    "outside_nan": 7111787,
+    "positive_px": 44090,
+    "min_in": 0.0,
+    "max_in": 1.0,
+    "ok": true
+  },
+  "uniqueness_audit": {
+    "compared_artifacts": [
+      "docs/downloads/gemsdoe39-h39-b-20261005T020000Z-nan.tif",
+      "docs/downloads/gemsdoe39-h39-b-20261005T020000Z-zeros.tif",
+      "artifacts/unique_submission.tif",
+      "artifacts/unique_submission_nan.tif",
+      "data/scored/13gems_20261001_r13-lattice-s5_v2_nan-outside.tif",
+      "data/scored/8GEMSDOE_Hedge-v2_submission.tif",
+      "data/scored/gems10-h25-ctx-ridge-20260927T232947704150Z-6452ae1d00.tif",
+      "data/scored/gems10-h28-dotted-ridge-20260928T020256236880Z-6452ae1d00.tif",
+      "data/scored/gems16-h16-1-topo-geophys-baseline-ridges-20260930-df20f65e-nan.tif",
+      "data/scored/gems19-h19-4-multiline-corroborated-openness-thermal-pop-20260930-691e4dfa-nan.tif",
+      "data/scored/gems19-h19-5-powerlaw-budget-multiline-corroborated-20260930-e27054cf-nan.tif",
+      "data/scored/gems24-h25-1-dotted-h19-5-d1-5-20261002-989f59505db1-nan.tif",
+      "data/scored/gems24-h25-1-dotted-h19-5-d2-8-20261002-e56ea318af89-nan.tif",
+      "data/scored/gems27-topo-gap-closure-t-v2-on-d1-5-20261002-5512495c6bd1-nan.tif",
+      "data/scored/gemsdoe-ens12-adopted-7f00890a.tif",
+      "data/scored/gemsdoe9-PLACEHOLDER-2314b599.tif",
+      "data/scored/h33-h33-2-b2.tif"
+    ],
+    "compared_count": 17,
+    "duplicate_of": [],
+    "unique_vs_checked_local_artifacts": true,
+    "scope_note": "This local check does not inspect every file in all sibling GEMSDOE repositories."
+  },
+  "official_sources": {
+    "problem_description": "https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/",
+    "organizer_known_fault_masking": "https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/2",
+    "usgs_geodawn": "https://doi.org/10.5066/P93LGLVQ"
+  },
+  "hypothesis_registration": {
+    "status": "post_hoc_exploratory",
+    "exact_detector_recipe_recorded_after_holdout_scoring": true,
+    "confirmatory": false,
+    "weekly_slot_eligible": false,
+    "note": "Fixed SPRT settings and a fixed holdout design do not retroactively preregister this detector formula."
+  },
+  "multiplicity": {
+    "current_test_candidates_in_pipeline": 1,
+    "development_variants_fully_registered": false,
+    "current_holdout_result_is_exploratory": true,
+    "future_policy": "For a fresh holdout, either test one candidate selected on development data or preallocate family-wise alpha across every tested candidate; do not reuse the exposed folds."
+  }
+}

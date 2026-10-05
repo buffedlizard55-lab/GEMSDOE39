@@ -1,6 +1,6 @@
 """Novel multi-physics feature detectors for GEMSDOE39.
 
-Hypotheses (register before testing, no peeking):
+Legacy H39-A…E research notes follow. This docstring is not a timestamped preregistration for H39X-01; see its post-hoc record below.
 
 H39-A  Cross-gradient tensor eigen-coherence (magnetic x gravity x MT conductivity).
        A previously unmapped blind fault shows a *straight, co-located* gradient edge in
@@ -218,7 +218,9 @@ def build_h39a(bands, foot):
             norms.append((np.clip(mag / q99, 0, 1), nx, ny))
         # product of edge strengths (geometric mean) - fires only where all respond
         prod = np.ones(foot.shape, np.float32)
-        cx = cy = cw = np.zeros(foot.shape, np.float32)
+        cx = np.zeros(foot.shape, np.float32)
+        cy = np.zeros(foot.shape, np.float32)
+        cw = np.zeros(foot.shape, np.float32)
         for m, nx, ny in norms:
             prod *= (0.05 + m)
             w = m * foot
@@ -317,6 +319,73 @@ def build_h39e(bands, foot):
         strength = _robust_unit(md, foot) * _robust_unit(mc, foot)
         out += strength * (cos_angle ** 2)
     return _robust_unit(out / len(sigmas), foot)
+
+
+def build_incumbent_ridge(bands, foot):
+    """Rebuild the repository's fixed topographic/geophysical ridge comparator."""
+    elev = _fill_nearest(bands["det_elev"], foot)
+    tmi = _fill_nearest(bands["tmi"], foot)
+    slope = _fill_nearest(bands["det_elev_slope"], foot)
+    ridge = np.zeros(foot.shape, np.float32)
+    for sigma in (1.0, 2.0, 3.5):
+        response = _line_response(elev, sigma, sign=-1)
+        ridge += _robust_unit(response, foot)
+    mag_gradient = np.hypot(*_grad(tmi, 1.5))
+    slope_break = np.hypot(*_grad(_gauss(slope, 1.5), 1.0))
+    field = _robust_unit(ridge / 3.0, foot) * (
+        0.55 + 0.25 * _robust_unit(mag_gradient, foot)
+        + 0.20 * _robust_unit(slope_break, foot)
+    )
+    return _robust_unit(field, foot)
+
+
+# -------------------------------------------- H39X-01: geodetic strain/dilatation corridor
+def build_h39x01_strain(bands, foot):
+    """Score coherent geodetic shear ridges with a paired-dilatation signature.
+
+    The exact recipe for this 2026-10-05 candidate was documented in the
+    hypothesis register after its holdout results were observed. It is therefore
+    exploratory, not preregistered or confirmatory. The detector surface reads
+    only the three named geodetic bands and footprint; catalogue labels are used
+    separately by the emitter for exact-known-cell masking.
+    """
+    required = ("geod_2ndinv", "geod_shearrate", "geod_dilaterate")
+    missing = [name for name in required if name not in bands]
+    if missing:
+        raise ValueError(f"H39X-01 is missing required bands: {missing}")
+    inv = _fill_nearest(bands["geod_2ndinv"], foot)
+    shear = _fill_nearest(bands["geod_shearrate"], foot)
+    dil = _fill_nearest(bands["geod_dilaterate"], foot)
+
+    # Geodetic strain amplitude is robustly rank-scaled; logs damp large
+    # outliers without changing sign information in the dilation channel.
+    inv_u = _robust_unit(np.log1p(np.abs(inv)), foot, lo_q=0.02, hi_q=0.995)
+    shear_u = _robust_unit(np.log1p(np.abs(shear)), foot, lo_q=0.02, hi_q=0.995)
+    strain_amp = np.sqrt(inv_u * shear_u)
+
+    # Fault-localized strain commonly changes across a narrow corridor. The
+    # derivative channel responds to that transition; a 7x7 local positive /
+    # negative pair is a deliberately conservative sign-change corroborator.
+    dil_sm = _gauss(dil, 1.5)
+    local_pos = np.maximum(ndi.maximum_filter(dil_sm, size=7, mode="nearest"), 0.0)
+    local_neg = np.maximum(-ndi.minimum_filter(dil_sm, size=7, mode="nearest"), 0.0)
+    pos_u = _robust_unit(local_pos, foot, lo_q=0.02, hi_q=0.995)
+    neg_u = _robust_unit(local_neg, foot, lo_q=0.02, hi_q=0.995)
+    bipolar = np.minimum(pos_u, neg_u)
+    dx, dy = _grad(dil, 3.0)
+    dilation_edge = _robust_unit(np.hypot(dx, dy), foot, lo_q=0.02, hi_q=0.995)
+    dilation_support = np.maximum(bipolar, dilation_edge)
+
+    # Multi-scale bright-line response on the strain invariant, rather than a
+    # generic point anomaly. These values reproduce the post-hoc recorded run.
+    inv_log = np.log1p(np.abs(inv)).astype(np.float32)
+    ridge = np.zeros(foot.shape, np.float32)
+    for sigma in (2.0, 4.0):
+        response = _line_response(inv_log, sigma, sign=-1)
+        np.maximum(ridge, _robust_unit(response, foot), out=ridge)
+
+    score = 0.50 * strain_amp + 0.30 * ridge + 0.20 * dilation_support
+    return _robust_unit(score, foot)
 
 
 # --------------------------------------------------- ensemble: weighted harmonic-rank fusion

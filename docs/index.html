@@ -2,165 +2,118 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GEMSDOE39 — Unique Submission for the DOE GEMS Prize</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="GEMSDOE39: auditable GEMS fault prediction candidate, GeoTIFF download, spatial holdout, and official source register.">
+<title>GEMSDOE39 | GEMS Fault Discovery</title>
 <style>
-:root{--bg:#f8fafc;--ink:#0f172a;--muted:#475569;--accent:#0369a1;--accent2:#065f46;--warn:#b45309;--card:#fff}
-*{box-sizing:border-box}
-body{margin:0;font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
-.wrap{max-width:1000px;margin:0 auto;padding:28px 22px}
-header{background:linear-gradient(135deg,#0c4a6e 0%,#0369a1 60%,#0891b2 100%);color:#fff;padding:40px 22px}
-header .wrap{padding:0}
-header h1{margin:0 0 6px;font-size:2.1em;letter-spacing:-0.02em}
-header .sub{opacity:0.9;font-size:1.05em;margin-bottom:18px}
-.btn{display:inline-block;background:#fbbf24;color:#0f172a;font-weight:700;padding:14px 22px;border-radius:12px;text-decoration:none;margin:6px 8px 6px 0;box-shadow:0 4px 14px rgba(0,0,0,0.15);transition:transform .08s}
-.btn:hover{transform:translateY(-1px)}
-.btn.alt{background:#fff;color:#0369a1}
-.btn.secondary{background:#065f46;color:#fff}
-.meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px;font-size:0.92em;opacity:0.95}
-.meta span{background:rgba(255,255,255,0.14);padding:4px 10px;border-radius:20px}
-section{background:var(--card);border-radius:14px;padding:24px;margin:22px 0;box-shadow:0 2px 8px rgba(15,23,42,0.06)}
-h2{margin-top:0;color:#0c4a6e;border-bottom:2px solid #e0f2fe;padding-bottom:8px}
-h3{color:#0c4a6e;margin-bottom:6px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:12px}
-.card{background:#f1f5f9;padding:14px;border-radius:10px}
-.card b{display:block;color:#0c4a6e;font-size:1.05em;margin-bottom:4px}
-code{background:#e2e8f0;padding:2px 6px;border-radius:4px;font-size:0.9em}
-.pass{color:#065f46;font-weight:700}
-.warn{color:var(--warn);font-weight:700}
-.note{background:#fef3c7;border-left:4px solid #d97706;padding:10px 14px;border-radius:6px;margin:10px 0}
-.ok{background:#d1fae5;border-left:4px solid #059669;padding:10px 14px;border-radius:6px;margin:10px 0}
-table{border-collapse:collapse;width:100%;margin-top:10px}
-th,td{padding:8px 10px;border-bottom:1px solid #e2e8f0;text-align:left;vertical-align:top;font-size:0.95em}
-th{background:#f1f5f9}
-.tag{display:inline-block;background:#0369a1;color:#fff;border-radius:6px;padding:2px 8px;font-size:0.78em;margin-left:6px}
-a{color:var(--accent)}
-.sha{font-family:ui-monospace,Consolas,monospace;font-size:0.82em;word-break:break-all;background:#f1f5f9;padding:3px 6px;border-radius:4px}
-footer{color:var(--muted);font-size:0.9em;text-align:center;padding:20px 0}
-.steps{counter-reset:step;list-style:none;padding:0}
-.steps li{counter-increment:step;position:relative;padding:8px 0 8px 38px}
-.steps li:before{content:counter(step);position:absolute;left:0;top:8px;width:26px;height:26px;background:#0369a1;color:#fff;border-radius:50%;text-align:center;line-height:26px;font-weight:700}
+:root{--navy:#10233f;--ink:#172b45;--muted:#5e7188;--blue:#1768ac;--teal:#087e78;--amber:#a65a00;--amber-bg:#fff4d6;--red:#a32b2b;--red-bg:#fff0ef;--line:#d8e1eb;--panel:#fff;--page:#f4f7fb;--green:#176b45;--green-bg:#e8f7ef}
+*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--ink);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}a{color:var(--blue)}a:focus,button:focus{outline:3px solid #ffca4b;outline-offset:3px}.wrap{max-width:1120px;margin:0 auto;padding:24px 22px 56px}header{background:linear-gradient(120deg,#10233f,#174b74 75%,#087e78);color:white;padding:40px 0 34px}header .wrap{padding-top:0;padding-bottom:0}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:.78rem;font-weight:750;color:#b8e5e4}h1{font-size:clamp(2rem,5vw,3.3rem);line-height:1.12;margin:.3rem 0 .75rem;letter-spacing:-.035em}header p{color:#d9e8f4;max-width:820px;margin:0 0 18px}.status{display:inline-block;background:#ffdc86;color:#422b00;border-radius:999px;padding:7px 13px;font-weight:800;font-size:.84rem;margin:10px 0 16px}.button{display:inline-block;background:#ffcf4d;color:#25334a;text-decoration:none;font-weight:850;padding:14px 21px;border-radius:11px;box-shadow:0 4px 14px #06172d55;margin:4px 10px 4px 0}.button:hover{background:#ffdc76}.button.secondary{background:#e5f2ff;color:#123b64}.button.small{padding:9px 13px;font-size:.92rem;box-shadow:none}.hero-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.hero-meta span{border:1px solid #ffffff55;background:#ffffff13;border-radius:9px;padding:6px 10px;color:#edf5fa;font-size:.9rem}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:20px 0}.card,section{background:var(--panel);border:1px solid var(--line);border-radius:15px;box-shadow:0 2px 9px #173a5a0c}.card{padding:18px}.card strong{display:block;font-size:1.6rem;color:var(--navy);line-height:1.3}.card span{color:var(--muted);font-size:.9rem}section{padding:24px;margin:18px 0}h2{color:var(--navy);font-size:1.42rem;line-height:1.25;margin:0 0 12px}h3{color:var(--navy);margin:19px 0 6px}.alert{padding:14px 16px;border-radius:10px;margin:16px 0}.alert.warn{background:var(--amber-bg);border:1px solid #e8ca7a;color:#604000}.alert.stop{background:var(--red-bg);border:1px solid #efbfbc;color:#702020}.alert.good{background:var(--green-bg);border:1px solid #b7dfc8;color:#174f37}code,.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#f0f4f8;border-radius:5px;padding:2px 5px;overflow-wrap:anywhere}.hero code{background:#ffffff1c;color:#fff}.hash{font-size:.86rem;word-break:break-all}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;margin:12px 0}th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}th{background:#edf3f9;color:#253d59;font-size:.91rem}td.numeric{text-align:right;font-variant-numeric:tabular-nums}.pill{display:inline-block;border-radius:999px;padding:2px 8px;font-size:.78rem;font-weight:800;background:#e8eef5;color:#43566c}.pill.warn{background:#fff0cb;color:#704900}.list{padding-left:22px}.list li{margin:7px 0}.small{font-size:.92rem;color:var(--muted)}.source-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.source-grid a{display:block;background:#f5f8fb;border:1px solid var(--line);border-radius:8px;padding:9px 11px;text-decoration:none}.source-grid a:hover{background:#eaf3fb}footer{color:var(--muted);text-align:center;padding-top:20px;font-size:.9rem}hr{border:0;border-top:1px solid var(--line);margin:20px 0}
+@media(max-width:800px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.source-grid{grid-template-columns:1fr}}
+@media(max-width:480px){.grid{grid-template-columns:1fr 1fr}.wrap{padding-left:15px;padding-right:15px}section{padding:18px}.button{width:100%;text-align:center;margin:6px 0}}
 </style>
 </head>
 <body>
 <header>
 <div class="wrap">
+<div class="eyebrow">DOE GEMS Prize · DrivenData Challenge #306</div>
 <h1>GEMSDOE39</h1>
-<div class="sub">Unique geothermal-fault submission for the DOE GEMS Prize (DrivenData #306).
-Validated single-band float32 GeoTIFF; strictly in [0, 1] inside footprint;
-PRIMARY = <b>H39-B Scarp-Curvature Step-Over</b>, spatially-blocked SPRT-gated.</div>
-<a class="btn" href="downloads/gemsdoe39-h39-b-20261005T020000Z-zeros.tif" download>⬇ DOWNLOAD SUBMISSION (zeros-outside, recommended)</a>
-<a class="btn alt" href="downloads/gemsdoe39-h39-b-20261005T020000Z-nan.tif" download>⬇ NaN-outside variant</a>
-<div class="meta">
-<span><b>35,805</b> positive pixels</span>
-<span><b>0</b> on USGS catalogue</span>
-<span>CRS <b>EPSG:32611</b></span>
-<span><b>3730×3292</b> @ 100 m</span>
-<span>All checks <b>PASS</b></span>
+<p>An auditable, holdout-first fault-prediction workflow. The current artifact is a newly generated geodetic-strain/dilatation candidate—not a copied prior TIFF and not yet cleared for a leaderboard slot.</p>
+<div class="status">FORMAT VERIFIED · HOLDOUT SPRT INCONCLUSIVE · DO NOT SPEND A SLOT YET</div>
+<div>
+<a class="button" href="downloads/gemsdoe39-h39x01-strain-corridor-20261005T023209Z-d2f7e140-nan.tif" download>⬇ Download H39X-01 candidate GeoTIFF</a>
+<a class="button secondary" href="executive-summary.html">Read the submission guide</a>
+</div>
+<div class="hero-meta">
+<span>Unique file · 44,090 predicted pixels</span><span>EPSG:32611 · 100 m</span><span>NaN outside footprint</span><span>SHA-256 checked</span>
 </div>
 </div>
 </header>
-
-<div class="wrap">
-
+<main class="wrap">
 <section>
-<h2>One-click download &amp; submit</h2>
-<div class="ok">Click the yellow button above to download the submission GeoTIFF, then follow
-the <a href="executive-summary.html">Executive Summary &amp; Upload Guide</a>.
-The <b>zeros-outside</b> file is the safe choice — it fixes the
-"<i>Predicted values must be in range [0, 1]</i>" upload error reported in the prompt.
-The NaN variant matches the sample format byte-for-byte inside the footprint;
-scoring is identical because DrivenData masks outside-footprint pixels by the
-reference grid regardless of their value.</div>
-<p><b>Recommended submission note (copy/paste):</b></p>
-<p><code>GEMSDOE39 H39-B scarp-curvature-stepover | multi-physics H39 family, cat-buffer 2 px, budget 44090; SPRT-gated; unique pixel set.</code></p>
-<p><b>SHA-256 (zeros):</b> <span class="sha">b29b79b08123cd24835ed0016c2792efbf457ff21ddfa316f3941317b64170b5</span><br>
-<b>SHA-256 (nan):</b> <span class="sha">c985646d4a1bb6de975b65fdc07904faaa55d4739eb176942c537d63f9</span></p>
-</section>
-
-<section>
-<h2>Quick submit steps</h2>
-<ol class="steps">
-<li>Log into <a href="https://www.drivendata.org/competitions/306/competition-doe-gems/submissions/" target="_blank" rel="noopener">DrivenData</a>.</li>
-<li>Click <b>New submission</b>.</li>
-<li>Click <b>Choose File</b>, select the downloaded zeros-outside .tif (do not zip — the file is already deflate-compressed).</li>
-<li>Paste the note above into the <b>Note</b> field.</li>
-<li>Click <b>Submit</b>. The score appears after DrivenData evaluates (a few minutes; rolling weekly limit is 3 submissions).</li>
-</ol>
-<p><a href="executive-summary.html">→ Full executive summary with 12-point format audit, scientific rationale, and source links</a></p>
-</section>
-
-<section>
-<h2>Snapshot: candidate performance on the spatially-blocked holdout</h2>
-<table>
-<tr><th>Candidate</th><th>Emitted px</th><th>On-catalogue px</th><th>Hidden-catalogue DTI</th><th>SGMC off-cat DTI</th></tr>
-<tr><td>H39-A Cross-gradient</td><td>28,552</td><td>0</td><td>0.0046</td><td>0.0364</td></tr>
-<tr><td>H39-B <b>Scarp step-over</b> <span class="tag">PRIMARY</span></td><td>35,805</td><td>0</td><td>0.0031</td><td>0.1236</td></tr>
-<tr><td>H39-C Tilt analytic-signal</td><td>28,377</td><td>0</td><td>0.0051</td><td>0.0355</td></tr>
-<tr><td>H39-D Magnetic worms</td><td>44,090</td><td>0</td><td>0.0043</td><td>0.0892</td></tr>
-<tr><td>H39-E Basement × cond</td><td>28,190</td><td>0</td><td>0.0041</td><td>0.0274</td></tr>
-<tr><td>H39-ENS harmonic ensemble</td><td>35,400</td><td>0</td><td>0.0050</td><td>0.0494</td></tr>
-<tr><td>BASELINE dotted ridge</td><td>39,682</td><td>0</td><td>0.0022</td><td>0.1348</td></tr>
-</table>
-<p style="font-size:0.9em;color:#475569"><b>Interpretation.</b> Hidden-catalogue DTI measures DTI on 20%-held label components
-across 8 spatial folds (4 quadrants × 2 draws, 1.5 km collar). SGMC off-catalogue DTI is
-an independent corroboration instrument on USGS SGMC map faults excluded from the
-scored catalogue (these are the structural patterns the metric is actually trying to
-reward). The primary H39-B was selected as the highest combined score among unique
-H39 candidates with zero on-catalogue pixels. At n=8 folds Wald's SPRT
-(α=0.05, β=0.10, p<sub>0</sub>=0.5, p<sub>1</sub>=0.7) places the
-accept-H1 boundary at LLR ≈ 2.89, and an 8/8 sweep gives LLR ≈ 2.69 — no candidate
-formally crosses, which is an expected power property at n=8 rather than evidence
-of no improvement. Full details are in
-<a href="executive-summary.html">the executive summary</a> and <code>docs/downloads/*-manifest.json</code>.</p>
-</section>
-
-<section>
-<h2>Five novel geological hypotheses (H39 family)</h2>
+<h2>Candidate status — check before using a weekly submission</h2>
+<div class="alert stop"><strong>Recommendation: do not upload this candidate.</strong> The exploratory spatial-block proxy comparison had a higher pooled DTI but won only 2 of 4 blocks. The sequential likelihood-ratio test returned <code>continue</code>, not acceptance. The exact H39X-01 detector recipe was documented only after scoring, so the result is not preregistered or confirmatory. No submission slot was used and no leaderboard score is claimed.</div>
 <div class="grid">
-<div class="card"><b>H39-A</b> Cross-gradient tensor multi-physics (mag × gravity × MT) eigen-coherence — parallel edges in three independent physics flag a blind contact.</div>
-<div class="card"><b>H39-B <span class="tag">PRIMARY</span></b> Scarp curvature step-over / horsetail splay — multi-scale ridge curvature, slope-break gradient, 1 m LiDAR corroboration, with directional collinearity chains.</div>
-<div class="card"><b>H39-C</b> Tilt-derivative analytic-signal edges — normalizes deep weak contacts to match shallow-source dynamic range.</div>
-<div class="card"><b>H39-D</b> Magnetic multi-scale "worm" ridges (Archibald et al. 1999) with amplitude-ratio persistence across Gaussian continuation heights.</div>
-<div class="card"><b>H39-E</b> Basement-depth × conductivity co-located parallel edge — a permeable fault-bounded geothermal aquifer signature.</div>
+<div class="card"><strong>14 / 14</strong><span>independent GeoTIFF format checks passed</span></div>
+<div class="card"><strong>2 / 4</strong><span>spatial blocks won vs the locked incumbent</span></div>
+<div class="card"><strong>0.05294</strong><span>pooled holdout proxy DTI (not a competition score)</span></div>
+<div class="card"><strong>Unknown</strong><span>public/private leaderboard score for this candidate</span></div>
 </div>
+<p><b>File:</b> <code>gemsdoe39-h39x01-strain-corridor-20261005T023209Z-d2f7e140-nan.tif</code><br>
+<b>SHA-256:</b> <span class="mono hash">a612f66fe640cc6d5dd2333a330a454c2d8affef04f4672961d07bd4415a0b83</span><br>
+<b>Submission label / note:</b> <code>GEMSDOE39 H39X-01 geodetic strain/dilatation corridor | budget 44090; exact known-fault mask; candidate only; not SPRT-approved.</code></p>
+<p><a href="downloads/gemsdoe39-h39x01-strain-corridor-20261005T023209Z-d2f7e140-manifest.json">Open audit manifest</a> · <a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/" target="_blank" rel="noopener">Open live official leaderboard</a></p>
 </section>
 
 <section>
-<h2>Project files</h2>
-<ul>
-<li><a href="executive-summary.html">Executive summary &amp; submission guide</a> (how to upload, fixes for the [0,1] error, scientific rationale, source links, irregularities).</li>
-<li><a href="../README.md">README</a> (charter, core values, quick start).</li>
-<li><code>scripts/build_pipeline.py</code> — reproducible end-to-end pipeline (features → emission → SPRT → GeoTIFF).</li>
-<li><code>scripts/restore_data.py</code> — SHA-256 pinned mirror restore (no DrivenData credentials required).</li>
-<li><code>scripts/validate_submission.py</code> — 12-point GeoTIFF validator.</li>
-<li><code>src/gems39/</code> — metric, holdout, SPRT, features, emission, grid modules.</li>
-<li><code>registry/data_manifest.json</code> — SHA-256 pin of every input raster.</li>
-</ul>
+<h2>Holdout results, block by block</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Spatial block</th><th class="numeric">H39X-01 DTI</th><th class="numeric">Incumbent DTI</th><th>Candidate</th></tr></thead>
+<tbody>
+<tr><td>NW</td><td class="numeric">0.010223</td><td class="numeric">0.029566</td><td>Loss</td></tr>
+<tr><td>NE</td><td class="numeric">0.000000</td><td class="numeric">0.014530</td><td>Loss</td></tr>
+<tr><td>SW</td><td class="numeric">0.069819</td><td class="numeric">0.033305</td><td>Win</td></tr>
+<tr><td>SE</td><td class="numeric">0.060368</td><td class="numeric">0.022261</td><td>Win</td></tr>
+<tr><th>Pooled proxy DTI</th><th class="numeric">0.052944</th><th class="numeric">0.024763</th><th>Descriptive only</th></tr>
+</tbody></table></div>
+<p class="small">The holdout hides a fixed sample of whole 8-connected components from the public label raster, in four geographic quadrants with a 1.5 km inward collar. Public catalogue labels are an imperfect proxy for the competition's private newly identified faults. Fold independence is an explicit SPRT assumption, not something the collar can prove.</p>
+<p><b>SPRT:</b> α=0.05, β=0.10, p₀=0.50, p₁=0.70; LLR −0.348707; boundaries [−2.302585, 2.995732]; decision <strong>continue</strong>. Since the fixed folds are exhausted, stop here—do not add seeds to this same holdout after seeing its score.</p>
 </section>
 
 <section>
-<h2>Verified sources (manual review)</h2>
-<table>
-<tr><th>Source</th><th>URL</th></tr>
-<tr><td>Competition home</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/" target="_blank" rel="noopener">drivendata.org/competitions/306</a></td></tr>
-<tr><td>Problem &amp; DTI metric</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/" target="_blank" rel="noopener">page/967</a></td></tr>
-<tr><td>Official rules PDF (NREL)</td><td><a href="https://docs.nrel.gov/docs/fy26osti/96647.pdf" target="_blank" rel="noopener">docs.nrel.gov/.../96647.pdf</a></td></tr>
-<tr><td>Reference solution</td><td><a href="https://github.com/drivendataorg/gems-prize-reference-solution" target="_blank" rel="noopener">github.com/drivendataorg/gems-prize-reference-solution</a></td></tr>
-<tr><td>Leaderboard</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/" target="_blank" rel="noopener">live leaderboard</a></td></tr>
-<tr><td>USGS GeoDAWN (airborne mag/radiometric)</td><td><a href="https://www.sciencebase.gov/catalog/item/657e1d85d34e23d3533209f7" target="_blank" rel="noopener">ScienceBase</a></td></tr>
-<tr><td>USGS 3DEP (1 m DEM)</td><td><a href="https://www.usgs.gov/3d-elevation-program" target="_blank" rel="noopener">usgs.gov/3d-elevation-program</a></td></tr>
-<tr><td>USGS Quaternary faults</td><td><a href="https://usgs.github.io/faults/" target="_blank" rel="noopener">usgs.github.io/faults</a></td></tr>
-<tr><td>OpenEI GDR 1391 (geothermal)</td><td><a href="https://gdr.openei.org/submissions/1391" target="_blank" rel="noopener">gdr.openei.org/submissions/1391</a></td></tr>
-<tr><td>INGENIOUS (ground truth)</td><td><a href="https://gbcge.org/current-projects/ingenious/" target="_blank" rel="noopener">gbcge.org/current-projects/ingenious</a></td></tr>
-</table>
-<div class="note"><b>Flagged irregularity:</b> the user brief cites <code>docs.nlr.gov</code> for the competition PDF; the correct domain is <code>docs.nrel.gov</code> (National Renewable Energy Laboratory). Both are documented here for traceability.</div>
+<h2>Ranked geological hypotheses</h2>
+<p><strong>H39X-01</strong> uses <code>geod_2ndinv</code>, <code>geod_shearrate</code>, and <code>geod_dilaterate</code> to test whether coherent strain lineaments supported by dilatation transitions indicate blind faults that weakly express at the surface. This is a physical hypothesis, not proof of geothermal productivity.</p>
+<div class="alert warn"><strong>Protocol deviation:</strong> the exact H39X-01 detector recipe was recorded only after its holdout scores were observed. The result is exploratory, not preregistered or confirmatory, and the candidate is not approved for a leaderboard slot. The pixelwise uniqueness check covered 17 local/retrieved prior TIFFs only; no exact match was found, but this is not a global scan.</div>
+<div class="table-wrap"><table>
+<thead><tr><th>Rank</th><th>Hypothesis / input layers</th><th>Expected DTI direction (not measured)</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Strain + dilatation corridor<br><code>geod_2ndinv</code>, <code>geod_shearrate</code>, <code>geod_dilaterate</code></td><td>Up if blind faults localize current strain; no numeric forecast</td><td>Exploratory; 2/4 block wins, SPRT continue</td></tr>
+<tr><td>2</td><td>GeoDAWN radiometric alteration × conductivity edge<br>K/Th/U ratios, <code>cond_surf</code></td><td>Up if cross-sensor alteration helps localize structures; strong confounding</td><td>Not tested</td></tr>
+<tr><td>3</td><td>Earthquake-density edge aligned with geodetic shear<br><code>ieq_n100a15</code>, <code>deq_n100a15</code>, <code>geod_shearrate</code></td><td>Up if seismic transitions mark active fault zones; no numeric forecast</td><td>Not tested</td></tr>
+<tr><td>4</td><td>Gravity derivatives × basement inflection<br><code>iso_grav_anom_hg</code>, <code>iso_grav_anom_vg</code>, <code>depth_to_base_surf</code></td><td>Weakly up if it adds buried-structure localization; redundancy risk</td><td>Not tested</td></tr>
+</tbody></table></div>
+<p><a href="hypothesis-register.md">View full input layers, physical signatures, novelty, costs, and multiplicity plan</a> · <a href="research-brief.md">Read research brief and limitations</a></p>
 </section>
 
-<footer>
-GEMSDOE39 · Built for the DOE GEMS Prize. Maximize P(Win). Own the Outcome.<br>
-No score is claimed without a verifiable local artifact. AI disclosure: this submission was assembled with AI assistance per competition rules.
-</footer>
+<section>
+<h2>How to submit — only after the holdout gate passes</h2>
+<div class="alert warn">The download above is format-valid but its SPRT is inconclusive. Do not spend a weekly submission slot on it under the current project rule. If a future candidate is approved, the steps below apply.</div>
+<ol class="list">
+<li>Download the recommended single-band <code>.tif</code> (no ZIP is needed).</li>
+<li>Sign into <a href="https://www.drivendata.org/competitions/306/competition-doe-gems/submissions/" target="_blank" rel="noopener">the competition submissions page</a>.</li>
+<li>Choose <b>New submission</b>, then select the TIFF under <b>File to submit</b>.</li>
+<li>Use the filename as the unique artifact identifier and paste the short note shown above in the optional note field.</li>
+<li>Before clicking submit, confirm the manifest and validator are PASS and the submission gate says <b>eligible</b>. This run does not.</li>
+<li>Submit once; DrivenData will return the score. Do not assume a private score from the public leaderboard.</li>
+</ol>
+<p><a href="executive-summary.html"><b>Executive summary:</b> exact format checks, upload instructions, the [0,1] error, and AI disclosure requirement →</a></p>
+</section>
+
+<section>
+<h2>Current leaderboard context</h2>
+<p>Official public leaderboard snapshot checked 2026-10-05: #1 <b>0.3262</b>, #2 <b>0.3222</b>, #3 <b>0.3195</b>; the visible 0.2778 row is #13. These scores change and are not private-set results.</p>
+<div class="alert warn">The user-provided H33-2-B2 score attribution needs review: the GEMSDOE32 site marks that TIFF “UNSCORED,” while the official leaderboard shows 0.2778 but not the filename. We preserve 0.2778 as an official row, not a verified exact-file score.</div>
+<a class="button small" href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/" target="_blank" rel="noopener">↗ View live official leaderboard</a>
+<a class="button small secondary" href="current-feed.html">Open dated evidence feed</a>
+</section>
+
+<section>
+<h2>Official sources for review</h2>
+<div class="source-grid">
+<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/" target="_blank" rel="noopener">DrivenData · competition overview</a>
+<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/" target="_blank" rel="noopener">DrivenData · task, metric, submission format</a>
+<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/968/" target="_blank" rel="noopener">DrivenData · about / science context</a>
+<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/data/" target="_blank" rel="noopener">DrivenData · data page (login required)</a>
+<a href="https://www.nlr.gov/docs/fy26osti/96647.pdf" target="_blank" rel="noopener">NLR · official rules PDF</a>
+<a href="https://github.com/drivendataorg/gems-prize-reference-solution" target="_blank" rel="noopener">DrivenData · reference solution</a>
+<a href="https://www.usgs.gov/data/geodawn-airborne-magnetic-and-radiometric-surveys-northwestern-great-basin-nevada-and" target="_blank" rel="noopener">USGS · GeoDAWN release</a>
+<a href="https://www.usgs.gov/faqs/what-lidar-data-and-where-can-i-download-it" target="_blank" rel="noopener">USGS · 3DEP LiDAR access</a>
+<a href="https://www.usgs.gov/publications/structural-discontinuities-and-their-control-hydrothermal-systems-great-basin-usa" target="_blank" rel="noopener">USGS · fault discontinuities and geothermal systems</a>
+<a href="https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/2" target="_blank" rel="noopener">DrivenData staff · known-fault masking clarification</a>
 </div>
+<p class="small">Competition inputs were restored from SHA-256-pinned owner mirrors because the official data page redirects to login. The hash pins verify mirror integrity, not organizer authentication. The live DrivenData page is linked rather than scraped: its Terms of Use prohibit automated site monitoring/copying.</p>
+</section>
+
+<footer>GEMSDOE39 · Maximize P(Win) · Own the Outcome · evidence over confidence · updated 2026-10-05</footer>
+</main>
 </body>
 </html>
