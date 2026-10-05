@@ -73,6 +73,8 @@ def main():
     ap.add_argument("--out-dir", default=str(ROOT / "docs" / "downloads"))
     ap.add_argument("--tag", default=None)
     ap.add_argument("--fast", action="store_true", help="skip the supervised H40-F channel")
+    ap.add_argument("--name-slug", default=None,
+                    help="override the artifact name slug (default: derived from the primary channel)")
     ap.add_argument("--reuse-channels", action="store_true",
                     help="reuse artifacts/h40_channels.npz instead of rebuilding detectors")
     ap.add_argument("--max-n", type=int, default=70_000)
@@ -228,14 +230,17 @@ def main():
         raw_npz.parent.mkdir(parents=True, exist_ok=True)
         np.savez_compressed(raw_npz, **channels, __log__=np.array(ch_log, dtype=object))
         print(f"  cached {len(channels)} raw channels -> {raw_npz.name}")
-    try:
-        bb, nsurf = det40.build_backbone(bands, foot, ext, ch_log)
-        channels["backbone"] = bb
-        print(f"  backbone: harmonic-rank consensus of {nsurf} surfaces")
-    except Exception as e:
-        import traceback; traceback.print_exc()
-        ch_log.append(f"backbone: FAILED {e}")
-        print(f"  backbone: FAILED {e}")
+    if "backbone" in channels and not channels["backbone"].shape != foot.shape:
+        print("  backbone: reused from cache")
+    else:
+        try:
+            bb, nsurf = det40.build_backbone(bands, foot, ext, ch_log)
+            channels["backbone"] = bb
+            print(f"  backbone: harmonic-rank consensus of {nsurf} surfaces")
+        except Exception as e:
+            import traceback; traceback.print_exc()
+            ch_log.append(f"backbone: FAILED {e}")
+            print(f"  backbone: FAILED {e}")
     del bands
 
     # tie diagnostic -- the defect that made the first run rank by raster order
@@ -343,22 +348,25 @@ def main():
     surfaces["H40-PFPT"] = fused
     cands = {}
     for key, surf in surfaces.items():
-        mask_full, ranks = pe.emit_ranked(surf, allowed, min_dist=args.min_dist,
-                                          max_n=args.max_n)
-        ys, xs, hit = pe.dot_hits(mask_full, ctx.sgmc_matched, r_px=3.0, active=active)
-        order_idx = np.argsort(ranks)
-        hit_sorted = hit[order_idx]
-        n_cut, why = pe.choose_budget(hit_sorted, pb["pi_star"], transfer=transfer,
-                                      max_n=args.max_n)
-        keep = pe.trim_to_budget(mask_full, ranks, n_cut)
+        mask_full, ys_e, xs_e = pe.emit_ranked(surf, allowed, min_dist=args.min_dist,
+                                               max_n=args.max_n)
+        # ys_e/xs_e are already in best-first acceptance order, so the hit vector
+        # is the marginal hit-rate curve in emission order with no reordering
+        _, _, hit_sorted = pe.dot_hits(mask_full, ctx.sgmc_matched, r_px=3.0,
+                                       active=active, ys=ys_e, xs=xs_e)
+        # self-consistent budget: pi* is re-evaluated at the candidate's OWN
+        # operating score and iterated to a fixed point (see priced_emit docstring)
+        n_cut, why = pe.optimal_budget_from_curve(hit_sorted, G, transfer=transfer)
+        keep = pe.trim_to_budget(foot.shape, ys_e, xs_e, n_cut)
         h_instr_full = float(hit_sorted.mean()) if hit_sorted.size else 0.0
         h_instr = float(hit_sorted[:n_cut].mean()) if n_cut else 0.0
         # the anchor-budget variant: same surface, same geometry, budget fixed at
         # the number of dots the live-scored 0.2778 artifact used
-        keep_anchor = pe.trim_to_budget(mask_full, ranks, nr["n_prune"])
-        ys2, xs2, hit2 = pe.dot_hits(keep_anchor, ctx.sgmc_matched, r_px=3.0, active=active)
+        keep_anchor = pe.trim_to_budget(foot.shape, ys_e, xs_e, nr["n_prune"])
+        _, _, hit2 = pe.dot_hits(keep_anchor, ctx.sgmc_matched, r_px=3.0, active=active,
+                                 ys=ys_e[:nr['n_prune']], xs=xs_e[:nr['n_prune']])
         h_instr_anchor = float(hit2.mean()) if hit2.size else 0.0
-        cands[key] = dict(mask=keep, mask_anchor=keep_anchor, ranks=ranks,
+        cands[key] = dict(mask=keep, mask_anchor=keep_anchor,
                           n=int(keep.sum()), n_anchor=int(keep_anchor.sum()),
                           h_instr=h_instr, h_instr_anchor=h_instr_anchor,
                           h_instr_full=h_instr_full,
@@ -372,12 +380,17 @@ def main():
                           leak_anchor=ho.leakage_probe(keep_anchor, ctx, ctx.sgmc_matched),
                           why=why, n_pool=int(mask_full.sum()))
         c = cands[key]
+        if key == "H40-PFPT":
+            print(f"    price-curve optimum: n*={why.get('n')} score={why.get('score'):.4f} | "
+                  f"pi* at optimum={100*(why.get('pi_star_at_optimum') or 0):.3f}% vs measured "
+                  f"marginal={100*(why.get('marginal_live_hit_rate_at_optimum') or 0):.3f}% | "
+                  f"consistent={why.get('marginal_agrees_with_price')}")
         print(f"  {key:9s} pool={c['n_pool']:>7,} | priced n={c['n']:>7,} "
               f"h_instr={100*c['h_instr']:6.3f}% h_live={100*c['h_live']:6.3f}% "
               f"score={c['price']['score']:.4f} | anchor-budget n={c['n_anchor']:>7,} "
               f"h_instr={100*c['h_instr_anchor']:6.3f}% h_live={100*c['h_live_anchor']:6.3f}% "
               f"score={c['price_anchor']['score']:.4f} | leak={c['leak_anchor']:.4f}")
-        del mask_full, hit, hit2
+        del mask_full, hit_sorted, hit2, ys_e, xs_e
     receipt["candidates_priced"] = {
         k: dict(n=v["n"], n_anchor=v["n_anchor"], n_pool=v["n_pool"],
                 hit_rate_instrument=v["h_instr"], hit_rate_instrument_anchor=v["h_instr_anchor"],
@@ -426,35 +439,46 @@ def main():
     #   (3) leakage <= LEAK_GATE
     #   (4) priced live score > 0.2778
     h_anchor_instr = ev_anchor["I2"]["dot_hit_rate"]
-    eligible = [k for k, v in cands.items()
-                if v["h_instr_anchor"] > h_anchor_instr
-                and decisions[f"{k}@anchor"]["decision"] == "accept_H1"
-                and v["leak_anchor"] <= LEAK_GATE
-                and v["price_anchor"]["score"] > ANCHOR["score"]]
-    better_only = [k for k, v in cands.items()
-                   if v["h_instr_anchor"] > h_anchor_instr and v["leak_anchor"] <= LEAK_GATE]
+    # Both emission arms are gated.  The anchor-budget arm exists so the comparison
+    # with the live-scored artifact is like-for-like (same dot count, same
+    # geometry); the priced arm is the one whose budget was DERIVED from the
+    # calibrated price curve rather than inherited from the incumbent.  Whichever
+    # clears the gate at the higher price is promoted.
+    arms = []
+    for k, v in cands.items():
+        for arm in ("anchor", "priced"):
+            h_i = v["h_instr_anchor"] if arm == "anchor" else v["h_instr"]
+            leak = v["leak_anchor"] if arm == "anchor" else v["leak"]
+            pr = v["price_anchor"] if arm == "anchor" else v["price"]
+            dec = decisions[f"{k}@{arm}"]["decision"]
+            ok = (h_i > h_anchor_instr and dec == "accept_H1"
+                  and leak <= LEAK_GATE and pr["score"] > ANCHOR["score"])
+            arms.append(dict(key=k, arm=arm, h_instr=h_i, leakage=leak, price=pr,
+                             sprt=dec, eligible=bool(ok), n=int(v["n_anchor"] if arm == "anchor"
+                                                                else v["n"])))
+    eligible = [a for a in arms if a["eligible"]]
+    better_only = sorted({a["key"] for a in arms
+                          if a["h_instr"] > h_anchor_instr and a["leakage"] <= LEAK_GATE})
     gate = dict(anchor_instrument_hit_rate=h_anchor_instr,
-                eligible=eligible, beats_anchor_on_instrument=better_only,
-                rule=("h_instr(anchor budget) > anchor's h_instr AND SPRT accept_H1 "
-                      f"AND leakage <= {LEAK_GATE} AND priced score > {ANCHOR['score']}"))
+                anchor_instrument_dti=ev_anchor["I2"]["pooled_dti"],
+                arms=[{k: v for k, v in a.items() if k != "price"} |
+                      {"priced_score": a["price"]["score"]} for a in arms],
+                eligible=[f"{a['key']}@{a['arm']}" for a in eligible],
+                beats_anchor_on_instrument=better_only,
+                rule=("per-dot instrument hit rate > the anchor's AND the combined Wald SPRT "
+                      "(sign test OR normal-mean test) reaches accept_H1 AND leakage <= "
+                      f"{LEAK_GATE} AND calibrated price > {ANCHOR['score']}; both emission "
+                      "arms are gated and the higher-priced eligible arm is promoted"))
     if eligible:
-        primary = max(eligible, key=lambda k: cands[k]["price_anchor"]["score"])
-        arm = "anchor"
+        best = max(eligible, key=lambda a: a["price"]["score"])
+        primary, arm = best["key"], best["arm"]
         gate["decision"] = "PROMOTE_NEW"
-    elif better_only:
-        # Pre-declared fallback: the SPRT did not reach accept_H1, so this is a
-        # PROXY win only.  Emit at the anchor's validated budget (never at an
-        # unvalidated larger one) and say so on the site and in the manifest.
-        primary = max(better_only, key=lambda k: cands[k]["h_instr_anchor"])
-        arm = "anchor"
-        gate["decision"] = ("PROXY_WIN_ONLY_SPRT_DID_NOT_ACCEPT_H1_"
-                            "EMITTED_AT_ANCHOR_BUDGET")
     else:
-        # Nothing beat the anchor on the instrument.  Do not gamble a slot: emit
-        # the fused primary at the anchor's validated budget and label it as a
-        # not-validated-better candidate.
-        primary = "H40-PFPT" if "H40-PFPT" in cands else max(
-            cands, key=lambda k: cands[k]["h_instr_anchor"])
+        # Pre-declared fallback: nothing cleared the gate, so do NOT gamble a slot
+        # on an unvalidated budget.  Emit the best instrument performer at the
+        # anchor's validated dot count and label it as not-validated-better.
+        cand_keys = [k for k in cands if cands[k]["leak_anchor"] <= LEAK_GATE] or list(cands)
+        primary = max(cand_keys, key=lambda k: cands[k]["h_instr_anchor"])
         arm = "anchor"
         gate["decision"] = "GATE_NOT_CLEARED_EMITTED_AT_ANCHOR_BUDGET_FOR_EVALUATION"
     print("  gate:", json.dumps(gate, default=float)[:900])
@@ -464,16 +488,26 @@ def main():
 
     pmask = cands[primary]["mask_anchor"] if arm == "anchor" else cands[primary]["mask"]
     pinfo = cands[primary]["price_anchor"] if arm == "anchor" else cands[primary]["price"]
+    h_i_prim = (cands[primary]["h_instr_anchor"] if arm == "anchor"
+                else cands[primary]["h_instr"])
     print(f"  PRIMARY = {primary}@{arm}: {int(pmask.sum()):,} dots, "
           f"{int((pmask & cat).sum())} on catalogue, "
-          f"instrument hit rate {100*cands[primary]['h_instr_anchor']:.3f}% "
-          f"(anchor {100*h_anchor_instr:.3f}%), priced live score {pinfo['score']:.4f}")
+          f"instrument hit rate {100*h_i_prim:.3f}% "
+          f"(anchor {100*h_anchor_instr:.3f}%, {h_i_prim/h_anchor_instr:.3f}x), "
+          f"priced live score {pinfo['score']:.4f}")
+    receipt["primary_metrics"] = dict(
+        n=int(pmask.sum()), instrument_hit_rate=h_i_prim,
+        instrument_hit_rate_ratio=h_i_prim / h_anchor_instr,
+        live_priced_hit_rate=pinfo["hit_rate"], priced_score=pinfo["score"],
+        priced_TPw=pinfo["TPw"], priced_FPw=pinfo["FPw"],
+        leakage=cands[primary]["leak_anchor" if arm == "anchor" else "leak"],
+        sprt=decisions[f"{primary}@{arm}"])
     assert int((pmask & cat).sum()) == 0, "candidate has mass on the masked catalogue"
     assert int((pmask & ~foot).sum()) == 0, "candidate has mass outside the footprint"
     assert 0.0 <= float(pmask.astype(np.float32).min()) and float(pmask.astype(np.float32).max()) <= 1.0
 
     pred = pmask.astype(np.float32)
-    slug = primary.lower().replace("_", "-")
+    slug = args.name_slug or primary.lower().replace("_", "-").replace("h40-", "")
     name_base = f"gemsdoe39-h40-{slug}-{tag}"
     nan_path = out / f"{name_base}-nan.tif"
     zero_path = out / f"{name_base}-zeros.tif"
@@ -503,13 +537,18 @@ def main():
     assert not ua["byte_identical_to_any"], "artifact is identical to a previous submission"
     receipt["uniqueness_audit"] = ua
 
+    stop = cands[primary]["why"]
     receipt["note"] = (
-        f"GEMSDOE39 H40 play-fairway | {primary} | {int(pmask.sum()):,} dots | "
+        f"GEMSDOE39 H40 | {primary}@{arm} | {int(pmask.sum()):,} dots = argmax of the "
+        f"live-score-calibrated price curve (|G|={G:,.0f}, break-even pi*="
+        f"{100*(stop.get('pi_star_at_optimum') or 0):.2f}% vs measured marginal "
+        f"{100*(stop.get('marginal_live_hit_rate_at_optimum') or 0):.2f}%) | "
         f"Poisson {args.min_dist}px, catalogue exclusion {args.cat_buffer_px}px | "
-        f"instrument hit rate {100*cands[primary]['h_instr_anchor']:.2f}% vs anchor "
-        f"{100*h_anchor_instr:.2f}% | priced from live-score-calibrated |G|={G:,.0f}, "
-        f"pi*={100*pb['pi_star']:.2f}% | SPRT a={SPRT['alpha']} b={SPRT['beta']} "
-        f"{decisions[f'{primary}@{arm}']['decision']}")
+        f"instrument hit rate {100*h_i_prim:.2f}% vs anchor "
+        f"{100*h_anchor_instr:.2f}% ({h_i_prim/h_anchor_instr:.2f}x) | "
+        f"SPRT a={SPRT['alpha']} b={SPRT['beta']} "
+        f"{decisions[f'{primary}@{arm}']['decision']} | "
+        f"max Jaccard vs any prior submission {ua['max_jaccard']:.4f}")
     receipt["anchor_evaluation"] = {
         k: v for k, v in ev_anchor["I2"].items() if k != "cells"} | {
         "I1_pooled_dti": ev_anchor["I1"]["pooled_dti"],

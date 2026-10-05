@@ -16,13 +16,13 @@ reproduced verbatim in [§ Permanent project charter](#permanent-project-charter
 
 | | |
 |---|---|
-| **Primary artifact (submit this one)** | [`docs/downloads/gemsdoe39-h40-pfpt-20261005T030000Z-zeros.tif`](docs/downloads/gemsdoe39-h40-pfpt-20261005T030000Z-zeros.tif) |
+| **Primary artifact (submit this one)** | [`docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-zeros.tif`](docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-zeros.tif) |
 | Site with the big yellow button | <https://buffedlizard55-lab.github.io/GEMSDOE39/> |
 | How to upload, step by step | [docs/executive-summary.html](docs/executive-summary.html) |
-| Submission **Name** | `gemsdoe39-h40-pfpt-playfairway-permeability` |
+| Submission **Name** | `gemsdoe39-h40-f-offcat-gbm` |
 | Submission **Note** | see § Submission name and note below |
-| NaN-outside twin (identical pixels) | `docs/downloads/gemsdoe39-h40-pfpt-20261005T030000Z-nan.tif` |
-| Full machine-readable receipt | `docs/downloads/gemsdoe39-h40-pfpt-20261005T030000Z-manifest.json` |
+| NaN-outside twin (identical pixels) | `docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-nan.tif` |
+| Full machine-readable receipt | `docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-manifest.json` |
 
 Both twins carry **exactly the same predicted pixels**; they differ only in how
 the area outside the study footprint is encoded (`0.0` vs `NaN`). Both satisfy the
@@ -52,7 +52,57 @@ that mishandles NaN.
   **#1 nchuzhoy 0.3262**, #2 kinghorton42 0.3222, #3 DARD 0.3195, …
   **#13 extradr19 0.2778** (this family's best), #14/#15 0.2708.
 * **No score is claimed for the H40 artifact.** What is claimed is a *price* —
-  a model-based prediction with a stated derivation and stated nuisance priors.
+  a model-based prediction with a stated derivation, stated nuisance priors, and a
+  published sensitivity table over how much of the measured advantage transfers.
+
+### Measured result of this round
+
+| quantity | live-scored anchor (0.2778) | this artifact | ratio |
+|---|---|---|---|
+| dots (active) | 37,654 | **45,962** | budget derived, not inherited |
+| per-dot hit rate on instrument I2 | 2.765% | **6.477%** | **2.343×** |
+| instrument I2 truth coverage | 20.37% | 37.4% | 1.84× |
+| pooled instrument DTI (I2) | 0.0640 | **0.1391** | **2.173×** |
+| pooled instrument DTI (I1, hidden catalogue) | 0.0059 | 0.0033 | 0.56× (see caveat) |
+| leakage (dots on instrument truth) | — | 1.06% | gate is ≤2% |
+| sign SPRT vs anchor | — | `accept_H1` 21/29, LLR +2.979 | bound +2.8904 |
+| normal-mean SPRT vs anchor | — | `accept_H1`, LLR +2.919 | bound +2.8904 |
+| max Jaccard vs any prior submission | — | 0.0093 | not a copy |
+| **calibrated price** | 0.2778 (measured) | **0.4848** (model) | — |
+
+Price sensitivity — how much of the measured advantage has to survive the jump
+from the instrument to the organizer's labels:
+
+| share transferred | live hit rate | priced score |
+|---|---|---|
+| 0% (no advantage is real) | 6.130% | **0.2778** — the anchor's measured score |
+| 25% | 8.188% | 0.3586 |
+| 50% | 10.246% | 0.4094 |
+| 75% | 12.304% | 0.4508 |
+| 100% (all of it is real) | 14.361% | **0.4848** |
+
+**Caveat stated up front, not buried.** The winner is H40-F, the supervised
+off-catalogue channel, and instrument I2 is drawn from the *same population* it is
+trained on (USGS SGMC faults absent from the scored catalogue), held out by
+spatial fold. On instrument I1 — hidden components of the scored catalogue, a
+population H40-F is not trained for — it scores 0.56× the anchor. I2 is the
+structurally correct instrument because staff define a new fault as "any fault
+pixel not already captured by USGS/INGENIOUS"
+([thread 11536](https://community.drivendata.org/t/11536/2)), and catalogue pixels
+are masked out of scoring in both rounds
+([thread 11516](https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516))
+— so I1 measures the ability to rediscover pixels that are not scored at all.
+That argument is why I2 was declared primary. It is an argument, not a
+measurement, and the risk-adjusted alternative is recorded below.
+
+**Risk-adjusted alternative for the next slot:** `W05-F1-A0.5` (H40-F gated by the
+Siler-2022 stress-favourability curve at exponent 0.5) — instrument I2 DTI
+1.841× the anchor, I1 0.749× (the best I1 of any variant that clears the gate),
+both SPRTs `accept_H1`, priced 0.4428. Also recorded: the tip-continuation
+channel H40-G is 2.19–2.26× the anchor on I1 but only ~1.05× on I2, which is
+exactly what a catalogue-continuation detector should do; it is the channel to
+reach for if the expert-expanded Phase 2 label set turns out to be dominated by
+extensions of mapped systems.
 
 ---
 
@@ -223,13 +273,12 @@ several independent factors agree, so one noisy channel cannot carry it.
 gemsdoe39-h40-pfpt-playfairway-permeability
 ```
 
-**Note** (paste into the DrivenData submission form; the authoritative string is
-`receipt["note"]` in the manifest):
+**Note** (paste into the DrivenData submission form verbatim; this string is
+generated by the pipeline, not hand-written, and is reproduced from
+`receipt["note"]` in the run manifest):
 
 ```
-GEMSDOE39 H40 play-fairway | H40-PFPT | <N> dots | Poisson 2.8px, catalogue
-exclusion 2px | budget set by break-even price pi*=3.15% from live-score
-calibrated |G|=14143 | SPRT a=0.05 b=0.10 p0=0.5 p1=0.7
+GEMSDOE39 H40 | H40-F@priced | 45,962 dots = argmax of the live-score-calibrated price curve (|G|=14,143, break-even pi*=13.54% vs measured marginal 14.03%) | Poisson 2.8px, catalogue exclusion 2px | instrument hit rate 6.48% vs anchor 2.76% (2.34x) | SPRT a=0.05 b=0.1 accept_H1 | max Jaccard vs any prior submission 0.0093
 ```
 
 **How to upload** — six steps, with the exact validator wording and the reason

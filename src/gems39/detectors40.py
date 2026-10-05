@@ -412,7 +412,13 @@ FEATURE_BANDS = ("mag_anom", "rtp", "tmi_hg", "geod_2ndinv", "iso_grav_anom_slop
                  "det_elev_slope")
 
 
-FEATURE_SIGMAS = (0.0, 3.0)
+# One scale only.  A second smoothed scale (sigma=3 px) costs a full-grid
+# Gaussian per band per prediction chunk -- 285 of them per fold, ~20 minutes of
+# the run -- and the external layers (heat flow, slip tendency, deep temperature,
+# slip rate) are already smoothed at 4-45 px, so the multi-scale context is
+# present without recomputing it 4 times.  Dropping it also cuts the feature
+# cube from 45 columns to 26.
+FEATURE_SIGMAS = (0.0,)
 EXTERNAL_FEATURES = ("heat_flow", "slip_tendency", "dilation_tendency",
                      "deep_temperature", "hot_spring", "slip_rate", "young_fault")
 
@@ -508,7 +514,8 @@ def build_h40f(bands, foot, ext, catalogue, log, cache=None, n_folds=4, max_pos=
     """
     if ext.sgmc_off is None or ext.sgmc_n_px == 0:
         log.append("H40-F: SGMC off-catalogue layer unavailable -> zeros")
-        return np.zeros(foot.shape, np.float32)
+        z = np.zeros(foot.shape, np.float32)
+        return (z, np.zeros(foot.shape, np.int8)) if return_fold_map else z
     fb = FeatureBuilder(bands, foot, ext, cache=cache)
     names = fb.names
     bid, nblocks = block_labels(foot.shape)
@@ -563,8 +570,13 @@ def build_h40f(bands, foot, ext, catalogue, log, cache=None, n_folds=4, max_pos=
             oof[yy, xx] = clf.predict_proba(fb.at_points(yy, xx).T)[:, 1]
         del Xtr, ytr, clf
     log.append(f"H40-F: {int(pos.sum())} SGMC-off positives / {int(neg.sum())} background, "
-               f"{len(names)} features, {n_folds} spatial-block folds, out-of-fold predictions")
-    return norm(oof, foot)
+               f"{len(names)} features, {n_folds} folds over {nblocks} spatial blocks "
+               f"({n_blocks_y}x{n_blocks_x} -- the SAME grid holdout40 evaluates on), "
+               f"out-of-fold predictions")
+    out = norm(oof, foot)
+    if return_fold_map:
+        return out, fold
+    return out
 
 
 # ---------------------------------------------------------------- fusion / propensity

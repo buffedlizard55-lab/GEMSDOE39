@@ -464,3 +464,172 @@ for every candidate, so the stopping point is auditable.
   scored catalogue", used because nothing better is available offline.
 * No claim that the external mirrors are the bytes USGS published. They are the
   bytes the owner pinned, and the pin is what is verified.
+
+
+---
+
+## 7. Measured outcome of the H40 round
+
+Machine-readable records: `artifacts/h40_selection.json` (selection stage) and
+`docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-manifest.json` (build stage).
+Every number below is read out of those two files, not transcribed.
+
+**Instrument calibration.** The live-scored 0.2778 artifact run through the same
+prevalence-matched I2 instrument as every candidate:
+
+| quantity | value |
+|---|---|
+| dots | 37,654 |
+| pooled instrument DTI (I2) | 0.0640 |
+| per-dot instrument hit rate | 2.765% |
+| instrument truth coverage | 20.37% of 14,148 px |
+| pooled instrument DTI (I1) | 0.0059 |
+| live hit rate from the inverse-DTI calibration | 6.130% |
+| **transfer factor (instrument / live)** | **0.451** |
+
+The transfer factor is *below* 1: the SGMC off-catalogue instrument is about
+2.2x **harder** than the live set. The first run reported 1.249 for this factor
+because it was computed from a broken quantity (irregularity 12); getting its
+direction wrong would have under-priced every candidate by roughly 5x.
+
+**Pre-declared selection rule.** Highest pooled instrument DTI among variants that
+(a) beat the anchor's pooled instrument DTI, (b) reach `accept_H1` on either Wald
+SPRT over the 32 I2 folds, (c) leak <= 2%, and (d) keep a per-dot hit rate within
+20% of the anchor. Declared in `scripts/h40_select.py` before measurement.
+
+| variant | bb,A,B,C,D,E,F,G | I2 DTI | x anchor | per-dot hit | x anchor | truth cov | live-priced hit | price | sign SPRT | mean SPRT | I1 x anchor |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| **ANCHOR** (live 0.2778) | - | 0.0640 | 1.000x | 2.765% | 1.000x | 20.37% | 6.130% | 0.2778 *(measured)* | control | control | 1.000x |
+| W01-F | 0,0,0,0,0,0,1,0 | 0.1391 | 2.173x | 6.488% | 2.347x | 37.45% | 14.386% | 0.4774 | accept_H1 21/29 | accept_H1 +2.92 | 0.561x |
+| W02-F2 | 0,0,0,0,0,0,2,0 | 0.1391 | 2.173x | 6.488% | 2.347x | 37.45% | 14.386% | 0.4774 | accept_H1 21/29 | accept_H1 +2.92 | 0.561x |
+| W14-F1-D0.25-E0.25 | 0,0,0,0,0.25,0.25,1,0 | 0.1324 | 2.070x | 5.896% | 2.133x | 36.71% | 13.073% | 0.4540 | accept_H1 21/29 | accept_H1 +2.95 | 0.651x |
+| W04-bb0.25-F1 | 0.25,0,0,0,0,0,1,0 | 0.1307 | 2.042x | 6.090% | 2.203x | 36.06% | 13.502% | 0.4619 | accept_H1 21/29 | accept_H1 +3.01 | 0.560x |
+| W06-F1-A0.25 | 0,0.25,0,0,0,0,1,0 | 0.1292 | 2.019x | 6.140% | 2.221x | 36.17% | 13.614% | 0.4640 | accept_H1 21/29 | accept_H1 +3.63 | 0.699x |
+| W13-bb0.5-F1.5 | 0.5,0,0,0,0,0,1.5,0 | 0.1286 | 2.009x | 5.944% | 2.150x | 35.76% | 13.179% | 0.4560 | accept_H1 21/29 | accept_H1 +3.13 | 0.583x |
+| W03-bb0.5-F1 | 0.5,0,0,0,0,0,1,0 | 0.1237 | 1.933x | 5.657% | 2.046x | 34.38% | 12.543% | 0.4439 | accept_H1 21/29 | accept_H1 +3.10 | 0.572x |
+| W18-bb0.25-F1-A0.25 | 0.25,0.25,0,0,0,0,1,0 | 0.1205 | 1.883x | 5.755% | 2.082x | 34.17% | 12.760% | 0.4481 | accept_H1 21/29 | accept_H1 +2.99 | 0.714x |
+| W05-F1-A0.5 | 0,0.5,0,0,0,0,1,0 | 0.1178 | 1.841x | 5.633% | 2.037x | 33.51% | 12.490% | 0.4428 | accept_H1 21/29 | accept_H1 +3.36 | 0.749x |
+| W07-F1-C0.5 | 0,0,0,0.5,0,0,1,0 | 0.1082 | 1.691x | 5.237% | 1.894x | 30.32% | 11.612% | 0.4249 | continue 22/32 | accept_H1 +3.27 | 0.718x |
+| W11-bb1-F1 | 1,0,0,0,0,0,1,0 | 0.1081 | 1.690x | 5.014% | 1.814x | 30.31% | 11.118% | 0.4143 | accept_H1 21/29 | accept_H1 +3.60 | 0.641x |
+| W12-bb1-A1-F2 | 1,1,0,0,0,0,2,0 | 0.1038 | 1.622x | 4.887% | 1.768x | 30.33% | 10.835% | 0.4080 | continue 22/32 | accept_H1 +2.97 | 0.750x |
+| W10-F1-A0.5-C0.5 | 0,0.5,0,0.5,0,0,1,0 | 0.0954 | 1.491x | 4.478% | 1.620x | 27.42% | 9.928% | 0.3868 | continue 22/32 | accept_H1 +4.02 | 0.867x |
+| W17-F1-A0.25-C0.25-G0.25 | 0,0.25,0,0.25,0,0,1,0.25 | 0.0704 | 1.100x | 3.609% | 1.305x | 19.59% | 8.003% | 0.3360 | accept_H0 8/18 | continue -1.47 | 2.075x |
+| W15-F1-A0.5-B0.25-C0.5-G0.25 | 0,0.5,0.25,0.5,0,0,1,0.25 | 0.0675 | 1.054x | 3.426% | 1.239x | 19.37% | 7.596% | 0.3242 | accept_H0 6/15 | accept_H0 -2.39 | 2.095x |
+| W08-F1-G0.5 | 0,0,0,0,0,0,1,0.5 | 0.0670 | 1.047x | 3.498% | 1.265x | 18.31% | 7.755% | 0.3288 | accept_H0 8/18 | accept_H0 -2.27 | 2.186x |
+| W16-F1-C0.5-G0.5 | 0,0,0,0.5,0,0,1,0.5 | 0.0663 | 1.036x | 3.452% | 1.249x | 18.34% | 7.655% | 0.3259 | accept_H0 8/18 | accept_H0 -2.36 | 2.253x |
+| W09-F1-A0.5-G0.5 | 0,0.5,0,0,0,0,1,0.5 | 0.0662 | 1.034x | 3.445% | 1.246x | 18.22% | 7.637% | 0.3254 | accept_H0 8/18 | accept_H0 -2.38 | 2.256x |
+| W00-backbone | 1,0,0,0,0,0,0,0 | 0.0502 | 0.784x | 2.369% | 0.857x | 15.79% | 5.253% | 0.2470 | accept_H0 10/21 | accept_H0 -2.26 | 1.325x |
+
+**Winner: `W01-F` = H40-F alone** -- the supervised off-catalogue propensity at
+exponent 1 with no other channel. Instrument DTI **0.1391 = 2.173x the
+anchor**, per-dot hit rate **6.488% = 2.347x**, truth coverage
+**37.45% vs 20.37%**, both SPRTs `accept_H1`, leakage
+0.0106.
+
+### Three things in that table worth more than the winner
+
+1. **No play-fairway gate improved on H40-F on I2.** Multiplying the supervised
+   channel by stress favourability (A), heat flow (B), deep temperature (C),
+   strain/seismic (D), tilt (E) or tip corridors (G) *reduced* instrument DTI in
+   every case tested, monotonically in the exponent. That is a negative result and
+   it is reported as one: the physically motivated layers carry real information
+   but, at the exponents tested, they dilute a stronger learned ranking rather than
+   sharpening it. `W06-F1-A0.25` loses the least (2.019x vs 2.173x), which is the
+   direction to push if the favourability gate is revisited -- smaller exponent, or
+   applied only where H40-F is ambiguous.
+2. **H40-G is a catalogue-continuation detector and behaves exactly like one.**
+   Every variant carrying a G exponent scores ~1.03-1.10x on I2 (faults *away* from
+   the catalogue) but **2.10-2.26x on I1** (hidden components *of* the catalogue).
+   The two instruments disagree in the direction the geology predicts: corridors laid
+   along strike beyond mapped tips can only find mapped-trace geometry. Since staff
+   confirm that "newly mapped geometry of an existing fault system" counts as a new
+   fault, G is not refuted -- it is aimed at a part of the target population that
+   neither offline instrument isolates. It is the first channel to try if the Phase 2
+   expert-expanded label set turns out to be dominated by extensions of mapped systems.
+3. **H40-E, the corrected tilt-angle zero-crossing, is the best *unsupervised*
+   channel.** In the build stage it prices at 0.3602-0.3681 at 37,654-57,981 dots
+   with a per-dot instrument hit rate of 4.005% (1.45x the anchor) and a *positive*
+   sum of per-fold score deltas (+1,039 to +1,992) -- but neither SPRT reaches
+   `accept_H1`, so it is correctly **not** promoted. It is the strongest candidate
+   that does not depend on SGMC-off labels at all, which makes it the natural
+   diversification play for a second submission slot.
+
+### What was actually emitted
+
+| | |
+|---|---|
+| file | `docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-zeros.tif` |
+| SHA-256 (zeros twin) | `8489991c787d98f06ac48a271a665def2cb02ca0a1fa0ccfd23ebfbe88d85d18` |
+| SHA-256 (nan twin) | `fbb4c10726adfffddcc912513e8e7ffd19bc0c7428d2351106f25524807f7e1a` |
+| active dots | 45,962 -- the argmax of the calibrated price curve, **not** the anchor's 37,654 |
+| on the masked catalogue | 0 |
+| geometry | best-first Poisson disk, 2.8 px minimum spacing, 2 px catalogue exclusion |
+| price-curve self-consistency | pi* at the optimum 13.535% vs measured marginal 14.033% -- they agree |
+| instrument hit rate | 6.477% (2.343x anchor) |
+| live-priced hit rate | 14.361% |
+| **calibrated price** | **0.4848** (TP_w 10,656, FP_w 42,662) |
+| leakage | 0.0102 (gate <= 0.02) |
+| sign SPRT | accept_H1, 14/17 folds, LLR +3.178 (bound +2.8904) |
+| normal-mean SPRT | accept_H1, LLR +3.031, sigma=172.8 (estimated) |
+| sum of per-fold score deltas | +3419.4 |
+| uniqueness | max Jaccard vs 22 mirrored artifacts = 0.0093 (`bayesopt-dilation-scarp_unscored.tif`); byte-identical to any: False |
+| format validator | PASS on all 11 checks, both twins |
+
+### Price sensitivity: how much of the advantage has to be real
+
+| share of the measured advantage that transfers | live hit rate | priced score | reading |
+|---|---|---|---|
+| 0% | 6.130% | **0.2778** | the anchor's *measured* score -- no evidence of improvement |
+| 25% | 8.188% | 0.3586 | clears today's live #1 (0.3262) |
+| 50% | 10.246% | 0.4094 | clears it comfortably |
+| 75% | 12.304% | 0.4508 | |
+| 100% | 14.361% | **0.4848** | the headline price |
+
+At 0% transfer the honest price is the anchor's measured 0.2778, not the 0.2960
+the model returns for holding the hit rate fixed while raising the budget: the
+corpus says the average hit rate falls roughly as n^-0.75 with budget, so it does
+not hold fixed.
+
+### Why two sequential tests, and why the fold statistic is what it is
+
+The sign test binarises each fold; the mean test uses the fold magnitudes. Here
+both reach `accept_H1`. They are not guaranteed to agree, and the disagreement
+case is real: a candidate that gains a lot in a few truth-dense folds and a little
+in many truth-poor folds has a positive *sum* of per-fold deltas -- so it wins the
+pooled metric, which is what the organizer scores -- while losing a majority of
+fold signs. The first selection run hit exactly that (sign `accept_H0` at 8/18
+while the pooled instrument DTI was 2.05x the anchor). Both tests are reported
+everywhere, the gate accepts on either, and
+`tests/test_h40.py::test_sign_test_and_mean_test_can_disagree_and_both_are_reported`
+pins a synthetic divergence so neither can be quietly dropped.
+
+The fold statistic is not ad hoc. With `D = 0.2*TP + 0.2*FP + 0.8*G` and `s = TP/D`:
+
+```
+delta = dTP*(1 - 0.2*s_anchor) - 0.2*s_anchor*dFP = D_cand,fold * (s_cand,fold - s_anchor)
+```
+
+an **exact** identity, not a linearisation. Because `s_anchor` is a single
+pre-declared constant, the fold deltas sum to
+`D_cand,pooled * (s_cand,pooled - s_anchor)` -- exactly the pooled score change
+against the anchor. A sequential test over folds is therefore a test of the
+*pooled* claim. Pinned by
+`tests/test_h40.py::test_fold_score_delta_is_the_first_order_pooled_score_change`,
+which also documents why additivity needs the 6 px block erosion and the 10 px
+collar: the kernel reaches 3 px across a fold boundary.
+
+### Residual risk, stated plainly
+
+The winner is trained on the same population the primary instrument is drawn from
+(USGS SGMC faults absent from the scored catalogue), held out by spatial fold and
+audited for alignment. That is the right construction -- staff define the target as
+"any fault pixel not already captured by USGS/INGENIOUS" -- but it means the
+instrument and the training target share a *source*, and a shared source can share
+a bias that neither the fold holdout nor the leakage probe can see. On the
+instrument that does **not** share that source (I1, hidden catalogue components)
+the winner scores 0.561x the anchor. I1 measures the ability to
+rediscover pixels that are masked out of scoring and therefore irrelevant to the
+live number, which is why I2 was declared primary -- but that is an argument, not a
+measurement. The risk-adjusted alternative is `W05-F1-A0.5` (I2 1.841x, I1
+0.749x, both SPRTs `accept_H1`, priced
+0.4428).

@@ -23,6 +23,7 @@ import numpy as np
 import rasterio
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
 
 LEADERBOARD = [
     (1, "nchuzhoy", 0.3262), (2, "kinghorton42", 0.3222), (3, "DARD", 0.3195),
@@ -205,7 +206,7 @@ def build(manifest_path: Path):
     gate = m["gate"]
     prim = m["primary"]
     pr = m["candidates_priced"][prim]
-    sprt = m["sprt"][prim]
+    sprt = m["sprt"][f"{prim}@{m.get('primary_arm','anchor')}"]
     anchor = m["anchor"]
     hold = m["holdout"]
     ext = m["external"]
@@ -214,20 +215,34 @@ def build(manifest_path: Path):
     fname_base = zeros.name[:-len("-zeros.tif")]
 
     rows = []
-    for k in sorted(m["candidates_priced"], key=lambda k: -m["candidates_priced"][k]["priced"]["score"]):
+    PILL = ' &nbsp;<span class="pill">PRIMARY</span>'
+    for k in sorted(m["candidates_priced"],
+                    key=lambda k: -m["candidates_priced"][k]["priced"]["score"]):
         v = m["candidates_priced"][k]
-        d = m["sprt"][k]
-        rows.append(
-            f"<tr><td><b>{esc(k)}</b>{' &nbsp;<span class=\"pill\">PRIMARY</span>' if k == prim else ''}</td>"
-            f"<td>{v['n_pool']:,}</td><td><b>{v['n']:,}</b></td>"
-            f"<td>{100*v['hit_rate_instrument']:.3f}%</td>"
-            f"<td>{100*v['hit_rate_live']:.3f}%</td>"
-            f"<td><b>{v['priced']['score']:.4f}</b></td>"
-            f"<td>{v['priced']['TPw']:,.0f}</td><td>{v['priced']['FPw']:,.0f}</td>"
-            f"<td>{v['leakage']:.4f}</td>"
-            f"<td>{d['wins']}/{d['n']}</td><td>{d['llr']:+.3f}</td>"
-            f"<td class=\"{'ok' if d['decision']=='accept_H1' else ('bad' if d['decision']=='accept_H0' else 'mut')}\">"
-            f"{esc(d['decision'])}</td></tr>")
+        for arm, nk, hk, pk, lk in (("anchor", "n_anchor", "hit_rate_instrument_anchor",
+                                     "priced_anchor", "leakage_anchor"),
+                                    ("priced", "n", "hit_rate_live", "priced", "leakage")):
+            d = m["sprt"].get(f"{k}@{arm}", {})
+            sg = d.get("sign", {})
+            mn = d.get("mean", {})
+            cls = {"accept_H1": "ok", "accept_H0": "bad"}.get(d.get("decision"), "mut")
+            hkey = ("hit_rate_instrument_anchor" if arm == "anchor"
+                    else "hit_rate_instrument")
+            pr_ = v.get(pk) or v.get("priced")
+            name = k + (" (PRIMARY)" if (k == prim and arm == m.get("primary_arm")) else "")
+            rows.append(
+                "<tr><td><b>" + esc(name) + "</b>" + (PILL if name.endswith("(PRIMARY)") else "")
+                + "</td><td>" + arm + "</td>"
+                + "<td>" + f"{v.get(nk, 0):,}" + "</td>"
+                + "<td>" + f"{100*v.get(hkey, 0):.3f}%" + "</td>"
+                + "<td>" + f"{100*v['hit_rate_live' if arm=='priced' else 'hit_rate_live_anchor']:.3f}%" + "</td>"
+                + "<td><b>" + f"{pr_['score']:.4f}" + "</b></td>"
+                + "<td>" + f"{pr_['TPw']:,.0f}" + "</td><td>" + f"{pr_['FPw']:,.0f}" + "</td>"
+                + "<td>" + f"{v.get(lk, 0):.4f}" + "</td>"
+                + "<td>" + f"{sg.get('wins','-')}/{sg.get('n','-')}" + "</td>"
+                + "<td>" + f"{sg.get('llr', float('nan')):+.3f}" + "</td>"
+                + "<td>" + f"{mn.get('llr', float('nan')):+.3f}" + "</td>"
+                + '<td class="' + cls + '">' + esc(d.get("decision", "-")) + "</td></tr>")
     cand_rows = "\n".join(rows)
 
     lb_rows = "\n".join(
@@ -253,7 +268,31 @@ def build(manifest_path: Path):
         f"<tr><td>{nm}</td><td class=\"mono\"><a href=\"{esc(u)}\">{esc(u)}</a></td>"
         f"<td>{esc(t)}</td></tr>" for nm, u, t in SOURCES)
 
-    gate_txt = esc(json.dumps(gate, indent=2, default=float))
+    # selection-stage record (committed alongside the manifest) -- read, not retyped
+    sel_path = ROOT / "artifacts" / "h40_selection.json"
+    selrec = json.loads(sel_path.read_text()) if sel_path.exists() else {}
+    n_variants = len(selrec.get("grid", {}))
+    exponents_txt = ", ".join(f"{k}^{v}" for k, v in m["fusion"]["weights"].items() if v)
+
+    gate_txt = esc(json.dumps({k: v for k, v in gate.items() if k != "arms"},
+                              indent=2, default=float))
+    arms_txt = esc(json.dumps(gate.get("arms", []), indent=1, default=float))
+
+    # ---- transfer-discount sensitivity: how much of the measured instrument
+    # advantage has to survive the jump to the live set for each score to hold.
+    from gems39.calibrate import price as _price
+    h_a_live = cal_h = m["calibration"]["anchor_live_hit_rate"]
+    ratio = pr["hit_rate_live"] / cal_h if cal_h else 1.0
+    sens = []
+    for f in (0.0, 0.25, 0.50, 0.75, 1.00):
+        h = cal_h * (1.0 + f * (ratio - 1.0))
+        pp = _price(pr["n"], G, h)
+        sens.append((f, h, pp["score"], pp["TPw"], pp["FPw"]))
+    sens_rows = "\n".join(
+        f"<tr><td>{100*f:.0f}%</td><td>{100*h:.3f}%</td><td>{tp:,.0f}</td>"
+        f"<td>{fp:,.0f}</td><td><b>{sc:.4f}</b></td>"
+        f"<td>{'above live #1 (0.3262)' if sc >= 0.3262 else ('between 0.2778 and 0.3262' if sc >= 0.2778 else 'below our previous best')}</td></tr>"
+        for f, h, sc, tp, fp in sens)
 
     # ------------------------------------------------------------------ index.html
     index = f"""<!doctype html>
@@ -277,15 +316,24 @@ def build(manifest_path: Path):
 the DOE GEMS Prize Challenge</a>. No pixel is copied from any previous submission.</p>
 <div class="kv">
 <div>Submission name</div><div class="mono">gemsdoe39-h40-pfpt-playfairway-permeability</div>
-<div>Primary channel</div><div><b>{esc(prim)}</b> &mdash; play-fairway fusion of 7 detectors</div>
+<div>Primary channel</div><div><b>{esc(prim)}</b> &mdash; fusion exponents
+   <code>{esc(exponents_txt)}</code>; selection winner <b>{esc(m['fusion']['winner'])}</b>
+   out of {n_variants} pre-declared fusion variants in <code>scripts/h40_select.py</code></div>
 <div>Predicted pixels</div><div>{zi['positive_inside_footprint']:,} of {m['grid']['active_px']:,} active
    ({100*zi['positive_inside_footprint']/m['grid']['active_px']:.3f}% of the scored domain)</div>
 <div>On the masked catalogue</div><div class="ok">0 pixels</div>
 <div>Emission geometry</div><div>best-first Poisson disk, {geo['min_dist_px']} px
    ({geo['min_dist_px']*100:.0f} m) minimum spacing, hard exclusion within
    {geo['cat_buffer_px']} px ({geo['cat_buffer_px']*100:.0f} m) of the catalogue</div>
-<div>Budget rule</div><div>stopped where the marginal hit rate crosses the break-even price
-   &pi;* = {100*cal['break_even_pi']['pi_star']:.3f}%</div>
+<div>Budget rule</div><div>{pr['n']:,} dots is the <b>argmax of the calibrated price curve</b>
+   over 400 candidate budgets &mdash; derived, not inherited from the anchor's 37,654.
+   Self-consistency at that optimum: break-even &pi;* =
+   {100*(m['candidates_priced'][prim]['stop'].get('pi_star_at_optimum') or 0):.3f}%
+   vs measured marginal hit rate
+   {100*(m['candidates_priced'][prim]['stop'].get('marginal_live_hit_rate_at_optimum') or 0):.3f}%.
+   (&pi;* at the anchor's own score of 0.2778 is
+   {100*cal['break_even_pi']['pi_star']:.3f}%; &pi;* rises with the operating score because
+   coverage of |G| saturates.)</div>
 <div>Calibrated |G|</div><div>{G:,.0f} active scored-truth pixels
    [{cal['G_range'][0]:,.0f} &ndash; {cal['G_range'][1]:,.0f}]</div>
 <div>Anchor hit rate</div><div>{100*cal['anchor_live_hit_rate']:.3f}%
@@ -294,9 +342,12 @@ the DOE GEMS Prize Challenge</a>. No pixel is copied from any previous submissio
 <div>Priced live score</div><div><b>{pr['priced']['score']:.4f}</b> (model output, not a measured score)</div>
 <div>Wald SPRT</div><div>&alpha;={m['sprt_predeclared']['alpha']}, &beta;={m['sprt_predeclared']['beta']},
    p0={m['sprt_predeclared']['p0']}, p1={m['sprt_predeclared']['p1']} &rarr;
-   <span class="{'ok' if sprt['decision']=='accept_H1' else 'mut'}">{esc(sprt['decision'])}</span>
-   ({sprt['wins']}/{sprt['n']} folds, LLR {sprt['llr']:+.3f},
-   bounds [{sprt['lower']:+.3f}, {sprt['upper']:+.3f}])</div>
+   <b>sign test</b> <span class="{'ok' if sprt['sign']['decision']=='accept_H1' else 'bad'}">{esc(sprt['sign']['decision'])}</span>
+   ({sprt['sign']['wins']}/{sprt['sign']['n']} folds, LLR {sprt['sign']['llr']:+.3f});
+   <b>normal-mean test</b> <span class="{'ok' if sprt['mean']['decision']=='accept_H1' else 'bad'}">{esc(sprt['mean']['decision'])}</span>
+   (n={sprt['mean']['n']}, LLR {sprt['mean']['llr']:+.3f}, &sigma;={sprt['mean']['sigma']:.1f});
+   bounds [{sprt['sign']['lower']:+.3f}, {sprt['sign']['upper']:+.3f}] &rarr;
+   <b>combined {esc(sprt['decision'])}</b></div>
 <div>Format validator</div><div class="ok">{'PASS' if all(checks.values()) else 'FAIL'} &mdash; all
    {len(checks)} checks on both twins</div>
 </div>
@@ -381,17 +432,41 @@ The target used throughout this round is therefore <b>&gt; 0.3262</b>.</div>
 <td>The tilt angle crosses zero directly above a vertical contact &mdash; a sub-pixel locator, unlike the analytic-signal magnitude which peaks off-contact.</td></tr>
 </table>
 
+<h2>How much of this has to be true</h2>
+<p>The {pr['priced']['score']:.4f} price assumes the <b>whole</b> of the measured instrument
+advantage ({pr['hit_rate_live']/m['calibration']['anchor_live_hit_rate']:.3f}&times; the anchor's
+per-dot hit rate) survives the jump from the SGMC off-catalogue instrument to the organizer's
+labels. That is an assumption, so here is the price as a function of how much of it survives:</p>
+<table><tr><th>share of the measured advantage that transfers</th><th>live hit rate</th>
+<th>TP<sub>w</sub></th><th>FP<sub>w</sub></th><th>priced score</th><th>where that lands</th></tr>
+{sens_rows}
+</table>
+<p class="mut"><b>Read the 0% row with care.</b> Holding the hit rate at the anchor's while raising
+the budget from 37,654 to {pr['n']:,} dots mechanically lifts the model's price to
+{[x[2] for x in sens][0]:.4f}, but the corpus says that is not how budgets behave: across 16 scored
+artifacts the implied hit rate falls roughly as n<sup>&minus;0.75</sup>, so a larger budget does
+<i>not</i> hold its average hit rate. At 0% transfer the defensible price is therefore the anchor's
+own measured <b>0.2778</b>, not {[x[2] for x in sens][0]:.4f}. Every row above 0% assumes some real
+transfer of the measured advantage.</p>
+<p class="mut">Even at a <b>quarter</b> of the measured advantage the price clears today's live #1
+(0.3262). The transfer factor itself ({anchor['transfer_factor']:.3f}) is estimated from a
+<b>single</b> live-scored artifact and is the weakest link in the chain &mdash; it says the
+SGMC off-catalogue instrument is about 2.2&times; <i>harder</i> than the live set, measured by
+running the live-scored 0.2778 artifact through the same instrument.</p>
+
 <h2>Priced candidates</h2>
 <p class="mut">Every candidate is emitted best-first Poisson-disk, its marginal hit-rate decay is
 <i>measured</i> on the prevalence-matched instrument, and it is stopped where that marginal rate
 crosses the break-even price. &ldquo;Priced score&rdquo; is model output from the calibration above.</p>
-<table><tr><th>channel</th><th>pool</th><th>priced n</th><th>instr. hit rate</th><th>live-priced hit rate</th>
-<th>priced score</th><th>TP<sub>w</sub></th><th>FP<sub>w</sub></th><th>leakage</th>
-<th>SPRT wins</th><th>LLR</th><th>decision</th></tr>
+<table><tr><th>channel</th><th>arm</th><th>n dots</th><th>instr. hit rate</th>
+<th>live-priced hit rate</th><th>priced score</th><th>TP<sub>w</sub></th><th>FP<sub>w</sub></th>
+<th>leakage</th><th>sign SPRT w/n</th><th>sign LLR</th><th>mean LLR</th><th>combined</th></tr>
 {cand_rows}
 </table>
 <h3>Promotion gate</h3>
 <pre>{gate_txt}</pre>
+<details><summary>every gated arm ({len(gate.get("arms", []))} rows)</summary>
+<pre>{arms_txt}</pre></details>
 
 <h2>Validation</h2>
 <div class="kv">

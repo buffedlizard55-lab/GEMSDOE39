@@ -1,166 +1,614 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
+<html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GEMSDOE39 — Unique Submission for the DOE GEMS Prize</title>
+<title>GEMSDOE39 &mdash; H40 Play-Fairway Submission (DrivenData #306)</title>
 <style>
-:root{--bg:#f8fafc;--ink:#0f172a;--muted:#475569;--accent:#0369a1;--accent2:#065f46;--warn:#b45309;--card:#fff}
+:root{--bg:#0f1216;--card:#171c23;--ink:#e8edf3;--mut:#93a1b1;--acc:#ffd23f;
+      --ok:#5fd08a;--bad:#ff7a7a;--line:#252d38}
 *{box-sizing:border-box}
-body{margin:0;font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
-.wrap{max-width:1000px;margin:0 auto;padding:28px 22px}
-header{background:linear-gradient(135deg,#0c4a6e 0%,#0369a1 60%,#0891b2 100%);color:#fff;padding:40px 22px}
-header .wrap{padding:0}
-header h1{margin:0 0 6px;font-size:2.1em;letter-spacing:-0.02em}
-header .sub{opacity:0.9;font-size:1.05em;margin-bottom:18px}
-.btn{display:inline-block;background:#fbbf24;color:#0f172a;font-weight:700;padding:14px 22px;border-radius:12px;text-decoration:none;margin:6px 8px 6px 0;box-shadow:0 4px 14px rgba(0,0,0,0.15);transition:transform .08s}
-.btn:hover{transform:translateY(-1px)}
-.btn.alt{background:#fff;color:#0369a1}
-.btn.secondary{background:#065f46;color:#fff}
-.meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px;font-size:0.92em;opacity:0.95}
-.meta span{background:rgba(255,255,255,0.14);padding:4px 10px;border-radius:20px}
-section{background:var(--card);border-radius:14px;padding:24px;margin:22px 0;box-shadow:0 2px 8px rgba(15,23,42,0.06)}
-h2{margin-top:0;color:#0c4a6e;border-bottom:2px solid #e0f2fe;padding-bottom:8px}
-h3{color:#0c4a6e;margin-bottom:6px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:12px}
-.card{background:#f1f5f9;padding:14px;border-radius:10px}
-.card b{display:block;color:#0c4a6e;font-size:1.05em;margin-bottom:4px}
-code{background:#e2e8f0;padding:2px 6px;border-radius:4px;font-size:0.9em}
-.pass{color:#065f46;font-weight:700}
-.warn{color:var(--warn);font-weight:700}
-.note{background:#fef3c7;border-left:4px solid #d97706;padding:10px 14px;border-radius:6px;margin:10px 0}
-.ok{background:#d1fae5;border-left:4px solid #059669;padding:10px 14px;border-radius:6px;margin:10px 0}
-table{border-collapse:collapse;width:100%;margin-top:10px}
-th,td{padding:8px 10px;border-bottom:1px solid #e2e8f0;text-align:left;vertical-align:top;font-size:0.95em}
-th{background:#f1f5f9}
-.tag{display:inline-block;background:#0369a1;color:#fff;border-radius:6px;padding:2px 8px;font-size:0.78em;margin-left:6px}
-a{color:var(--accent)}
-.sha{font-family:ui-monospace,Consolas,monospace;font-size:0.82em;word-break:break-all;background:#f1f5f9;padding:3px 6px;border-radius:4px}
-footer{color:var(--muted);font-size:0.9em;text-align:center;padding:20px 0}
-.steps{counter-reset:step;list-style:none;padding:0}
-.steps li{counter-increment:step;position:relative;padding:8px 0 8px 38px}
-.steps li:before{content:counter(step);position:absolute;left:0;top:8px;width:26px;height:26px;background:#0369a1;color:#fff;border-radius:50%;text-align:center;line-height:26px;font-weight:700}
-</style>
-</head>
-<body>
-<header>
-<div class="wrap">
-<h1>GEMSDOE39</h1>
-<div class="sub">Unique geothermal-fault submission for the DOE GEMS Prize (DrivenData #306).
-Validated single-band float32 GeoTIFF; strictly in [0, 1] inside footprint;
-PRIMARY = <b>H39-B Scarp-Curvature Step-Over</b>, spatially-blocked SPRT-gated.</div>
-<a class="btn" href="downloads/gemsdoe39-h39-b-20261005T020000Z-zeros.tif" download>⬇ DOWNLOAD SUBMISSION (zeros-outside, recommended)</a>
-<a class="btn alt" href="downloads/gemsdoe39-h39-b-20261005T020000Z-nan.tif" download>⬇ NaN-outside variant</a>
-<div class="meta">
-<span><b>35,805</b> positive pixels</span>
-<span><b>0</b> on USGS catalogue</span>
-<span>CRS <b>EPSG:32611</b></span>
-<span><b>3730×3292</b> @ 100 m</span>
-<span>All checks <b>PASS</b></span>
+body{margin:0;background:var(--bg);color:var(--ink);
+     font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 20px 80px}
+h1{font-size:30px;margin:8px 0 4px;line-height:1.25}
+h2{font-size:22px;margin:38px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+h3{font-size:17px;margin:22px 0 6px}
+p{margin:8px 0}
+a{color:#7fc4ff}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{background:#0b0e12;border:1px solid var(--line);border-radius:8px;padding:12px 14px;
+    overflow-x:auto;font-size:13px}
+code{background:#0b0e12;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:13px}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#1b222b}
+tr:nth-child(even) td{background:#141920}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+.dl{display:block;background:var(--acc);color:#1a1400;font-weight:800;font-size:22px;
+    text-align:center;padding:22px 18px;border-radius:12px;text-decoration:none;
+    margin:18px 0 10px;letter-spacing:.2px}
+.dl:hover{filter:brightness(1.07)}
+.dl small{display:block;font-weight:600;font-size:13px;margin-top:6px;color:#3a2f00}
+.sub{display:block;text-align:center;color:var(--mut);font-size:13px;margin-bottom:22px}
+.mut{color:var(--mut)}
+.ok{color:var(--ok);font-weight:700}
+.bad{color:var(--bad);font-weight:700}
+.pill{display:inline-block;background:#1b222b;border:1px solid var(--line);
+      border-radius:999px;padding:2px 10px;font-size:12px;color:var(--mut);margin:2px 4px 2px 0}
+.kv{display:grid;grid-template-columns:minmax(200px,34%) 1fr;gap:6px 14px;font-size:14px}
+.kv div:nth-child(odd){color:var(--mut)}
+.warn{border-left:4px solid var(--acc);background:#1d1a10;padding:12px 14px;border-radius:0 8px 8px 0;margin:14px 0}
+.note{border-left:4px solid #4a90d9;background:#111a24;padding:12px 14px;border-radius:0 8px 8px 0;margin:14px 0}
+ol li,ul li{margin:6px 0}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;word-break:break-all}
+.nav{display:flex;gap:14px;flex-wrap:wrap;font-size:14px;margin-top:10px}
+</style></head><body><div class="wrap">
+
+<a class="dl" href="docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-zeros.tif" download>
+  &#11015;&nbsp; DOWNLOAD SUBMISSION &mdash; gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-zeros.tif
+  <small>137,398 bytes &middot; 45,962 predicted pixels &middot;
+         float32 &middot; EPSG:32611 &middot; values in [0,1] &middot; SHA-256 8489991c787d98f0&hellip;</small>
+</a>
+<span class="sub">Click once &mdash; the file downloads directly. Then follow the
+  <a href="executive-summary.html">6-step upload guide</a>.</span>
+
+<div class="card">
+<h1>GEMSDOE39 &mdash; H40 play-fairway permeability targeting</h1>
+<p class="mut">A <b>unique</b> submission for
+<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/">DrivenData #306,
+the DOE GEMS Prize Challenge</a>. No pixel is copied from any previous submission.</p>
+<div class="kv">
+<div>Submission name</div><div class="mono">gemsdoe39-h40-pfpt-playfairway-permeability</div>
+<div>Primary channel</div><div><b>H40-F</b> &mdash; fusion exponents
+   <code>H40-F^1</code>; selection winner <b>W01-F</b>
+   out of 19 pre-declared fusion variants in <code>scripts/h40_select.py</code></div>
+<div>Predicted pixels</div><div>45,962 of 5,106,385 active
+   (0.900% of the scored domain)</div>
+<div>On the masked catalogue</div><div class="ok">0 pixels</div>
+<div>Emission geometry</div><div>best-first Poisson disk, 2.8 px
+   (280 m) minimum spacing, hard exclusion within
+   2 px (200 m) of the catalogue</div>
+<div>Budget rule</div><div>45,962 dots is the <b>argmax of the calibrated price curve</b>
+   over 400 candidate budgets &mdash; derived, not inherited from the anchor's 37,654.
+   Self-consistency at that optimum: break-even &pi;* =
+   13.535%
+   vs measured marginal hit rate
+   14.033%.
+   (&pi;* at the anchor's own score of 0.2778 is
+   3.149%; &pi;* rises with the operating score because
+   coverage of |G| saturates.)</div>
+<div>Calibrated |G|</div><div>14,143 active scored-truth pixels
+   [13,987 &ndash; 14,434]</div>
+<div>Anchor hit rate</div><div>6.130%
+   (37,654 dots &rarr; 2,308 hits)
+   for the live-scored 0.2778 artifact</div>
+<div>Priced live score</div><div><b>0.4848</b> (model output, not a measured score)</div>
+<div>Wald SPRT</div><div>&alpha;=0.05, &beta;=0.1,
+   p0=0.5, p1=0.7 &rarr;
+   <b>sign test</b> <span class="ok">accept_H1</span>
+   (14/17 folds, LLR +3.178);
+   <b>normal-mean test</b> <span class="ok">accept_H1</span>
+   (n=15, LLR +3.031, &sigma;=172.8);
+   bounds [-2.251, +2.890] &rarr;
+   <b>combined accept_H1</b></div>
+<div>Format validator</div><div class="ok">PASS &mdash; all
+   11 checks on both twins</div>
 </div>
 </div>
-</header>
 
-<div class="wrap">
+<div class="warn"><b>No score is claimed for this artifact.</b>
+0.4848 is the output of a two-equation calibration against
+organizer-returned scores, with stated nuisance priors and a transfer factor
+estimated from a <b>single</b> anchor artifact. The measured fact is
+0.2778 for the previous artifact; everything above is a prediction with a derivation.</div>
 
-<section>
-<h2>One-click download &amp; submit</h2>
-<div class="ok">Click the yellow button above to download the submission GeoTIFF, then follow
-the <a href="executive-summary.html">Executive Summary &amp; Upload Guide</a>.
-The <b>zeros-outside</b> file is the safe choice — it fixes the
-"<i>Predicted values must be in range [0, 1]</i>" upload error reported in the prompt.
-The NaN variant matches the sample format byte-for-byte inside the footprint;
-scoring is identical because DrivenData masks outside-footprint pixels by the
-reference grid regardless of their value.</div>
-<p><b>Recommended submission note (copy/paste):</b></p>
-<p><code>GEMSDOE39 H39-B scarp-curvature-stepover | multi-physics H39 family, cat-buffer 2 px, budget 44090; SPRT-gated; unique pixel set.</code></p>
-<p><b>SHA-256 (zeros):</b> <span class="sha">b29b79b08123cd24835ed0016c2792efbf457ff21ddfa316f3941317b64170b5</span><br>
-<b>SHA-256 (nan):</b> <span class="sha">c985646d4a1bb6de975b65fdc07904faaa55d4739eb176942c537d63f9</span></p>
-</section>
+<h2>Why the previous best (0.2778) scored what it scored</h2>
+<p>The artifact is
+<code>gemsdoe32-h33-h33-2-b2-20261004T220000Z-e5eb6e7e-zeros.tif</code>:
+<b>37,654 dots</b>. It is the
+40,199-dot <code>h27-4-r1-solo-d2-8</code> artifact (0.2708) with
+<b>exactly 2,545 dots deleted</b> &mdash; every dot at
+1.414&ndash;2.000 px
+from the catalogue. Re-read from disk and asserted by
+<code>calibrate.verify_nested_pair</code>.</p>
+<p>Because <code>TP<sub>w</sub> + FN<sub>w</sub> = |G|</code>, the metric collapses to
+<code>DTI = TP<sub>w</sub> / (0.2&middot;TP<sub>w</sub> + 0.2&middot;FP<sub>w</sub> + 0.8&middot;|G|)</code>,
+and that nested pair identifies <code>|G|</code>:</p>
+<pre>|G|                = 14,143   [13,987 .. 14,434] over a 5x4 (l0,kb) sensitivity grid
+anchor hit rate h  = 6.130%
+model reproduces   = 0.2778  vs observed 0.2778
+break-even pi*     = 3.149%</pre>
+<table><tr><th>Denominator term at the 0.2778 artifact</th><th>value</th><th>share</th><th>can we move it?</th></tr>
+<tr><td><code>0.2 &middot; TP<sub>w</sub></code></td><td>1,095</td>
+    <td>5.6%</td><td>yes &mdash; and it is the cheapest lever</td></tr>
+<tr><td><code>0.2 &middot; FP<sub>w</sub></code></td><td>7,300</td>
+    <td>37.0%</td><td>yes &mdash; by raising hits-per-dot</td></tr>
+<tr><td><code>0.8 &middot; |G|</code></td><td>11,314</td>
+    <td><b>57.4%</b></td><td class="bad">no &mdash; fixed cost</td></tr></table>
+<p><b>Answer to &ldquo;can we beat it?&rdquo;</b> Reaching 0.3262 (live #1) at the anchor's FP mass needs
+<code>TP<sub>w</sub> &asymp; 6,489</code> instead of 5,475 &mdash; a <b>+18.6% improvement in
+hit rate</b> (6.13% &rarr; ~7.3%). Budget tuning cannot do it: the priced optimum for the
+incumbent surface is ~25&ndash;28k dots for ~0.283. The only lever is <b>more hits per dot</b>,
+which is what all seven H40 channels are aimed at.</p>
+<div class="note">Also settled analytically and pinned by
+<code>tests/test_h40.py::test_binary_emission_is_never_worse_than_scaling_down</code>:
+because <code>0.8&middot;|G|</code> is a constant additive term, <code>DTI(c&middot;p)</code> rises
+monotonically in <code>c</code> and the inclusion rule does not depend on <code>p</code>.
+<b>Binary {0,1} emission at full scale is optimal</b>; submitting soft probabilities is
+strictly worse.</div>
 
-<section>
-<h2>Quick submit steps</h2>
-<ol class="steps">
-<li>Log into <a href="https://www.drivendata.org/competitions/306/competition-doe-gems/submissions/" target="_blank" rel="noopener">DrivenData</a>.</li>
-<li>Click <b>New submission</b>.</li>
-<li>Click <b>Choose File</b>, select the downloaded zeros-outside .tif (do not zip — the file is already deflate-compressed).</li>
-<li>Paste the note above into the <b>Note</b> field.</li>
-<li>Click <b>Submit</b>. The score appears after DrivenData evaluates (a few minutes; rolling weekly limit is 3 submissions).</li>
+<h2>Live leaderboard (read by hand, 2026-10-05)</h2>
+<p class="mut">Source: <a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/">the
+official leaderboard page</a>. The competition Terms of Use prohibit automated scraping, so this
+table was transcribed from a single manual read and is <b>not</b> refreshed by any script.</p>
+<table><tr><th>rank</th><th>participant</th><th>best public DW-Tversky</th><th>ratio</th></tr>
+<tr><td>#1</td><td>nchuzhoy</td><td><b>0.3262</b></td><td>1.174&times; our best</td></tr>
+<tr><td>#2</td><td>kinghorton42</td><td><b>0.3222</b></td><td>1.160&times; our best</td></tr>
+<tr><td>#3</td><td>DARD</td><td><b>0.3195</b></td><td>1.150&times; our best</td></tr>
+<tr><td>#4</td><td>xiaofanhu</td><td><b>0.3060</b></td><td>1.102&times; our best</td></tr>
+<tr><td>#5</td><td>alexoktaba</td><td><b>0.3042</b></td><td>1.095&times; our best</td></tr>
+<tr><td>#6</td><td>joeyfezster</td><td><b>0.3021</b></td><td>1.087&times; our best</td></tr>
+<tr><td>#7</td><td>Batik Shirt Brothers</td><td><b>0.2998</b></td><td>1.079&times; our best</td></tr>
+<tr><td>#8</td><td>ndavis7</td><td><b>0.2888</b></td><td>1.040&times; our best</td></tr>
+<tr><td>#9</td><td>mzoorob</td><td><b>0.2884</b></td><td>1.038&times; our best</td></tr>
+<tr><td>#10</td><td>GrigorSargsyan</td><td><b>0.2876</b></td><td>1.035&times; our best</td></tr>
+<tr><td>#11</td><td>HardcoreTechGod</td><td><b>0.2854</b></td><td>1.027&times; our best</td></tr>
+<tr><td>#12</td><td>op01</td><td><b>0.2792</b></td><td>1.005&times; our best</td></tr>
+<tr><td>#13</td><td>extradr19  &lt;- this project&#x27;s family</td><td><b>0.2778</b></td><td>1.000&times; our best</td></tr>
+<tr><td>#14</td><td>smashi34</td><td><b>0.2708</b></td><td>0.975&times; our best</td></tr>
+<tr><td>#15</td><td>smrtdoog5</td><td><b>0.2708</b></td><td>0.975&times; our best</td></tr>
+</table>
+<div class="warn"><b>Irregularity flagged:</b> the standing request quotes 0.3195 as the current
+leader. On 2026-10-05 the live page shows <b>0.3262 (nchuzhoy)</b> at #1 and 0.3195 (DARD) at #3.
+The target used throughout this round is therefore <b>&gt; 0.3262</b>.</div>
+
+<h2>The seven H40 hypotheses (ranked)</h2>
+<p>Full register with layers, physical signatures, literature links and novelty statements:
+<a href="research/h40-hypotheses.md"><code>docs/research/h40-hypotheses.md</code></a>.</p>
+<table><tr><th>#</th><th>ID</th><th>Hypothesis</th><th>Layers</th><th>Why it finds a <i>missing</i> fault</th></tr>
+<tr><td>1</td><td><b>H40-F</b></td><td>Supervised propensity for faults <i>absent</i> from the catalogue</td>
+<td>all 19 bands (&sigma;=0, 3 px) + 7 external layers; positives = USGS SGMC faults &gt;300 m from the catalogue (62,122 px)</td>
+<td>Training on the catalogue learns what a <i>mapped</i> fault looks like and over-weights geomorphic expression. Training on catalogue-<i>absent</i> faults inverts the bias.</td></tr>
+<tr><td>2</td><td><b>H40-A</b></td><td>Critically stressed lineament</td>
+<td>USGS Siler (2022) slip/dilation tendency, DOI 10.5066/P9YL58W6 (37,811 segments) + 7 bands</td>
+<td>USGS built this dataset to find &ldquo;as-yet-undiscovered hydrothermal processes&rdquo; &mdash; the scored population. Orientation vs the local stress field, empirical curve, peak/trough 6.9&times;.</td></tr>
+<tr><td>3</td><td><b>H40-C</b></td><td>Deep reservoir temperature anomaly</td>
+<td>GDR 1391 INGENIOUS (27,092 rows, 1,244 geothermometers)</td>
+<td>A hot reservoir needs a deep permeable pathway. Geothermometry measures the fluid that travelled the conduit; surface heat flow smears it.</td></tr>
+<tr><td>4</td><td><b>H40-G</b></td><td>Tip-continuation / linkage corridor</td>
+<td>catalogue skeleton tips + local strike &times; H40-A fields</td>
+<td>Staff: a new fault &ldquo;can include newly mapped geometry of an existing fault system&rdquo;. A trace that stops is a tip or a mapping limit.</td></tr>
+<tr><td>5</td><td><b>H40-B</b></td><td>Heat-flow anomaly</td>
+<td>USGS DeAngelo et al. (2022), DOI 10.5066/P9BZPVUC (879 QC A/B/C wells)</td>
+<td>Convective loss along a permeable fault leaves a local positive residual that conduction-only mapping smooths away.</td></tr>
+<tr><td>6</td><td><b>H40-D</b></td><td>Strain-rate kink + seismic lineament</td>
+<td>bands 4, 7, 8, 10, 16 &mdash; all unreachable before this session</td>
+<td>QFFD needs geomorphic evidence; GPS/InSAR strain and microseismicity outline faults that deform without a scarp.</td></tr>
+<tr><td>7</td><td><b>H40-E</b></td><td>Corrected tilt-angle zero-crossing</td>
+<td>band 6 <code>tc</code> + bands 3, 9</td>
+<td>The tilt angle crosses zero directly above a vertical contact &mdash; a sub-pixel locator, unlike the analytic-signal magnitude which peaks off-contact.</td></tr>
+</table>
+
+<h2>How much of this has to be true</h2>
+<p>The 0.4848 price assumes the <b>whole</b> of the measured instrument
+advantage (2.343&times; the anchor's
+per-dot hit rate) survives the jump from the SGMC off-catalogue instrument to the organizer's
+labels. That is an assumption, so here is the price as a function of how much of it survives:</p>
+<table><tr><th>share of the measured advantage that transfers</th><th>live hit rate</th>
+<th>TP<sub>w</sub></th><th>FP<sub>w</sub></th><th>priced score</th><th>where that lands</th></tr>
+<tr><td>0%</td><td>6.130%</td><td>6,363</td><td>44,553</td><td><b>0.2960</b></td><td>between 0.2778 and 0.3262</td></tr>
+<tr><td>25%</td><td>8.188%</td><td>7,777</td><td>44,080</td><td><b>0.3586</b></td><td>above live #1 (0.3262)</td></tr>
+<tr><td>50%</td><td>10.246%</td><td>8,934</td><td>43,607</td><td><b>0.4094</b></td><td>above live #1 (0.3262)</td></tr>
+<tr><td>75%</td><td>12.304%</td><td>9,881</td><td>43,135</td><td><b>0.4508</b></td><td>above live #1 (0.3262)</td></tr>
+<tr><td>100%</td><td>14.361%</td><td>10,656</td><td>42,662</td><td><b>0.4848</b></td><td>above live #1 (0.3262)</td></tr>
+</table>
+<p class="mut"><b>Read the 0% row with care.</b> Holding the hit rate at the anchor's while raising
+the budget from 37,654 to 45,962 dots mechanically lifts the model's price to
+0.2960, but the corpus says that is not how budgets behave: across 16 scored
+artifacts the implied hit rate falls roughly as n<sup>&minus;0.75</sup>, so a larger budget does
+<i>not</i> hold its average hit rate. At 0% transfer the defensible price is therefore the anchor's
+own measured <b>0.2778</b>, not 0.2960. Every row above 0% assumes some real
+transfer of the measured advantage.</p>
+<p class="mut">Even at a <b>quarter</b> of the measured advantage the price clears today's live #1
+(0.3262). The transfer factor itself (0.451) is estimated from a
+<b>single</b> live-scored artifact and is the weakest link in the chain &mdash; it says the
+SGMC off-catalogue instrument is about 2.2&times; <i>harder</i> than the live set, measured by
+running the live-scored 0.2778 artifact through the same instrument.</p>
+
+<h2>Priced candidates</h2>
+<p class="mut">Every candidate is emitted best-first Poisson-disk, its marginal hit-rate decay is
+<i>measured</i> on the prevalence-matched instrument, and it is stopped where that marginal rate
+crosses the break-even price. &ldquo;Priced score&rdquo; is model output from the calibration above.</p>
+<table><tr><th>channel</th><th>arm</th><th>n dots</th><th>instr. hit rate</th>
+<th>live-priced hit rate</th><th>priced score</th><th>TP<sub>w</sub></th><th>FP<sub>w</sub></th>
+<th>leakage</th><th>sign SPRT w/n</th><th>sign LLR</th><th>mean LLR</th><th>combined</th></tr>
+<tr><td><b>H40-F</b></td><td>anchor</td><td>37,654</td><td>6.488%</td><td>14.386%</td><td><b>0.4774</b></td><td>9,660</td><td>34,946</td><td>0.0106</td><td>21/29</td><td>+2.979</td><td>+2.919</td><td class="ok">accept_H1</td></tr>
+<tr><td><b>H40-F (PRIMARY)</b> &nbsp;<span class="pill">PRIMARY</span></td><td>priced</td><td>45,962</td><td>6.477%</td><td>14.361%</td><td><b>0.4848</b></td><td>10,656</td><td>42,662</td><td>0.0102</td><td>14/17</td><td>+3.178</td><td>+3.031</td><td class="ok">accept_H1</td></tr>
+<tr><td><b>H40-PFPT</b></td><td>anchor</td><td>37,654</td><td>6.488%</td><td>14.386%</td><td><b>0.4774</b></td><td>9,660</td><td>34,946</td><td>0.0106</td><td>21/29</td><td>+2.979</td><td>+2.919</td><td class="ok">accept_H1</td></tr>
+<tr><td><b>H40-PFPT</b></td><td>priced</td><td>45,962</td><td>6.477%</td><td>14.361%</td><td><b>0.4848</b></td><td>10,656</td><td>42,662</td><td>0.0102</td><td>14/17</td><td>+3.178</td><td>+3.031</td><td class="ok">accept_H1</td></tr>
+<tr><td><b>H40-E</b></td><td>anchor</td><td>37,654</td><td>4.005%</td><td>8.880%</td><td><b>0.3602</b></td><td>7,184</td><td>35,982</td><td>0.0073</td><td>22/32</td><td>+2.294</td><td>+1.343</td><td class="mut">continue</td></tr>
+<tr><td><b>H40-E</b></td><td>priced</td><td>57,981</td><td>3.651%</td><td>8.096%</td><td><b>0.3681</b></td><td>8,917</td><td>55,634</td><td>0.0065</td><td>22/32</td><td>+2.294</td><td>+1.874</td><td class="mut">continue</td></tr>
+<tr><td><b>backbone</b></td><td>anchor</td><td>37,654</td><td>2.369%</td><td>5.253%</td><td><b>0.2470</b></td><td>4,846</td><td>36,665</td><td>0.0035</td><td>10/21</td><td>-2.254</td><td>-2.261</td><td class="bad">accept_H0</td></tr>
+<tr><td><b>backbone</b></td><td>priced</td><td>69,825</td><td>2.353%</td><td>5.217%</td><td><b>0.2879</b></td><td>7,612</td><td>68,004</td><td>0.0036</td><td>10/21</td><td>-2.254</td><td>-2.586</td><td class="bad">accept_H0</td></tr>
+<tr><td><b>H40-G</b></td><td>anchor</td><td>37,654</td><td>2.114%</td><td>4.687%</td><td><b>0.2259</b></td><td>4,417</td><td>36,772</td><td>0.0028</td><td>4/12</td><td>-2.741</td><td>-2.768</td><td class="bad">accept_H0</td></tr>
+<tr><td><b>H40-G</b></td><td>priced</td><td>70,000</td><td>2.116%</td><td>4.691%</td><td><b>0.2687</b></td><td>7,095</td><td>68,358</td><td>0.0030</td><td>4/12</td><td>-2.741</td><td>-2.449</td><td class="bad">accept_H0</td></tr>
+<tr><td><b>H40-C</b></td><td>anchor</td><td>37,654</td><td>1.495%</td><td>3.315%</td><td><b>0.1698</b></td><td>3,290</td><td>37,030</td><td>0.0022</td><td>2/8</td><td>-2.392</td><td>-2.952</td><td class="bad">accept_H0</td></tr>
+<tr><td><b>H40-C</b></td><td>priced</td><td>69,825</td><td>1.650%</td><td>3.658%</td><td><b>0.2257</b></td><td>5,916</td><td>68,548</td><td>0.0023</td><td>2/8</td><td>-2.392</td><td>-3.512</td><td class="bad">accept_H0</td></tr>
+<tr><td><b>H40-A</b></td><td>anchor</td><td>37,654</td><td>1.235%</td><td>2.738%</td><td><b>0.1440</b></td><td>2,778</td><td>37,138</td><td>0.0019</td><td>0/5</td><td>-2.554</td><td>-2.940</td><td class="bad">accept_H0</td></tr>
+<tr><td><b>H40-A</b></td><td>priced</td><td>70,000</td><td>1.343%</td><td>2.977%</td><td><b>0.1935</b></td><td>5,054</td><td>68,958</td><td>0.0018</td><td>0/5</td><td>-2.554</td><td>-3.690</td><td class="bad">accept_H0</td></tr>
+<tr><td><b>H40-B</b></td><td>anchor</td><td>37,654</td><td>1.129%</td><td>2.503%</td><td><b>0.1330</b></td><td>2,562</td><td>37,183</td><td>0.0013</td><td>0/5</td><td>-2.554</td><td>-2.855</td><td class="bad">accept_H0</td></tr>
+<tr><td><b>H40-B</b></td><td>priced</td><td>69,825</td><td>1.320%</td><td>2.928%</td><td><b>0.1909</b></td><td>4,976</td><td>68,803</td><td>0.0018</td><td>0/5</td><td>-2.554</td><td>-3.339</td><td class="bad">accept_H0</td></tr>
+<tr><td><b>H40-D</b></td><td>anchor</td><td>37,654</td><td>1.038%</td><td>2.302%</td><td><b>0.1235</b></td><td>2,376</td><td>37,221</td><td>0.0012</td><td>1/7</td><td>-2.728</td><td>-2.706</td><td class="bad">accept_H0</td></tr>
+<tr><td><b>H40-D</b></td><td>priced</td><td>69,477</td><td>0.830%</td><td>1.841%</td><td><b>0.1305</b></td><td>3,361</td><td>68,837</td><td>0.0009</td><td>1/7</td><td>-2.728</td><td>-2.931</td><td class="bad">accept_H0</td></tr>
+</table>
+<h3>Promotion gate</h3>
+<pre>{
+  &quot;anchor_instrument_hit_rate&quot;: 0.02764646518298189,
+  &quot;anchor_instrument_dti&quot;: 0.06398864226198121,
+  &quot;eligible&quot;: [
+    &quot;H40-F@anchor&quot;,
+    &quot;H40-F@priced&quot;,
+    &quot;H40-PFPT@anchor&quot;,
+    &quot;H40-PFPT@priced&quot;
+  ],
+  &quot;beats_anchor_on_instrument&quot;: [
+    &quot;H40-E&quot;,
+    &quot;H40-F&quot;,
+    &quot;H40-PFPT&quot;
+  ],
+  &quot;rule&quot;: &quot;per-dot instrument hit rate &gt; the anchor&#x27;s AND the combined Wald SPRT (sign test OR normal-mean test) reaches accept_H1 AND leakage &lt;= 0.02 AND calibrated price &gt; 0.2778; both emission arms are gated and the higher-priced eligible arm is promoted&quot;,
+  &quot;decision&quot;: &quot;PROMOTE_NEW&quot;
+}</pre>
+<details><summary>every gated arm (18 rows)</summary>
+<pre>[
+ {
+  &quot;key&quot;: &quot;backbone&quot;,
+  &quot;arm&quot;: &quot;anchor&quot;,
+  &quot;h_instr&quot;: 0.023689382270143944,
+  &quot;leakage&quot;: 0.003452488447442503,
+  &quot;sprt&quot;: &quot;accept_H0&quot;,
+  &quot;eligible&quot;: false,
+  &quot;n&quot;: 37654,
+  &quot;priced_score&quot;: 0.2470386460059831
+ },
+ {
+  &quot;key&quot;: &quot;backbone&quot;,
+  &quot;arm&quot;: &quot;priced&quot;,
+  &quot;h_instr&quot;: 0.023530254206945937,
+  &quot;leakage&quot;: 0.003551736484067311,
+  &quot;sprt&quot;: &quot;accept_H0&quot;,
+  &quot;eligible&quot;: false,
+  &quot;n&quot;: 69825,
+  &quot;priced_score&quot;: 0.287944605323579
+ },
+ {
+  &quot;key&quot;: &quot;H40-A&quot;,
+  &quot;arm&quot;: &quot;anchor&quot;,
+  &quot;h_instr&quot;: 0.012349285600467413,
+  &quot;leakage&quot;: 0.0019121474478143092,
+  &quot;sprt&quot;: &quot;accept_H0&quot;,
+  &quot;eligible&quot;: false,
+  &quot;n&quot;: 37654,
+  &quot;priced_score&quot;: 0.14396804078048323
+ },
+ {
+  &quot;key&quot;: &quot;H40-A&quot;,
+  &quot;arm&quot;: &quot;priced&quot;,
+  &quot;h_instr&quot;: 0.013428571428571429,
+  &quot;leakage&quot;: 0.0017857142857142857,
+  &quot;sprt&quot;: &quot;accept_H0&quot;,
+  &quot;eligible&quot;: false,
+  &quot;n&quot;: 70000,
+  &quot;priced_score&quot;: 0.19349999976817758
+ },
+ {
+  &quot;key&quot;: &quot;H40-B&quot;,
+  &quot;arm&quot;: &quot;anchor&quot;,
+  &quot;h_instr&quot;: 0.011286981462792797,
+  &quot;leakage&quot;: 0.001301322568651405,
+  &quot;sprt&quot;: &quot;accept_H0&quot;,
+  &quot;eligible&quot;: false,
+  &quot;n&quot;: 37654,
+  &quot;priced_score&quot;: 0.13302017117641188
+ },
+ {
+  &quot;key&quot;: &quot;H40-B&quot;,
+  &quot;arm&quot;: &quot;priced&quot;,
+  &quot;h_instr&quot;: 0.013204439670605084,
+  &quot;leakage&quot;: 0.0017758682420336556,
+  &quot;sprt&quot;: &quot;accept_H0&quot;,
+  &quot;eligible&quot;: false,
+  &quot;n&quot;: 69825,
+  &quot;priced_score&quot;: 0.19088070377064528
+ },
+ {
+  &quot;key&quot;: &quot;H40-C&quot;,
+  &quot;arm&quot;: &quot;anchor&quot;,
+  &quot;h_instr&quot;: 0.014951930737770224,
+  &quot;leakage&quot;: 0.002177723482232963,
+  &quot;sprt&quot;: &quot;accept_H0&quot;,
+  &quot;eligible&quot;: false,
+  &quot;n&quot;: 37654,
+  &quot;priced_score&quot;: 0.16978683946253312
+ },
+ {
+  &quot;key&quot;: &quot;H40-C&quot;,
+  &quot;arm&quot;: &quot;priced&quot;,
+  &quot;h_instr&quot;: 0.016498388829215897,
+  &quot;leakage&quot;: 0.0023200859291084854,
+  &quot;sprt&quot;: &quot;accept_H0&quot;,
+  &quot;eligible&quot;: false,
+  &quot;n&quot;: 69825,
+  &quot;priced_score&quot;: 0.22574557003109874
+ },
+ {
+  &quot;key&quot;: &quot;H40-D&quot;,
+  &quot;arm&quot;: &quot;anchor&quot;,
+  &quot;h_instr&quot;: 0.010384022945769374,
+  &quot;leakage&quot;: 0.001248207361767674,
+  &quot;sprt&quot;: &quot;accept_H0&quot;,
+  &quot;eligible&quot;: false,
+  &quot;n&quot;: 37654,
+  &quot;priced_score&quot;: 0.12352052236869766
+ },
+ {
+  &quot;key&quot;: &quot;H40-D&quot;,
+  &quot;arm&quot;: &quot;priced&quot;,
+  &quot;h_instr&quot;: 0.008304906659757905,
+  &quot;leakage&quot;: 0.0009067749039250399,
+  &quot;sprt&quot;: &quot;accept_H0&quot;,
+  &quot;eligible&quot;: false,
+  &quot;n&quot;: 69477,
+  &quot;priced_score&quot;: 0.13051925214584306
+ },
+ {
+  &quot;key&quot;: &quot;H40-E&quot;,
+  &quot;arm&quot;: &quot;anchor&quot;,
+  &quot;h_instr&quot;: 0.040048865990333034,
+  &quot;leakage&quot;: 0.007276783343071121,
+  &quot;sprt&quot;: &quot;continue&quot;,
+  &quot;eligible&quot;: false,
+  &quot;n&quot;: 37654,
+  &quot;priced_score&quot;: 0.3601667399839924
+ },
+ {
+  &quot;key&quot;: &quot;H40-E&quot;,
+  &quot;arm&quot;: &quot;priced&quot;,
+  &quot;h_instr&quot;: 0.03651196081474966,
+  &quot;leakage&quot;: 0.0064676359497076626,
+  &quot;sprt&quot;: &quot;continue&quot;,
+  &quot;eligible&quot;: false,
+  &quot;n&quot;: 57981,
+  &quot;priced_score&quot;: 0.3681182945931134
+ },
+ {
+  &quot;key&quot;: &quot;H40-G&quot;,
+  &quot;arm&quot;: &quot;anchor&quot;,
+  &quot;h_instr&quot;: 0.021139852339724863,
+  &quot;leakage&quot;: 0.0027619907579540023,
+  &quot;sprt&quot;: &quot;accept_H0&quot;,
+  &quot;eligible&quot;: false,
+  &quot;n&quot;: 37654,
+  &quot;priced_score&quot;: 0.22589322954769467
+ },
+ {
+  &quot;key&quot;: &quot;H40-G&quot;,
+  &quot;arm&quot;: &quot;priced&quot;,
+  &quot;h_instr&quot;: 0.021157142857142857,
+  &quot;leakage&quot;: 0.0030428571428571427,
+  &quot;sprt&quot;: &quot;accept_H0&quot;,
+  &quot;eligible&quot;: false,
+  &quot;n&quot;: 70000,
+  &quot;priced_score&quot;: 0.268718737557441
+ },
+ {
+  &quot;key&quot;: &quot;H40-F&quot;,
+  &quot;arm&quot;: &quot;anchor&quot;,
+  &quot;h_instr&quot;: 0.0648802252084772,
+  &quot;leakage&quot;: 0.010569926169862432,
+  &quot;sprt&quot;: &quot;accept_H1&quot;,
+  &quot;eligible&quot;: true,
+  &quot;n&quot;: 37654,
+  &quot;priced_score&quot;: 0.4773952264488203
+ },
+ {
+  &quot;key&quot;: &quot;H40-F&quot;,
+  &quot;arm&quot;: &quot;priced&quot;,
+  &quot;h_instr&quot;: 0.06477089769809843,
+  &quot;leakage&quot;: 0.010160567425264349,
+  &quot;sprt&quot;: &quot;accept_H1&quot;,
+  &quot;eligible&quot;: true,
+  &quot;n&quot;: 45962,
+  &quot;priced_score&quot;: 0.48484746586721655
+ },
+ {
+  &quot;key&quot;: &quot;H40-PFPT&quot;,
+  &quot;arm&quot;: &quot;anchor&quot;,
+  &quot;h_instr&quot;: 0.0648802252084772,
+  &quot;leakage&quot;: 0.010569926169862432,
+  &quot;sprt&quot;: &quot;accept_H1&quot;,
+  &quot;eligible&quot;: true,
+  &quot;n&quot;: 37654,
+  &quot;priced_score&quot;: 0.4773952264488203
+ },
+ {
+  &quot;key&quot;: &quot;H40-PFPT&quot;,
+  &quot;arm&quot;: &quot;priced&quot;,
+  &quot;h_instr&quot;: 0.06477089769809843,
+  &quot;leakage&quot;: 0.010160567425264349,
+  &quot;sprt&quot;: &quot;accept_H1&quot;,
+  &quot;eligible&quot;: true,
+  &quot;n&quot;: 45962,
+  &quot;priced_score&quot;: 0.48484746586721655
+ }
+]</pre></details>
+
+<h2>Validation</h2>
+<div class="kv">
+<div>Blocks</div><div>24 rectangular spatial blocks &times; 2 seeds</div>
+<div>Folds per instrument</div><div>I1 = 32, I2 = 32</div>
+<div>I2 prevalence matching</div><div>62,122 off-catalogue px &rarr;
+   14,148 (target |G| = 14,143)</div>
+<div>SPRT design check</div><div>upper bound +2.8904 needs
+   9 all-wins; lower -2.2513 needs
+   5 &rarr;
+   <span class="ok">decidable</span> with 32 I2 folds</div>
+<div>Anchor transfer factor</div><div>0.451
+   (instrument 2.765% &divide; live 6.130%)</div>
+<div>Leakage gate</div><div>&le; 0.02 of emitted pixels may touch instrument truth</div>
+</div>
+<div class="warn"><b>The previous 8-fold design had no power.</b> With &alpha;=0.05, &beta;=0.10,
+p0=0.5, p1=0.7 the upper boundary is ln(18) = 2.8904 while an 8/8 sweep reaches
+8&middot;ln(0.7/0.5) = 2.6918 &mdash; it could never accept H1. This is a design defect, not a reason
+to &ldquo;run it longer&rdquo;. Fixed at 32 folds and pinned by
+<code>tests/test_h40.py::test_holdout_design_can_reach_a_boundary</code>.</div>
+
+<h2>Corpus inversion &mdash; every mirrored scored artifact</h2>
+<p class="mut">Each artifact is a known binary pixel set with an owner-reported score. Inverting the
+calibrated model gives the hit rate that explains each score. Three independent consistency checks
+hold: identical pixel sets score identically (0.1563 &times; 2, 0.2600 &times; 2, 0.2477 &times; 2), and
+hit rate falls monotonically with budget inside each surface family.</p>
+<table><tr><th>active dots</th><th>score</th><th>implied hit rate</th><th>artifact</th></tr>
+<tr><td>37,654</td><td>0.2778</td><td>6.130%</td><td class="mono">h33-2-b2_0.2778.tif</td></tr>
+<tr><td>40,199</td><td>0.2708</td><td>5.742%</td><td class="mono">h27-4-solo-d2-8_0.2708.tif</td></tr>
+<tr><td>44,090</td><td>0.2600</td><td>5.214%</td><td class="mono">gems24-h25-1-dotted-h19-5-d2-8-20261002-e56ea318af89-nan.tif</td></tr>
+<tr><td>44,090</td><td>0.2600</td><td>5.214%</td><td class="mono">d28-ref02600-repro_0.2600.tif</td></tr>
+<tr><td>60,069</td><td>0.2477</td><td>4.344%</td><td class="mono">gems24-h25-1-dotted-h19-5-d1-5-20261002-989f59505db1-nan.tif</td></tr>
+<tr><td>60,069</td><td>0.2477</td><td>4.344%</td><td class="mono">d15-poisson200m-offcat-60069_0.2477.tif</td></tr>
+<tr><td>61,328</td><td>0.2449</td><td>4.248%</td><td class="mono">gems27-topo-gap-closure-t-v2-on-d1-5-20261002-5512495c6bd1-nan.t</td></tr>
+<tr><td>121,131</td><td>0.1922</td><td>2.680%</td><td class="mono">gems19-h19-5-powerlaw-budget-multiline-corroborated-20260930-e27</td></tr>
+<tr><td>123,779</td><td>0.1894</td><td>2.621%</td><td class="mono">gems19-h19-4-multiline-corroborated-openness-thermal-pop-2026093</td></tr>
+<tr><td>123,939</td><td>0.1855</td><td>2.542%</td><td class="mono">gems16-h16-1-topo-geophys-baseline-ridges-20260930-df20f65e-nan.</td></tr>
+<tr><td>65,236</td><td>0.1839</td><td>2.855%</td><td class="mono">gems10-h28-dotted-ridge-20260928T020256236880Z-6452ae1d00.tif</td></tr>
+<tr><td>166,519</td><td>0.1563</td><td>1.992%</td><td class="mono">8GEMSDOE_Hedge-v2_submission.tif</td></tr>
+<tr><td>166,519</td><td>0.1563</td><td>1.992%</td><td class="mono">gemsdoe-ens12-adopted-7f00890a.tif</td></tr>
+<tr><td>161,366</td><td>0.1280</td><td>1.505%</td><td class="mono">gems10-h25-ctx-ridge-20260927T232947704150Z-6452ae1d00.tif</td></tr>
+<tr><td>204,504</td><td>0.0904</td><td>0.953%</td><td class="mono">13gems_20261001_r13-lattice-s5_v2_nan-outside.tif</td></tr>
+<tr><td>145,610</td><td>0.0107</td><td>0.101%</td><td class="mono">gemsdoe9-PLACEHOLDER-2314b599.tif</td></tr>
+</table>
+
+<h2>External layers actually loaded</h2>
+<table><tr><th>quantity</th><th>value</th></tr>
+<tr><td>heat_flow_n_wells</td><td>879</td></tr>
+<tr><td>stress_n_segments</td><td>37811</td></tr>
+<tr><td>wells_n</td><td>27092</td></tr>
+<tr><td>qfaults_n</td><td>376</td></tr>
+<tr><td>sgmc_off_px</td><td>62122</td></tr>
+</table>
+<ul><li class="mono">heat_flow: 879 QCA+B+C wells, winsorised to [20.0,400.0] mW/m^2, USAEAC_83_117 -&gt; EPSG:32611, IDW sigma 8/40 px</li>
+<li class="mono">stress: 37811 segments &gt;= 200 m from GB_Quaternary_faults_TD_TS.shp (DOI 10.5066/P9YL58W6); TS_norm/TD length-weighted; SHmaxAz averaged on the circle (doubling trick)</li>
+<li class="mono">wellspring: 27092 rows (1244 with a geothermometer, 3163 hot); row/col cross-checked against utm_x/utm_y on 27092 rows, 0 mismatches; IDW sigma 8/45 px (deep T) and 6/30 px (hot)</li>
+<li class="mono">qfaults: 376 in-footprint trace centroids; slip rate length-weighted; young = recency &lt; 130 ka (220 traces)</li>
+<li class="mono">sgmc_off_catalogue: 62122 px more than 300 m from the scored catalogue</li></ul>
+<ul><li class="mono">H40-F: 62122 SGMC-off positives / 5044263 background, 26 features, 4 folds over 24 spatial blocks (4x6 -- the SAME grid holdout40 evaluates on), out-of-fold predictions</li>
+<li class="mono">primary fusion: {&#x27;H40-F&#x27;: 1}</li></ul>
+
+<h2>Written artifacts</h2>
+<table><tr><th></th><th>zeros-outside (SUBMIT THIS)</th><th>NaN-outside twin</th></tr>
+<tr><td>filename</td><td class="mono">gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-zeros.tif</td><td class="mono">gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-nan.tif</td></tr>
+<tr><td>bytes</td><td>137,398</td><td>180,402</td></tr>
+<tr><td>SHA-256</td><td class="mono">8489991c787d98f06ac48a271a665def2cb02ca0a1fa0ccfd23ebfbe88d85d18</td><td class="mono">fbb4c10726adfffddcc912513e8e7ffd19bc0c7428d2351106f25524807f7e1a</td></tr>
+<tr><td>positive pixels</td><td>45,962</td><td>45,962</td></tr>
+<tr><td>finite pixels</td><td>12,279,160</td><td>5,167,373</td></tr>
+<tr><td>NaN pixels</td><td>0</td><td>7,111,787</td></tr>
+<tr><td>min / max (finite)</td><td>0.0 / 1.0</td><td>0.0 / 1.0</td></tr>
+<tr><td>CRS / dtype / bands</td><td>EPSG:32611 / float32 / 1</td><td>EPSG:32611 / float32 / 1</td></tr>
+<tr><td>size</td><td>3292 &times; 3730</td><td>3292 &times; 3730</td></tr>
+<tr><td>transform</td><td class="mono">(100.0, 0.0, 243350.0, 0.0, -100.0, 4508550.0)</td><td class="mono">(100.0, 0.0, 243350.0, 0.0, -100.0, 4508550.0)</td></tr>
+</table>
+<h3>Format checks (zeros twin)</h3>
+<table><tr><th>check</th><th>result</th></tr>
+<tr><td class="mono">single_band</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">dtype_float32</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">crs_epsg_32611</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">dimensions_3730x3292</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">in_footprint_all_finite</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">in_footprint_range_0_1</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">in_footprint_zero_sentinel</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">outside_footprint_null_or_zero</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">nodata_is_nan</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">values_are_binary_0_or_1</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">sha256_is_64_hex</td><td class="ok">PASS</td></tr>
+</table>
+
+<h2>Irregularities found and flagged this round</h2>
+<p>Full list with fixes: <a href="https://github.com/buffedlizard55-lab/GEMSDOE39#irregularities-found-and-flagged-this-round">README &sect; Irregularities</a>
+and <a href="research/h40-hypotheses.md">&sect;5 of the hypothesis register</a>. Headlines:</p>
+<ol>
+<li><b>Band-name defect (fixed).</b> <code>grid.read_all_bands</code> hardcoded a placeholder list in which
+<code>tc</code> sat at index 18; the raster's own <code>band_name</code> tags put <code>tc</code> at band 6 and
+<code>iso_grav_anom_hg</code> at 18. Every tilt-based detector had silently run on the gravity horizontal
+gradient, and <b>11 of 19 bands were unreachable</b>.</li>
+<li><b>SPRT audit-record defect (fixed).</b> <code>wins</code>/<code>total</code> were recomputed by re-iterating
+the input after the loop, so a generator reported 0/0 while <code>n</code> was correct.</li>
+<li><b>SPRT had no power (fixed).</b> 8 folds cannot cross a boundary that needs 9 wins.</li>
+<li><b>Manifest not reproducible from committed code.</b> The round-1 manifest reports empty
+<code>catalogue_hidden_folds</code> while claiming <code>n=8, wins=8</code>; the committed code derives
+<code>wins</code> from that same dict and would have produced <code>n=0</code>.</li>
+<li><b>Stale timestamp and a 56-character SHA-256 in the old pages (fixed).</b> Both are now generated
+from the artifact bytes, so a page cannot disagree with the file it links.</li>
+<li><b>Holdout proxy off by ~60&times; (addressed).</b> Round-1 holdout DTI (0.0022&ndash;0.0051) sat two orders
+of magnitude below the organizer's 0.24&ndash;0.28 for the same artifacts. Replaced by the inverse-DTI
+calibration.</li>
+<li><b>Emitter silently under-filled its budget (addressed).</b> Round 1 reported 35,805 emitted pixels
+against <code>--budget 44090</code>. The H40 emitter reports pool, cutoff and marginal hit rate.</li>
+<li><b>OOM (fixed).</b> The first H40 holdout draft was killed with exit 137: 24 full-grid block masks plus
+a stored kernel field per cell, and <code>read_all_bands</code> materialising all 19 raw bands and all 19
+cleaned copies at once. Both now stream/crop.</li>
+<li><b><code>labels.tif</code> and <code>existing_faults.tif</code> are byte-identical</b> (425,830 B,
+SHA-256 <code>7ba308ccdc44&hellip;</code>). Flagged, not silently deduplicated.</li>
+<li><b><code>sample_submission.tif</code> is not empty</b> &mdash; it carries 60,988 positive pixels, exactly the
+catalogue count, so the template is the supplied catalogue rasterised to float32.</li>
+<li><b>Network reachability.</b> This sandbox reaches only github.com, api.github.com and pypi.org.
+Verified 2026-10-05: HTTP 000 from sciencebase.gov, gdr.openei.org, mrdata.usgs.gov,
+web2.nbmg.unr.edu, osti.gov, pangea.stanford.edu and community.drivendata.org. External payloads
+therefore arrive through the owner's SHA-256-pinned GitHub mirrors: <b>integrity-pinned, NOT
+organizer-authenticated</b>. The quoted staff text, the ScienceBase purpose statement and the
+leaderboard were read through the page-fetch service.</li>
 </ol>
-<p><a href="executive-summary.html">→ Full executive summary with 12-point format audit, scientific rationale, and source links</a></p>
-</section>
 
-<section>
-<h2>Snapshot: candidate performance on the spatially-blocked holdout</h2>
-<table>
-<tr><th>Candidate</th><th>Emitted px</th><th>On-catalogue px</th><th>Hidden-catalogue DTI</th><th>SGMC off-cat DTI</th></tr>
-<tr><td>H39-A Cross-gradient</td><td>28,552</td><td>0</td><td>0.0046</td><td>0.0364</td></tr>
-<tr><td>H39-B <b>Scarp step-over</b> <span class="tag">PRIMARY</span></td><td>35,805</td><td>0</td><td>0.0031</td><td>0.1236</td></tr>
-<tr><td>H39-C Tilt analytic-signal</td><td>28,377</td><td>0</td><td>0.0051</td><td>0.0355</td></tr>
-<tr><td>H39-D Magnetic worms</td><td>44,090</td><td>0</td><td>0.0043</td><td>0.0892</td></tr>
-<tr><td>H39-E Basement × cond</td><td>28,190</td><td>0</td><td>0.0041</td><td>0.0274</td></tr>
-<tr><td>H39-ENS harmonic ensemble</td><td>35,400</td><td>0</td><td>0.0050</td><td>0.0494</td></tr>
-<tr><td>BASELINE dotted ridge</td><td>39,682</td><td>0</td><td>0.0022</td><td>0.1348</td></tr>
+<h2>Source register</h2>
+<table><tr><th>source</th><th>manual-review link</th><th>what was taken from it</th></tr>
+<tr><td>DrivenData #306 - problem description, metric, submission format</td><td class="mono"><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/">https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/</a></td><td>distance-weighted Tversky index, alpha=0.2, beta=0.8, R=300 m; worked example 3.00/(3.00+0.2*1.89+0.8*2.00)=0.60</td></tr>
+<tr><td>DrivenData #306 - live leaderboard (read by hand 2026-10-05)</td><td class="mono"><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/">https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/</a></td><td>#1 0.3262; this family&#x27;s 0.2778 is #13</td></tr>
+<tr><td>DrivenData staff (chrisk-dd, 2026-09-16) - catalogue masking</td><td class="mono"><a href="https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516">https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516</a></td><td>&quot;Pixels corresponding to known USGS/INGENIOUS faults are masked / excluded from evaluation&quot;; re-evaluation masks them too</td></tr>
+<tr><td>DrivenData staff (chrisk-dd, 2026-09-23) - definition of 'new fault'</td><td class="mono"><a href="https://community.drivendata.org/t/where-do-you-draw-the-line/11536">https://community.drivendata.org/t/where-do-you-draw-the-line/11536</a></td><td>&quot;any fault pixel not already captured by USGS/INGENIOUS&quot; and can include &quot;newly mapped geometry of an existing fault system&quot;</td></tr>
+<tr><td>DrivenData staff (chrisk-dd, 2026-09-23) - test-set details / Phase 2</td><td class="mono"><a href="https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527">https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527</a></td><td>no further details shared; Phase 2 uses &quot;a test set that is updated by expert review of all Phase 1 submissions&quot;</td></tr>
+<tr><td>USGS Siler (2022) - slip &amp; dilation tendency, Quaternary faults, Great Basin</td><td class="mono"><a href="https://doi.org/10.5066/P9YL58W6">https://doi.org/10.5066/P9YL58W6</a></td><td>built &#x27;to help identify faults ... likely to host as-yet-undiscovered hydrothermal processes&#x27;; 37,811 in-footprint segments used</td></tr>
+<tr><td>USGS Siler (2022) - ScienceBase item page</td><td class="mono"><a href="https://www.sciencebase.gov/catalog/item/6296974dd34ec53d276bb33d">https://www.sciencebase.gov/catalog/item/6296974dd34ec53d276bb33d</a></td><td>purpose statement quoted verbatim in docs/research/h40-hypotheses.md</td></tr>
+<tr><td>USGS DeAngelo et al. (2022) - Great Basin heat flow</td><td class="mono"><a href="https://doi.org/10.5066/P9BZPVUC">https://doi.org/10.5066/P9BZPVUC</a></td><td>2,108 unique wells in footprint; 879 retained at QC A/B/C</td></tr>
+<tr><td>USGS DeAngelo et al. (2022) - ScienceBase item page</td><td class="mono"><a href="https://www.sciencebase.gov/catalog/item/6297d2fad34ec53d276c5b28">https://www.sciencebase.gov/catalog/item/6297d2fad34ec53d276c5b28</a></td><td></td></tr>
+<tr><td>USGS Glen et al. (2022) - regional geophysical maps of the Great Basin</td><td class="mono"><a href="https://www.sciencebase.gov/catalog/item/628d4fabd34ef70cdba3c4a4">https://www.sciencebase.gov/catalog/item/628d4fabd34ef70cdba3c4a4</a></td><td></td></tr>
+<tr><td>USGS Peacock &amp; Bedrosian (2022) - electrical conductance maps</td><td class="mono"><a href="https://www.sciencebase.gov/catalog/item/62979746d34ec53d276c5b28">https://www.sciencebase.gov/catalog/item/62979746d34ec53d276c5b28</a></td><td></td></tr>
+<tr><td>DOE Geothermal Data Repository 1391 - INGENIOUS compilation</td><td class="mono"><a href="https://gdr.openei.org/submissions/1391">https://gdr.openei.org/submissions/1391</a></td><td>27,092 well/spring rows with row,col + utm; 1,244 fluid geothermometers</td></tr>
+<tr><td>INGENIOUS project page</td><td class="mono"><a href="https://gbcge.org/current-projects/ingenious/">https://gbcge.org/current-projects/ingenious/</a></td><td></td></tr>
+<tr><td>USGS GeoDAWN airborne magnetic &amp; radiometric surveys</td><td class="mono"><a href="https://www.usgs.gov/data/geodawn-airborne-magnetic-and-radiometric-surveys-northwestern-great-basin-nevada-and">https://www.usgs.gov/data/geodawn-airborne-magnetic-and-radiometric-surveys-northwestern-great-basin-nevada-and</a></td><td></td></tr>
+<tr><td>USGS GeoDAWN - ScienceBase item</td><td class="mono"><a href="https://www.sciencebase.gov/catalog/item/657e1d85d34e23d3533209f7">https://www.sciencebase.gov/catalog/item/657e1d85d34e23d3533209f7</a></td><td></td></tr>
+<tr><td>USGS Quaternary Fault and Fold Database</td><td class="mono"><a href="https://www.usgs.gov/programs/earthquake-hazards/science/quaternary-fault-and-fold-database-united-states">https://www.usgs.gov/programs/earthquake-hazards/science/quaternary-fault-and-fold-database-united-states</a></td><td></td></tr>
+<tr><td>NBMG Qfaults_INGENIOUS ArcGIS REST layer 0</td><td class="mono"><a href="https://web2.nbmg.unr.edu/arcgis/rest/services/Qfaults/Qfaults_INGENIOUS/MapServer/0">https://web2.nbmg.unr.edu/arcgis/rest/services/Qfaults/Qfaults_INGENIOUS/MapServer/0</a></td><td></td></tr>
+<tr><td>USGS State Geologic Map Compilation</td><td class="mono"><a href="https://mrdata.usgs.gov/geology/state/">https://mrdata.usgs.gov/geology/state/</a></td><td>62,122 off-catalogue fault pixels used as the H40-F training target</td></tr>
+<tr><td>USGS 3DEP 1 m DEM</td><td class="mono"><a href="https://registry.opendata.aws/usgs-lidar/">https://registry.opendata.aws/usgs-lidar/</a></td><td></td></tr>
+<tr><td>Faulds &amp; Hinz (2015) - favourable settings of Great Basin geothermal systems</td><td class="mono"><a href="https://www.osti.gov/servlets/purl/1724082">https://www.osti.gov/servlets/purl/1724082</a></td><td></td></tr>
+<tr><td>Barton, Zoback &amp; Moos (1995) Geology 23:913 - critically stressed faults</td><td class="mono"><a href="https://doi.org/10.1130/0091-7613(1995)023%3C0913:UFFASA%3E2.3.CO;2">https://doi.org/10.1130/0091-7613(1995)023%3C0913:UFFASA%3E2.3.CO;2</a></td><td></td></tr>
+<tr><td>Morris, Ferrizzoli &amp; Zoback (1996) Geology 24:1107 - slip/dilation tendency</td><td class="mono"><a href="https://doi.org/10.1130/0091-7613(1996)024%3C1107:FPTSOT%3E2.3.CO;2">https://doi.org/10.1130/0091-7613(1996)024%3C1107:FPTSOT%3E2.3.CO;2</a></td><td></td></tr>
+<tr><td>Biasi &amp; Wesnousky (2016) BSSA 106:1110 - steps and gaps in ground ruptures</td><td class="mono"><a href="https://doi.org/10.1785/0120150223">https://doi.org/10.1785/0120150223</a></td><td></td></tr>
+<tr><td>Hermant et al. (2025) - deep-learning Quaternary fault mapping, Stanford SGP-TR-229</td><td class="mono"><a href="https://pangea.stanford.edu/ERE/db/GeoConf/papers/SGW/2025/Hermant.pdf">https://pangea.stanford.edu/ERE/db/GeoConf/papers/SGW/2025/Hermant.pdf</a></td><td></td></tr>
+<tr><td>Wald (1945) - sequential probability ratio test</td><td class="mono"><a href="https://doi.org/10.1214/aoms/1177731008">https://doi.org/10.1214/aoms/1177731008</a></td><td></td></tr>
+<tr><td>DrivenData reference solution repository</td><td class="mono"><a href="https://github.com/drivendataorg/gems-prize-reference-solution">https://github.com/drivendataorg/gems-prize-reference-solution</a></td><td>ships a Tversky *training loss*, not the scoring metric</td></tr>
 </table>
-<p style="font-size:0.9em;color:#475569"><b>Interpretation.</b> Hidden-catalogue DTI measures DTI on 20%-held label components
-across 8 spatial folds (4 quadrants × 2 draws, 1.5 km collar). SGMC off-catalogue DTI is
-an independent corroboration instrument on USGS SGMC map faults excluded from the
-scored catalogue (these are the structural patterns the metric is actually trying to
-reward). The primary H39-B was selected as the highest combined score among unique
-H39 candidates with zero on-catalogue pixels. At n=8 folds Wald's SPRT
-(α=0.05, β=0.10, p<sub>0</sub>=0.5, p<sub>1</sub>=0.7) places the
-accept-H1 boundary at LLR ≈ 2.89, and an 8/8 sweep gives LLR ≈ 2.69 — no candidate
-formally crosses, which is an expected power property at n=8 rather than evidence
-of no improvement. Full details are in
-<a href="executive-summary.html">the executive summary</a> and <code>docs/downloads/*-manifest.json</code>.</p>
-</section>
 
-<section>
-<h2>Five novel geological hypotheses (H39 family)</h2>
-<div class="grid">
-<div class="card"><b>H39-A</b> Cross-gradient tensor multi-physics (mag × gravity × MT) eigen-coherence — parallel edges in three independent physics flag a blind contact.</div>
-<div class="card"><b>H39-B <span class="tag">PRIMARY</span></b> Scarp curvature step-over / horsetail splay — multi-scale ridge curvature, slope-break gradient, 1 m LiDAR corroboration, with directional collinearity chains.</div>
-<div class="card"><b>H39-C</b> Tilt-derivative analytic-signal edges — normalizes deep weak contacts to match shallow-source dynamic range.</div>
-<div class="card"><b>H39-D</b> Magnetic multi-scale "worm" ridges (Archibald et al. 1999) with amplitude-ratio persistence across Gaussian continuation heights.</div>
-<div class="card"><b>H39-E</b> Basement-depth × conductivity co-located parallel edge — a permeable fault-bounded geothermal aquifer signature.</div>
-</div>
-</section>
-
-<section>
-<h2>Project files</h2>
+<h2>What is explicitly not claimed</h2>
 <ul>
-<li><a href="executive-summary.html">Executive summary &amp; submission guide</a> (how to upload, fixes for the [0,1] error, scientific rationale, source links, irregularities).</li>
-<li><a href="../README.md">README</a> (charter, core values, quick start).</li>
-<li><code>scripts/build_pipeline.py</code> — reproducible end-to-end pipeline (features → emission → SPRT → GeoTIFF).</li>
-<li><code>scripts/restore_data.py</code> — SHA-256 pinned mirror restore (no DrivenData credentials required).</li>
-<li><code>scripts/validate_submission.py</code> — 12-point GeoTIFF validator.</li>
-<li><code>src/gems39/</code> — metric, holdout, SPRT, features, emission, grid modules.</li>
-<li><code>registry/data_manifest.json</code> — SHA-256 pin of every input raster.</li>
+<li>No claim that any H40 channel scores above 0.2778 on the organizer's private set.</li>
+<li>No claim that <code>|G| = 14,143</code> exactly; the defensible statement is
+<code>[13,987, 14,434]</code> under the stated priors.</li>
+<li>No claim that the heat-flow / slip-tendency / deep-temperature interpolations are kriging
+estimates. No variogram is fitted; they are two-scale Gaussian-weighted local means.</li>
+<li>No claim that SGMC off-catalogue faults <i>are</i> the scored population.</li>
+<li>No claim that the external mirrors are the bytes USGS published &mdash; they are the bytes the owner
+pinned, and the pin is what is verified.</li>
 </ul>
-</section>
 
-<section>
-<h2>Verified sources (manual review)</h2>
-<table>
-<tr><th>Source</th><th>URL</th></tr>
-<tr><td>Competition home</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/" target="_blank" rel="noopener">drivendata.org/competitions/306</a></td></tr>
-<tr><td>Problem &amp; DTI metric</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/" target="_blank" rel="noopener">page/967</a></td></tr>
-<tr><td>Official rules PDF (NREL)</td><td><a href="https://docs.nrel.gov/docs/fy26osti/96647.pdf" target="_blank" rel="noopener">docs.nrel.gov/.../96647.pdf</a></td></tr>
-<tr><td>Reference solution</td><td><a href="https://github.com/drivendataorg/gems-prize-reference-solution" target="_blank" rel="noopener">github.com/drivendataorg/gems-prize-reference-solution</a></td></tr>
-<tr><td>Leaderboard</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/" target="_blank" rel="noopener">live leaderboard</a></td></tr>
-<tr><td>USGS GeoDAWN (airborne mag/radiometric)</td><td><a href="https://www.sciencebase.gov/catalog/item/657e1d85d34e23d3533209f7" target="_blank" rel="noopener">ScienceBase</a></td></tr>
-<tr><td>USGS 3DEP (1 m DEM)</td><td><a href="https://www.usgs.gov/3d-elevation-program" target="_blank" rel="noopener">usgs.gov/3d-elevation-program</a></td></tr>
-<tr><td>USGS Quaternary faults</td><td><a href="https://usgs.github.io/faults/" target="_blank" rel="noopener">usgs.github.io/faults</a></td></tr>
-<tr><td>OpenEI GDR 1391 (geothermal)</td><td><a href="https://gdr.openei.org/submissions/1391" target="_blank" rel="noopener">gdr.openei.org/submissions/1391</a></td></tr>
-<tr><td>INGENIOUS (ground truth)</td><td><a href="https://gbcge.org/current-projects/ingenious/" target="_blank" rel="noopener">gbcge.org/current-projects/ingenious</a></td></tr>
-</table>
-<div class="note"><b>Flagged irregularity:</b> the user brief cites <code>docs.nlr.gov</code> for the competition PDF; the correct domain is <code>docs.nrel.gov</code> (National Renewable Energy Laboratory). Both are documented here for traceability.</div>
-</section>
-
-<footer>
-GEMSDOE39 · Built for the DOE GEMS Prize. Maximize P(Win). Own the Outcome.<br>
-No score is claimed without a verifiable local artifact. AI disclosure: this submission was assembled with AI assistance per competition rules.
-</footer>
-</div>
-</body>
-</html>
+<p class="mut">Generated 20261005T070000Z by <code>scripts/build_site.py</code> from
+<code>gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-manifest.json</code>. Every number on this page is read from that manifest or
+recomputed from the GeoTIFF bytes at generation time.</p>
+</div></body></html>

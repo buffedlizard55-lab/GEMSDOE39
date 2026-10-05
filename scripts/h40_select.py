@@ -122,6 +122,8 @@ def main():
     ap.add_argument("--data-dir", default=str(ROOT / "data"))
     ap.add_argument("--cache", default=str(ROOT / "artifacts" / "h40_raw_channels.npz"))
     ap.add_argument("--reuse-channels", action="store_true")
+    ap.add_argument("--blocks-y", type=int, default=4)
+    ap.add_argument("--blocks-x", type=int, default=6)
     ap.add_argument("--rebuild", default="",
                     help="comma-separated channel names to rebuild even with --reuse-channels")
     ap.add_argument("--max-n", type=int, default=ANCHOR_N)
@@ -154,7 +156,9 @@ def main():
             for nm in sorted(rebuild):
                 if nm == "H40-F":
                     ch[nm], fmap = det40.build_h40f(bands, foot, ext, cat, clog,
-                                                    cache=cache, return_fold_map=True)
+                                                    cache=cache, return_fold_map=True,
+                                                    n_blocks_y=args.blocks_y,
+                                                    n_blocks_x=args.blocks_x)
                     np.savez_compressed(ROOT / "artifacts" / "h40f_foldmap.npz", fold=fmap)
                 elif nm == "backbone":
                     ch[nm], _ = det40.build_backbone(bands, foot, ext, clog, cache=cache)
@@ -237,8 +241,8 @@ def main():
     rows = []
     for name, w in GRID.items():
         prop = fuse(ch, w, foot)
-        mask, ranks = pe.emit_ranked(prop, allowed, min_dist=args.min_dist,
-                                     max_n=args.max_n)
+        mask, ys_e, xs_e = pe.emit_ranked(prop, allowed, min_dist=args.min_dist,
+                                          max_n=args.max_n)
         n = int(mask.sum())
         ev = ho.evaluate(mask, ctx, pooled=True)
         s_i2 = ev["I2"]["pooled_dti"]
@@ -276,7 +280,7 @@ def main():
               f"{str(d['wins'])+'/'+str(d['n']):>10}{d['llr']:>+8.3f}  {d['decision']:10s}"
               f" | mean-test {dn['decision']:10s} LLR {dn['llr']:+7.3f}"
               f" | I1 {r['ratio_dti_I1']:.3f}x")
-        del prop, mask, ranks, ev, deltas
+        del prop, mask, ys_e, xs_e, ev, deltas
 
     ok = [r for r in rows
           if r["ratio_dti"] > 1.0

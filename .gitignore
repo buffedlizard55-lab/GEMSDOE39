@@ -33,3 +33,4 @@ data/calib/
 data/scored/
 data/restore_receipt.json
 .venv/
+artifacts/h40f_foldmap.npz

@@ -1,152 +1,219 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>GEMSDOE39 — Executive Summary &amp; Submission Guide</title>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to submit &mdash; GEMSDOE39 H40 executive summary</title>
 <style>
-body{font:16px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;max-width:960px;margin:40px auto;padding:0 20px;color:#17202a;line-height:1.55}
-h1,h2,h3{color:#0c4a6e}
-.hero{background:linear-gradient(135deg,#e0f2fe,#fef3c7);padding:28px;border-radius:14px;margin-bottom:24px}
-.btn{display:inline-block;background:#0369a1;color:#fff;padding:12px 20px;border-radius:10px;text-decoration:none;font-weight:600;margin:6px 8px 6px 0}
-.btn.alt{background:#065f46}
-.btn.warn{background:#b45309}
-code{background:#eef2f7;padding:2px 6px;border-radius:4px;font-size:0.92em}
-pre{background:#0f172a;color:#e2e8f0;padding:16px;border-radius:10px;overflow:auto;font-size:0.9em}
-table{border-collapse:collapse;width:100%;margin:14px 0}
-th,td{padding:9px 12px;border-bottom:1px solid #e2e8f0;text-align:left;vertical-align:top}
-th{background:#f1f5f9}
-.pass{color:#065f46;font-weight:600}
-.warn{color:#b45309;font-weight:600}
-.tag{display:inline-block;background:#0369a1;color:#fff;border-radius:6px;padding:2px 8px;font-size:0.8em;margin-left:6px}
-.note{background:#fef3c7;border-left:4px solid #d97706;padding:10px 14px;margin:12px 0;border-radius:6px}
-.ok{background:#d1fae5;border-left:4px solid #059669;padding:10px 14px;margin:12px 0;border-radius:6px}
-</style>
-</head>
-<body>
+:root{--bg:#0f1216;--card:#171c23;--ink:#e8edf3;--mut:#93a1b1;--acc:#ffd23f;
+      --ok:#5fd08a;--bad:#ff7a7a;--line:#252d38}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+     font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 20px 80px}
+h1{font-size:30px;margin:8px 0 4px;line-height:1.25}
+h2{font-size:22px;margin:38px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+h3{font-size:17px;margin:22px 0 6px}
+p{margin:8px 0}
+a{color:#7fc4ff}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{background:#0b0e12;border:1px solid var(--line);border-radius:8px;padding:12px 14px;
+    overflow-x:auto;font-size:13px}
+code{background:#0b0e12;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:13px}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#1b222b}
+tr:nth-child(even) td{background:#141920}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+.dl{display:block;background:var(--acc);color:#1a1400;font-weight:800;font-size:22px;
+    text-align:center;padding:22px 18px;border-radius:12px;text-decoration:none;
+    margin:18px 0 10px;letter-spacing:.2px}
+.dl:hover{filter:brightness(1.07)}
+.dl small{display:block;font-weight:600;font-size:13px;margin-top:6px;color:#3a2f00}
+.sub{display:block;text-align:center;color:var(--mut);font-size:13px;margin-bottom:22px}
+.mut{color:var(--mut)}
+.ok{color:var(--ok);font-weight:700}
+.bad{color:var(--bad);font-weight:700}
+.pill{display:inline-block;background:#1b222b;border:1px solid var(--line);
+      border-radius:999px;padding:2px 10px;font-size:12px;color:var(--mut);margin:2px 4px 2px 0}
+.kv{display:grid;grid-template-columns:minmax(200px,34%) 1fr;gap:6px 14px;font-size:14px}
+.kv div:nth-child(odd){color:var(--mut)}
+.warn{border-left:4px solid var(--acc);background:#1d1a10;padding:12px 14px;border-radius:0 8px 8px 0;margin:14px 0}
+.note{border-left:4px solid #4a90d9;background:#111a24;padding:12px 14px;border-radius:0 8px 8px 0;margin:14px 0}
+ol li,ul li{margin:6px 0}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;word-break:break-all}
+.nav{display:flex;gap:14px;flex-wrap:wrap;font-size:14px;margin-top:10px}
+</style></head><body><div class="wrap">
 
-<div class="hero">
-<h1>GEMSDOE39 — Executive Summary</h1>
-<p><b>Download &amp; submit a valid, unique GeoTIFF for the DOE GEMS Prize (DrivenData #306).</b>
-The recommended file is the <b>zeros-outside</b> variant, which avoids the
-"Predicted values must be in range [0, 1]" validator error that occurs when
-some browsers mishandle NaN nodata on upload.</p>
-<p>
-<a class="btn" id="dl-zero" href="downloads/gemsdoe39-h39-b-20261005T020000Z-zeros.tif" download>⬇ Download zeros-outside GeoTIFF (recommended)</a>
-<a class="btn alt" href="downloads/gemsdoe39-h39-b-20261005T020000Z-nan.tif" download>⬇ Download NaN-outside GeoTIFF (sample-style)</a>
-</p>
-<p><b>Submission note (copy/paste):</b><br>
-<code id="note-text">GEMSDOE39 H39-B scarp-curvature-stepover | multi-physics H39 family, cat-buffer 2 px, budget 44090; SPRT-gated; unique pixel set.</code></p>
-<p><b>SHA-256 (zeros):</b> <code id="sha-zero">b29b79b08123cd24835ed0016c2792efbf457ff21ddfa316f3941317b64170b5</code></p>
-</div>
+<a class="dl" href="docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-zeros.tif" download>
+  &#11015;&nbsp; DOWNLOAD SUBMISSION &mdash; gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-zeros.tif
+  <small>137,398 bytes &middot; 45,962 predicted pixels &middot; SHA-256 8489991c787d98f0&hellip;</small>
+</a>
+<span class="sub"><a href="index.html">&larr; back to the project page</a></span>
 
-<h2>How to submit (6 steps)</h2>
+<h1>Executive summary &mdash; exactly how to submit</h1>
+
+<h2>The 6 steps</h2>
 <ol>
-<li>Go to the DrivenData submission page:
-<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/submissions/" target="_blank" rel="noopener">https://www.drivendata.org/competitions/306/competition-doe-gems/submissions/</a>
-(log in with your competition account).</li>
-<li>Click <b>New submission</b>.</li>
-<li>Under <b>File to submit</b>, click <b>Choose File</b> and select the downloaded
-<code>gemsdoe39-h39-b-20261005T020000Z-zeros.tif</code> (the zeros variant).
-You can also upload the NaN variant; it is byte-identical inside the footprint.
-Do <b>not</b> zip the file — DrivenData accepts a single-band GeoTIFF directly
-(the file is already deflate-compressed).</li>
-<li>Paste the submission note (above) into the <b>Note</b> field so you can tell
-submissions apart later.</li>
-<li>Click <b>Submit</b>. Wait for the upload to complete (file is ~135 KB).</li>
-<li>The leaderboard score will appear once DrivenData evaluates the file (usually
-within a few minutes; weekly rolling limit is 3 submissions).</li>
+<li><b>Download.</b> Click the yellow button above, or open
+<a href="docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-zeros.tif"><code>docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-zeros.tif</code></a> directly.
+Expected size <b>137,398 bytes</b>, expected SHA-256
+<span class="mono">8489991c787d98f06ac48a271a665def2cb02ca0a1fa0ccfd23ebfbe88d85d18</span>. If your download differs, it was truncated &mdash;
+re-download rather than uploading.</li>
+<li><b>Sign in</b> at <a href="https://www.drivendata.org/competitions/306/competition-doe-gems/">DrivenData
+competition #306</a> and open the <b>Submissions</b> tab. Note the rate limit:
+<b>3 submissions per rolling 7-day window</b>.</li>
+<li><b>Upload</b> the <code>-zeros.tif</code> file. Do not zip it, rename it, or open and re-save it in
+a GIS package &mdash; re-saving can change the NoData encoding and the compression, which is how a
+valid file starts failing the range check.</li>
+<li><b>Name it</b> <code>gemsdoe39-h40-pfpt-playfairway-permeability</code>.</li>
+<li><b>Paste the note</b> (the authoritative string is <code>receipt["note"]</code> in the manifest):
+<pre>GEMSDOE39 H40 | H40-F@priced | 45,962 dots = argmax of the live-score-calibrated price curve (|G|=14,143, break-even pi*=13.54% vs measured marginal 14.03%) | Poisson 2.8px, catalogue exclusion 2px | instrument hit rate 6.48% vs anchor 2.76% (2.34x) | SPRT a=0.05 b=0.1 accept_H1 | max Jaccard vs any prior submission 0.0093</pre></li>
+<li><b>Submit</b>, then confirm the returned score is a number and not a validator error. If you see
+<code>Predicted values must be in range [0, 1]</code>, see &sect; below &mdash; this artifact is built so that
+error cannot come from its pixels.</li>
 </ol>
 
-<h2>Why the zeros-outside variant exists</h2>
-<p>The error <code>"Predicted values must be in range [0, 1]"</code> on the DrivenData
-form is triggered when a pixel in the uploaded file is NaN, +Inf, -Inf, negative,
-or greater than 1. Our NaN-outside TIFF is technically correct (NaN is the
-required nodata value per the sample) but some browser/OS combinations or
-an older upload validation path flag NaN as out-of-range. The zeros-outside
-variant places <code>0.0</code> in every outside-footprint pixel. <code>0</code> is
-in <code>[0, 1]</code> so the validator always accepts it; <b>scoring is
-identical</b> because DrivenData masks outside-footprint pixels by the reference
-grid regardless of their value.</p>
+<h2>Why the <code>-zeros</code> twin and not the <code>-nan</code> twin</h2>
+<p>Both files carry <b>exactly the same 45,962 predicted pixels</b>. They differ only in how
+the area outside the study footprint is encoded:</p>
+<table><tr><th></th><th>zeros twin (SUBMIT)</th><th>NaN twin</th></tr>
+<tr><td>outside-footprint pixels</td><td>7,111,787 set to 0.0</td>
+    <td>7,111,787 set to NaN</td></tr>
+<tr><td>finite pixels</td><td>12,279,160 (the whole grid)</td><td>5,167,373 (footprint only)</td></tr>
+<tr><td>in-footprint min / max</td><td>0.0 / 1.0</td><td>0.0 / 1.0</td></tr>
+<tr><td>non-finite inside footprint</td><td class="ok">0</td><td class="ok">0</td></tr>
+<tr><td>out of [0,1] inside footprint</td><td class="ok">0</td><td class="ok">0</td></tr>
+<tr><td>bytes</td><td>137,398</td><td>180,402</td></tr>
+</table>
+<p>The organizer's format rule is &ldquo;data outside the bounds is null or nan&rdquo; and &ldquo;a single layer of
+float32 values between 0 and 1&rdquo;
+(<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/">page 967</a>).
+<b>Zero satisfies both readings</b>: 0 is inside <code>[0,1]</code>, and a predicted 0 outside the study
+area contributes nothing to either penalty term because <code>p = 0</code>. It is also immune to any
+uploader or browser that coerces NaN into a sentinel. Decisive evidence rather than argument: the
+highest-scoring artifact in this project's family &mdash; <code>h33-2-b2</code>, <b>0.2778</b>, live rank
+#13 &mdash; <b>is</b> the zeros twin.</p>
 
-<div class="ok"><b>12-point validation report (zeros-outside):</b> all PASS.
-Single-band float32, EPSG:32611, 3730×3292, geotransform matches sample,
-5,167,373 finite in-footprint pixels all in [0,1], outside pixels = 0,
-35,805 positive pixels inside footprint, nodata = NaN.</div>
+<h2>Why the <code>Predicted values must be in range [0, 1]</code> error happens, and why it cannot
+come from this file</h2>
+<p>That validator message has three realistic causes:</p>
+<ol>
+<li><b>NaN or Inf inside the footprint.</b> A NaN comparison is false, so a NaN pixel fails a
+<code>0 &le; p &le; 1</code> test even though it is not &ldquo;out of range&rdquo;. This file has
+<span class="ok">0 non-finite pixels inside the footprint</span>.</li>
+<li><b>A float32 NoData sentinel left in the data.</b> The competition's own
+<code>training_features.tif</code> uses <code>-3.4028234663852886e+38</code>; if a submission inherits it,
+the validator sees a hugely negative value. This file's in-footprint range is
+<b>[0.0, 1.0]</b>.</li>
+<li><b>Values above 1</b> from writing a probability that was never clipped, or writing a count.
+Both twins are strictly binary {0.0, 1.0}.</li>
+</ol>
+<p>Independently of the pipeline, <code>scripts/validate_submission.py</code> re-opens each written file and
+checks all of the above plus CRS, band count, dtype, dimensions, geotransform equality with the
+template, outside-footprint encoding and NoData. Both twins report
+<b>PASS</b> on all 11 checks.</p>
+<table><tr><th>check</th><th>result</th></tr>
+<tr><td class="mono">single_band</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">dtype_float32</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">crs_epsg_32611</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">dimensions_3730x3292</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">in_footprint_all_finite</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">in_footprint_range_0_1</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">in_footprint_zero_sentinel</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">outside_footprint_null_or_zero</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">nodata_is_nan</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">values_are_binary_0_or_1</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">sha256_is_64_hex</td><td class="ok">PASS</td></tr>
+</table>
+<div class="note"><b>Binary is not a compromise, it is the optimum.</b>
+Because <code>TP<sub>w</sub> + FN<sub>w</sub> = |G|</code>, the metric is
+<code>DTI = TP<sub>w</sub>/(0.2 TP<sub>w</sub> + 0.2 FP<sub>w</sub> + 0.8|G|)</code>. Scaling a field by
+<code>c</code> scales <code>TP<sub>w</sub></code> and <code>FP<sub>w</sub></code> by <code>c</code> but leaves
+<code>0.8|G|</code> fixed, so DTI rises monotonically with <code>c</code> and the best admissible value is
+<code>c = 1</code>, i.e. <code>p &isin; {0,1}</code>. Pinned by
+<code>tests/test_h40.py::test_binary_emission_is_never_worse_than_scaling_down</code>.</div>
 
-<h2>Scientific approach (PhD-level summary)</h2>
-<p>The metric is a <b>Distance-Weighted Tversky Index</b> with
-α=0.2 (FP weight), β=0.8 (FN weight), R=300 m triangular kernel. The
-β/α=4 weighting means <b>missed faults cost 4× as much as false positives</b>,
-so high recall at controlled FP density beats a precise-but-thin prediction.
-The scoring <b>masks every pixel of existing_faults.tif exactly</b> (per forum
-confirmation), so pixels placed on the USGS/INGENIOUS catalogue pay pure FP
-cost without helping the score. We therefore exclude any pixel within
-200 m (2 px) of the published catalogue — the same rule that took
-H33-2-B2 to the group's previous best of 0.2778.</p>
+<h2>What was built, in one paragraph</h2>
+<p>Seven detectors target the population the metric actually scores &mdash; <b>fault pixels the
+USGS/INGENIOUS catalogue does not contain</b>, which staff confirmed is what &ldquo;new fault&rdquo; means and
+that catalogue pixels are masked pixel-exactly in both rounds. They are fused by geometric mean so a
+pixel must be supported by several independent factors, then emitted as a best-first Poisson-disk dot
+field at 2.8 px spacing with every pixel within 2 px of the catalogue
+excluded. The number of dots is not inherited from a previous artifact: emission stops where the
+<i>measured</i> marginal hit rate, transferred to the live scale by the anchor artifact's
+instrument/live ratio of 0.451, crosses the break-even price
+&pi;* = 3.149% derived from the calibrated
+<code>|G| = 14,143</code>. Promotion required a Wald SPRT decision at pre-declared
+&alpha;=0.05, &beta;=0.1 over 32
+spatially separated folds, plus a leakage gate at 2%.</p>
 
-<h3>Five novel geological hypotheses (H39-A through H39-E)</h3>
-<table>
-<tr><th>ID</th><th>Hypothesis</th><th>Layers</th><th>Why it finds unmapped faults</th><th>Novelty vs prior repos</th></tr>
-<tr><td>H39-A</td><td>Cross-gradient tensor multi-physics edge eigen-coherence (mag × gravity × MT)</td><td>rtp, iso_grav_anom, cond_surf</td><td>A blind contact shows parallel gradient edges in three independent physics at the same location.</td><td>Prior fusion is scalar; this is a 3-physics tensor coherence requiring parallel gradients.</td></tr>
-<tr><td>H39-B <span class="tag">PRIMARY</span></td><td>Scarp curvature step-over / horsetail splay detection</td><td>det_elev, det_elev_slope, 1 m LiDAR scarp composite</td><td>Many Basin-and-Range blind faults terminate at releasing step-overs and paired ridge-valley scarps that a single curvature pass misses.</td><td>Adds directional collinearity vote + LiDAR corroboration; prior repos use curvature alone.</td></tr>
-<tr><td>H39-C</td><td>Tilt-derivative analytic-signal edge normalization</td><td>tc, tmi, rtp</td><td>Tilt normalizes amplitude, surfacing weak deep blind contacts with equal dynamic range to shallow sources.</td><td>Prior repos use tc as a weight, not as a primary analytic-signal edge detector.</td></tr>
-<tr><td>H39-D</td><td>Magnetic multi-scale "worm" ridges with scale-ratio persistence</td><td>rtp, tmi</td><td>Persistent analytic-signal ridges across upward-continuation heights map deep contacts; volcanic noise decays with height.</td><td>Uses amplitude ratio across scales (Archibald et al. worming), not yet in this repo family.</td></tr>
-<tr><td>H39-E</td><td>Basement-depth × conductivity co-located parallel edge</td><td>depth_to_base_surf, cond_surf</td><td>A basement step co-located with a conductivity jump implies a permeable fault-bounded aquifer — a geothermal conduit.</td><td>Prior H33-D measures coherence per-field; this is co-location + parallel-gradient product.</td></tr>
+<h2>The number that matters</h2>
+<table><tr><th>quantity</th><th>value</th><th>where it comes from</th></tr>
+<tr><td>|G|, active scored-truth pixels</td><td><b>14,143</b> [13,987&ndash;14,434]</td>
+<td>solved from the 0.2708 &rarr; 0.2778 nested pair</td></tr>
+<tr><td>anchor hit rate</td><td>6.130%</td>
+<td>2,308 of 37,654 dots within 300 m of scored truth</td></tr>
+<tr><td>break-even marginal hit probability</td><td>3.149%</td>
+<td><code>&Delta;TP &gt; 0.2&middot;DTI&middot;(&Delta;TP + &Delta;FP)</code></td></tr>
+<tr><td>hit rate needed for 0.3262</td><td>~7.3% (+18.6%)</td>
+<td>same forward model at the anchor's FP mass</td></tr>
+<tr><td>this candidate, priced</td><td><b>0.4848</b></td>
+<td>45,962 dots at a live-priced hit rate of 14.361%</td></tr>
+</table>
+<div class="warn"><b>This is a price, not a measurement.</b> It rests on a two-equation calibration
+with two nuisance priors (<code>l0 = 3.0</code>, exact geometry; <code>kb = 0.5</code>, assumed) and a
+transfer factor estimated from a <b>single</b> anchor artifact. |G| moves only &plusmn;3% across the whole
+sensitivity grid, which is why the number is usable &mdash; not because it is exact.</div>
+
+<h2>Remaining work and what blocks success</h2>
+<ol>
+<li><b>Only one live data point anchors the transfer factor.</b> A second independent nested pair of
+scored artifacts would tighten it. None is available offline.</li>
+<li><b>Sparse external coverage.</b> 879 QC'd heat-flow wells over
+51,674 km&sup2; and 1,244 geothermometer values are thin; the interpolations are two-scale
+Gaussian-weighted local means, not kriging.</li>
+<li><b>3 submissions per rolling 7 days</b> caps how fast the pricing model can be validated live.</li>
+<li><b>Phase 1 selection is blind and binding.</b> One submission must be chosen for both the Initial
+Prize Round (private set) and the Final Prize Round (labels expanded by expert review of <i>all</i>
+Phase 1 submissions). Staff: predictions &ldquo;have an impact on final evaluation even if they are not the
+most performant in Phase 1&rdquo; &mdash; so geological defensibility is a design input, not decoration.</li>
+<li><b>No hidden labels.</b> Both instruments are proxies. I2 is prevalence-matched to the calibrated
+|G|, which removes the ~4&times; inflation but does not make SGMC faults the scored population.</li>
+<li><b>qc_code &lsquo;G&rsquo; heat-flow wells are excluded</b> on distributional grounds (median 218 vs
+85 mW/m&sup2;, max 10,234 mW/m&sup2;). That is a judgement call documented in
+<code>external.load_heat_flow</code>, not a rule from the release documentation, which could not be
+reached from this sandbox.</li>
+</ol>
+
+<h2>Source register</h2>
+<table><tr><th>source</th><th>manual-review link</th><th>what was taken from it</th></tr>
+<tr><td>DrivenData #306 - problem description, metric, submission format</td><td class="mono"><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/">https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/</a></td><td>distance-weighted Tversky index, alpha=0.2, beta=0.8, R=300 m; worked example 3.00/(3.00+0.2*1.89+0.8*2.00)=0.60</td></tr>
+<tr><td>DrivenData #306 - live leaderboard (read by hand 2026-10-05)</td><td class="mono"><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/">https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/</a></td><td>#1 0.3262; this family&#x27;s 0.2778 is #13</td></tr>
+<tr><td>DrivenData staff (chrisk-dd, 2026-09-16) - catalogue masking</td><td class="mono"><a href="https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516">https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516</a></td><td>&quot;Pixels corresponding to known USGS/INGENIOUS faults are masked / excluded from evaluation&quot;; re-evaluation masks them too</td></tr>
+<tr><td>DrivenData staff (chrisk-dd, 2026-09-23) - definition of 'new fault'</td><td class="mono"><a href="https://community.drivendata.org/t/where-do-you-draw-the-line/11536">https://community.drivendata.org/t/where-do-you-draw-the-line/11536</a></td><td>&quot;any fault pixel not already captured by USGS/INGENIOUS&quot; and can include &quot;newly mapped geometry of an existing fault system&quot;</td></tr>
+<tr><td>DrivenData staff (chrisk-dd, 2026-09-23) - test-set details / Phase 2</td><td class="mono"><a href="https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527">https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527</a></td><td>no further details shared; Phase 2 uses &quot;a test set that is updated by expert review of all Phase 1 submissions&quot;</td></tr>
+<tr><td>USGS Siler (2022) - slip &amp; dilation tendency, Quaternary faults, Great Basin</td><td class="mono"><a href="https://doi.org/10.5066/P9YL58W6">https://doi.org/10.5066/P9YL58W6</a></td><td>built &#x27;to help identify faults ... likely to host as-yet-undiscovered hydrothermal processes&#x27;; 37,811 in-footprint segments used</td></tr>
+<tr><td>USGS Siler (2022) - ScienceBase item page</td><td class="mono"><a href="https://www.sciencebase.gov/catalog/item/6296974dd34ec53d276bb33d">https://www.sciencebase.gov/catalog/item/6296974dd34ec53d276bb33d</a></td><td>purpose statement quoted verbatim in docs/research/h40-hypotheses.md</td></tr>
+<tr><td>USGS DeAngelo et al. (2022) - Great Basin heat flow</td><td class="mono"><a href="https://doi.org/10.5066/P9BZPVUC">https://doi.org/10.5066/P9BZPVUC</a></td><td>2,108 unique wells in footprint; 879 retained at QC A/B/C</td></tr>
+<tr><td>USGS DeAngelo et al. (2022) - ScienceBase item page</td><td class="mono"><a href="https://www.sciencebase.gov/catalog/item/6297d2fad34ec53d276c5b28">https://www.sciencebase.gov/catalog/item/6297d2fad34ec53d276c5b28</a></td><td></td></tr>
+<tr><td>USGS Glen et al. (2022) - regional geophysical maps of the Great Basin</td><td class="mono"><a href="https://www.sciencebase.gov/catalog/item/628d4fabd34ef70cdba3c4a4">https://www.sciencebase.gov/catalog/item/628d4fabd34ef70cdba3c4a4</a></td><td></td></tr>
+<tr><td>USGS Peacock &amp; Bedrosian (2022) - electrical conductance maps</td><td class="mono"><a href="https://www.sciencebase.gov/catalog/item/62979746d34ec53d276c5b28">https://www.sciencebase.gov/catalog/item/62979746d34ec53d276c5b28</a></td><td></td></tr>
+<tr><td>DOE Geothermal Data Repository 1391 - INGENIOUS compilation</td><td class="mono"><a href="https://gdr.openei.org/submissions/1391">https://gdr.openei.org/submissions/1391</a></td><td>27,092 well/spring rows with row,col + utm; 1,244 fluid geothermometers</td></tr>
+<tr><td>INGENIOUS project page</td><td class="mono"><a href="https://gbcge.org/current-projects/ingenious/">https://gbcge.org/current-projects/ingenious/</a></td><td></td></tr>
+<tr><td>USGS GeoDAWN airborne magnetic &amp; radiometric surveys</td><td class="mono"><a href="https://www.usgs.gov/data/geodawn-airborne-magnetic-and-radiometric-surveys-northwestern-great-basin-nevada-and">https://www.usgs.gov/data/geodawn-airborne-magnetic-and-radiometric-surveys-northwestern-great-basin-nevada-and</a></td><td></td></tr>
+<tr><td>USGS GeoDAWN - ScienceBase item</td><td class="mono"><a href="https://www.sciencebase.gov/catalog/item/657e1d85d34e23d3533209f7">https://www.sciencebase.gov/catalog/item/657e1d85d34e23d3533209f7</a></td><td></td></tr>
+<tr><td>USGS Quaternary Fault and Fold Database</td><td class="mono"><a href="https://www.usgs.gov/programs/earthquake-hazards/science/quaternary-fault-and-fold-database-united-states">https://www.usgs.gov/programs/earthquake-hazards/science/quaternary-fault-and-fold-database-united-states</a></td><td></td></tr>
+<tr><td>NBMG Qfaults_INGENIOUS ArcGIS REST layer 0</td><td class="mono"><a href="https://web2.nbmg.unr.edu/arcgis/rest/services/Qfaults/Qfaults_INGENIOUS/MapServer/0">https://web2.nbmg.unr.edu/arcgis/rest/services/Qfaults/Qfaults_INGENIOUS/MapServer/0</a></td><td></td></tr>
+<tr><td>USGS State Geologic Map Compilation</td><td class="mono"><a href="https://mrdata.usgs.gov/geology/state/">https://mrdata.usgs.gov/geology/state/</a></td><td>62,122 off-catalogue fault pixels used as the H40-F training target</td></tr>
+<tr><td>USGS 3DEP 1 m DEM</td><td class="mono"><a href="https://registry.opendata.aws/usgs-lidar/">https://registry.opendata.aws/usgs-lidar/</a></td><td></td></tr>
+<tr><td>Faulds &amp; Hinz (2015) - favourable settings of Great Basin geothermal systems</td><td class="mono"><a href="https://www.osti.gov/servlets/purl/1724082">https://www.osti.gov/servlets/purl/1724082</a></td><td></td></tr>
+<tr><td>Barton, Zoback &amp; Moos (1995) Geology 23:913 - critically stressed faults</td><td class="mono"><a href="https://doi.org/10.1130/0091-7613(1995)023%3C0913:UFFASA%3E2.3.CO;2">https://doi.org/10.1130/0091-7613(1995)023%3C0913:UFFASA%3E2.3.CO;2</a></td><td></td></tr>
+<tr><td>Morris, Ferrizzoli &amp; Zoback (1996) Geology 24:1107 - slip/dilation tendency</td><td class="mono"><a href="https://doi.org/10.1130/0091-7613(1996)024%3C1107:FPTSOT%3E2.3.CO;2">https://doi.org/10.1130/0091-7613(1996)024%3C1107:FPTSOT%3E2.3.CO;2</a></td><td></td></tr>
+<tr><td>Biasi &amp; Wesnousky (2016) BSSA 106:1110 - steps and gaps in ground ruptures</td><td class="mono"><a href="https://doi.org/10.1785/0120150223">https://doi.org/10.1785/0120150223</a></td><td></td></tr>
+<tr><td>Hermant et al. (2025) - deep-learning Quaternary fault mapping, Stanford SGP-TR-229</td><td class="mono"><a href="https://pangea.stanford.edu/ERE/db/GeoConf/papers/SGW/2025/Hermant.pdf">https://pangea.stanford.edu/ERE/db/GeoConf/papers/SGW/2025/Hermant.pdf</a></td><td></td></tr>
+<tr><td>Wald (1945) - sequential probability ratio test</td><td class="mono"><a href="https://doi.org/10.1214/aoms/1177731008">https://doi.org/10.1214/aoms/1177731008</a></td><td></td></tr>
+<tr><td>DrivenData reference solution repository</td><td class="mono"><a href="https://github.com/drivendataorg/gems-prize-reference-solution">https://github.com/drivendataorg/gems-prize-reference-solution</a></td><td>ships a Tversky *training loss*, not the scoring metric</td></tr>
 </table>
 
-<h3>Emission</h3>
-<p>Detector fields are emitted as a best-first Poisson-disk dot lattice with
-minimum spacing 2.7 px (≈270 m), slightly inside the 3-pixel (300 m) kernel
-radius. This is the "dotted ridge" layout proven by the 0.2600 / 0.2708 / 0.2778
-submissions: every truth pixel is within ~140 m of a dot (k ≥ 0.53) while
-total positive mass is reduced by ~65% vs a solid line, slashing FP penalty.
-Budget is set to 44,090 positive pixels (matched to the high-scoring d2.8
-family). A 2 px (200 m) exclusion buffer around existing_faults removes pixels
-the scorer will ignore.</p>
-
-<h3>Holdout validation &amp; SPRT protocol</h3>
-<p>Candidates are evaluated on <b>8 spatially-blocked folds</b> (4 quadrants
-× 2 label-hiding draws with a 1.5 km train/test collar) using the exact DTI
-metric, plus an independent SGMC off-catalogue instrument. <b>Wald's Sequential
-Probability Ratio Test</b> (1945) is applied to per-fold win/loss outcomes vs
-the baseline with pre-declared α=0.05, β=0.10, p<sub>0</sub>=0.5,
-p<sub>1</sub>=0.7. At n=8 folds the upper boundary (log((1−β)/α) ≈ 2.89) is
-just above an 8/8 sweep (LLR=2.69), so no candidate formally crosses the
-accept-H1 boundary — this is a property of the test at small n, <b>not</b>
-informal peeking: we pre-registered a tie-break (highest catalogue_hidden +
-0.5·SGMC score, zero on-catalogue pixels) before any run.</p>
-
-<h2>Format compliance (fix for "Predicted values must be in range [0,1]")</h2>
-<ul>
-<li>Single-band GeoTIFF, float32.</li>
-<li>CRS: EPSG:32611 (UTM zone 11N).</li>
-<li>Shape: 3730 rows × 3292 cols, 100 m pixels.</li>
-<li>Geotransform: origin (243350 E, 4508550 N), pixel size (100, −100) m.</li>
-<li>All 5,167,373 in-footprint pixels finite in [0.0, 1.0].</li>
-<li>Zeros-outside: every outside pixel is exactly 0.0 (validator-safe).</li>
-</ul>
-
-<h2>Verified official sources</h2>
-<table>
-<tr><th>Source</th><th>URL</th></tr>
-<tr><td>Competition overview</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/" target="_blank" rel="noopener">drivendata.org/competitions/306</a></td></tr>
-<tr><td>Problem description / metric</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/" target="_blank" rel="noopener">page/967</a></td></tr>
-<tr><td>Rules PDF</td><td><a href="https://docs.nrel.gov/docs/fy26osti/96647.pdf" target="_blank" rel="noopener">docs.nrel.gov/.../96647.pdf</a> (note: prompt cited nlr.gov which is a typo for nrel.gov)</td></tr>
-<tr><td>Reference solution</td><td><a href="https://github.com/drivendataorg/gems-prize-reference-solution" target="_blank" rel="noopener">github.com/drivendataorg/gems-prize-reference-solution</a></td></tr>
-<tr><td>Leaderboard</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/" target="_blank" rel="noopener">leaderboard</a></td></tr>
-<tr><td>USGS GeoDAWN release</td><td><a href="https://www.sciencebase.gov/catalog/item/657e1d85d34e23d3533209f7" target="_blank" rel="noopener">ScienceBase</a></td></tr>
-<tr><td>USGS 3DEP LiDAR</td><td><a href="https://www.usgs.gov/3d-elevation-program" target="_blank" rel="noopener">usgs.gov/3d-elevation-program</a></td></tr>
-<tr><td>USGS Quaternary faults</td><td><a href="https://usgs.github.io/faults/" target="_blank" rel="noopener">usgs.github.io/faults</a></td></tr>
-</table>
-
-<h2>Irregularities flagged for manual review</h2>
-<ul>
-<li>The user prompt cites the competition PDF at <code>docs.nlr.gov</code>, which is not a valid US-government domain. The correct host is <code>docs.nrel.gov</code> (National Renewable Energy Laboratory) — link above. Both are referenced verbatim in the README.</li>
-<li>The public leaderboard is a live snapshot, not a private test score. Top public scores as of 2026-10-04 were ~0.3195–0.3262; final ranking depends on private holdout and Phase 2 expert review.</li>
-<li>DrivenData's Terms of Service prohibit automated scraping; live scores must be checked manually. This repo does not submit files or consume submission slots on the user's behalf.</li>
-<li>Official DrivenData data download requires a competition account; files used here come from the owner-mirror in the buffedlizard55-lab GitHub org and are SHA-256 pinned in <code>registry/data_manifest.json</code>. They are integrity-verified but not organizer-authenticated.</li>
-</ul>
-
-<p style="margin-top:24px;color:#64748b;font-size:0.9em">Built for the DOE GEMS Prize Challenge. No score is claimed without a verifiable artifact. Maximize P(Win); Own the Outcome.</p>
-</body>
-</html>
+<p class="mut">Generated 20261005T070000Z by <code>scripts/build_site.py</code> from
+<code>gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-manifest.json</code>.</p>
+</div></body></html>

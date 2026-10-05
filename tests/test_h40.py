@@ -284,8 +284,12 @@ def test_poisson_disk_respects_minimum_spacing():
     rng = np.random.default_rng(1)
     prop = rng.random((120, 120)).astype(np.float32)
     allowed = np.ones((120, 120), bool)
-    mask, ranks = pe.emit_ranked(prop, allowed, min_dist=2.8, max_n=400)
+    mask, ys_e, xs_e = pe.emit_ranked(prop, allowed, min_dist=2.8, max_n=400)
     ys, xs = np.nonzero(mask)
+    # the returned coordinates must be exactly the mask, in best-first order
+    assert sorted(zip(ys_e.tolist(), xs_e.tolist())) == sorted(zip(ys.tolist(), xs.tolist()))
+    v = prop[ys_e, xs_e].astype(np.float64)
+    assert (v[:-1] >= v[1:] - 1e-6).all(), "not in descending propensity order"
     from scipy.ndimage import distance_transform_edt
     for i in range(min(ys.size, 400)):
         m2 = mask.copy(); m2[ys[i], xs[i]] = False
@@ -304,14 +308,33 @@ def test_catalogue_buffer_is_a_hard_gate():
 
 
 def test_trim_to_budget_keeps_the_best_first_dots():
-    prop = np.zeros((60, 60), np.float32)
-    prop[10:50:4, 10:50:4] = 1.0
-    allowed = np.ones((60, 60), bool)
-    mask, ranks = pe.emit_ranked(prop, allowed, min_dist=2.8, max_n=200)
+    """Regression test for the index-scrambling defect.
+
+    ``trim_to_budget`` must return the n HIGHEST-propensity accepted dots.  The
+    previous implementation reordered raster-ordered coordinates by pool-rank
+    positions and returned an arbitrary permutation, which passed the old
+    assertions (right count, subset of the mask) while silently degrading every
+    trimmed emission.
+    """
+    rng = np.random.default_rng(11)
+    H = W = 90
+    prop = rng.random((H, W)).astype(np.float32)
+    allowed = np.ones((H, W), bool)
+    mask, ys, xs = pe.emit_ranked(prop, allowed, min_dist=2.8, max_n=600)
     n = int(mask.sum())
-    keep = pe.trim_to_budget(mask, ranks, n // 2)
-    assert int(keep.sum()) == n // 2
-    assert (keep & ~mask).sum() == 0
+    assert n > 20
+    for k in (1, n // 3, n // 2, n - 1, n):
+        keep = pe.trim_to_budget((H, W), ys, xs, k)
+        assert int(keep.sum()) == k
+        assert not (keep & ~mask).any()
+        kept_vals = prop[keep]
+        dropped_vals = prop[mask & ~keep]
+        if dropped_vals.size:
+            assert kept_vals.min() >= dropped_vals.max() - 1e-6, \
+                f"trim to {k} kept a lower-propensity dot than one it dropped"
+    # out-of-range n is clamped, not an error
+    assert int(pe.trim_to_budget((H, W), ys, xs, 10 ** 9).sum()) == n
+    assert int(pe.trim_to_budget((H, W), ys, xs, 0).sum()) == 0
 
 
 # ------------------------------------------------------------- leakage guard
