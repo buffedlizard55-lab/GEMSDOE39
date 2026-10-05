@@ -49,8 +49,8 @@ generated 2026-10-05 · every number on this page is recomputed from the bytes i
 
 <!-- ===================== DOWNLOAD ===================== -->
 <div class="download">
-  <h2 style="margin-top:0;border:0;padding:0"><span class="pill ok">VALIDATED</span> &nbsp;Download the submission file</h2>
-  <p><b>One click, then upload it to DrivenData.</b> This is the file to submit. It is single-band
+  <h2 style="margin-top:0;border:0;padding:0"><span class="pill ok">INCUMBENT</span> &nbsp;Download the current file</h2>
+  <p>This remains the format-validated H39-A/R39A incumbent download. The latest H39Y-01 hypothesis was tested and rejected, so no replacement file or new weekly-slot recommendation is available. It is single-band
   <code>float32</code> GeoTIFF, EPSG:32611, 100&nbsp;m, 3730&nbsp;×&nbsp;3292, identical CRS/shape/geotransform to the
   submission template, and <b>every one of its 12,279,160 cells is a finite value in [0,&nbsp;1]</b>.</p>
   <a class="btn" href="downloads/gemsdoe39-h39-a-model-r39a-zeros.tif">⬇ Download the GeoTIFF (110&nbsp;KB)</a>
@@ -70,11 +70,16 @@ generated 2026-10-05 · every number on this page is recomputed from the bytes i
   </table>
 </div>
 
+<div class="warnbox">
+  <b>H39Y-01 holdout decision (2026-10-05): no new submission slot recommended.</b> The registered detector lost 5/5 evaluated cells; the SPRT crossed its lower boundary at LLR −2.554128 (lower boundary −2.302585), accepting H0. Pooled proxy DTI was 0.035772 vs 0.168755 for the incumbent. No H39Y TIFF was generated; the file above remains the incumbent. <a href="reports/h39y01-validation-20261005.md">See the full report</a> and <a href="preregistration-h39y-20261005.md">pre-score plan</a>. This is a local proxy result, not a leaderboard score.
+</div>
+
 <div class="kpis">
   <div class="kpi"><div class="v">15/15</div><div class="l">Format checks pass</div></div>
   <div class="kpi"><div class="v">0.024</div><div class="l">Max Jaccard vs 241 prior rasters</div></div>
   <div class="kpi"><div class="v">0.661</div><div class="l">Blocked out-of-fold AUC</div></div>
-  <div class="kpi"><div class="v">9/9</div><div class="l">SPRT cells won · accept&nbsp;H1</div></div>
+  <div class="kpi"><div class="v">9/9</div><div class="l">Incumbent H39-A historic holdout</div></div>
+  <div class="kpi"><div class="v">0/5</div><div class="l">Latest H39Y-01 tiles won · accept&nbsp;H0</div></div>
   <div class="kpi"><div class="v">0.00</div><div class="l">Pixels on the known catalogue</div></div>
   <div class="kpi"><div class="v">3.00 px</div><div class="l">Median nearest-neighbour spacing</div></div>
 </div>
@@ -159,9 +164,9 @@ real hidden set, not the real hidden set.
 </div>
 
 <!-- ===================== HYPOTHESES ===================== -->
-<h2>2. The five candidate hypotheses, registered before any was run</h2>
-<p>Each names its layers, its physical signature, why it should catch a fault the catalogue lacks rather than one it
-already contains, and how it differs from prior work in this project family.</p>
+<h2>2. Earlier H39-A-model channel experiments</h2>
+<p>The table below records the earlier H39-A-model family experiments and their local measures. A separate four-hypothesis portfolio and confirmatory H39Y-01 test are documented in section 9 and the linked preregistration.</p>
+<p>Each earlier hypothesis names its layers, physical signature, off-catalogue rationale, and repo-local novelty.</p>
 
 <table>
 <tr><th>#</th><th>Hypothesis / layers</th><th>Physical signature and why it is off-catalogue</th><th>Novelty in this family</th><th>Result</th></tr>
@@ -307,10 +312,17 @@ break-even rule rather than inherited.</p>
 <li><b>AI disclosure</b> is required by the competition rules and must be included in the submission narrative.</li>
 </ul>
 
+<h2>9. H39Y-01 preregistered geological discovery test</h2>
+<p>Before implementing or scoring a candidate, this cycle ranked four distinct hypotheses. H39Y-01 was selected as the only testable candidate: a 2-pixel GeoDAWN <code>ThK</code>/<code>UK</code>/<code>UTh</code> ratio-gradient aligned with the competition <code>cond_surf</code> conductivity gradient. USGS GeoDAWN and Fact Sheet 2020-3055 support radiometric mapping plausibility, not fault-detection performance. The local ratio TIFF is an owner-mirrored derivative; its source provenance is not organizer-authenticated.</p>
+<p><b>Outcome:</b> 11 cells met the frozen eligibility rule. The sequential comparison stopped after five eligible tiles at its lower boundary: 0/5 strict wins, LLR −2.554128 (lower boundary −2.302585), <code>accept_H0</code>. Pooled proxy DTI was 0.035772 vs 0.168755 for H39-A-model. H39Y-01 is not promoted; no candidate TIFF or weekly-slot recommendation was created. Do not re-score this frozen candidate on these exposed cells.</p>
+<p>The <a href="preregistration-h39y-20261005.md">ranked hypotheses and frozen recipe</a>, <a href="preregistration-addendum-h39y-20261005.md">pre-score scoring-mask correction</a>, <a href="preregistration-addendum2-h39y-20261005.md">training-only-label lock</a>, <a href="reports/h39y01-preflight-20261005.json">preflight inputs/geometry</a>, and <a href="reports/h39y01-validation-20261005.md">detailed validation report</a> are available for audit. H39Y-02 and H39Y-03 remain untested and would require a fresh holdout or family-wise alpha plan; H39Y-04 remains deferred pending verified source bytes/schema.</p>
+
 <footer>
 GEMSDOE39 · generated 2026-10-05 · 
 <a href="executive-summary.html">Executive summary and upload instructions</a> ·
 <a href="research-brief.md">Research brief (markdown)</a> ·
+<a href="reports/h39y01-validation-20261005.md">H39Y-01 holdout report</a> ·
+<a href="preregistration-h39y-20261005.md">H39Y preregistration</a> ·
 <a href="../registry/uniqueness.json">Uniqueness receipt</a> ·
 <a href="../registry/score_ledger.csv">Score ledger</a> ·
 <a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/">Official leaderboard</a>

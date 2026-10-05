@@ -7,6 +7,7 @@
 >
 > **Live site:** <https://buffedlizard55-lab.github.io/GEMSDOE39/>
 > **Executive summary / how to submit:** <https://buffedlizard55-lab.github.io/GEMSDOE39/executive-summary.html>
+> **Dated evidence feed:** <https://buffedlizard55-lab.github.io/GEMSDOE39/current-feed.html> · **Research archive:** [`docs/research-brief.md`](docs/research-brief.md)
 
 ---
 
@@ -29,6 +30,12 @@
 
 **No previous submission was copied.** The detector is a new, leak-controlled discriminant; the emission is
 a new budget derived from the metric's own break-even rule.
+
+### Latest validation update — H39Y-01 (2026-10-05)
+
+The preregistered radiometric–conductivity candidate **did not beat the incumbent** on the locked spatial holdout. Eleven cells met the truth-count rule; the SPRT stopped after the first five eligible cells with **0 wins and 5 losses**, LLR **−2.554128** crossing the lower boundary **−2.302585** (`accept_H0`). Pooled proxy DTI on those five cells was **0.035772** for H39Y-01 versus **0.168755** for the H39-A-model incumbent.
+
+**No H39Y-01 GeoTIFF was generated and no weekly slot is recommended.** Keep the incumbent download above; these local proxy values are not DrivenData leaderboard scores. The [full result report](docs/reports/h39y01-validation-20261005.md), [machine-readable outcomes](docs/reports/h39y01-validation-20261005.json), [pre-score lock](docs/reports/h39y01-preflight-20261005.json), and [dated preregistration](docs/preregistration-h39y-20261005.md) preserve the plan and result. The test stopped at its first boundary; no later holdout cell was fit or scored.
 
 ---
 
