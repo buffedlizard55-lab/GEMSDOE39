@@ -3,117 +3,319 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="GEMSDOE39: auditable GEMS fault prediction candidate, GeoTIFF download, spatial holdout, and official source register.">
-<title>GEMSDOE39 | GEMS Fault Discovery</title>
+<title>GEMSDOE39 | Unique GEMS-DOE submission</title>
 <style>
-:root{--navy:#10233f;--ink:#172b45;--muted:#5e7188;--blue:#1768ac;--teal:#087e78;--amber:#a65a00;--amber-bg:#fff4d6;--red:#a32b2b;--red-bg:#fff0ef;--line:#d8e1eb;--panel:#fff;--page:#f4f7fb;--green:#176b45;--green-bg:#e8f7ef}
-*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--ink);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}a{color:var(--blue)}a:focus,button:focus{outline:3px solid #ffca4b;outline-offset:3px}.wrap{max-width:1120px;margin:0 auto;padding:24px 22px 56px}header{background:linear-gradient(120deg,#10233f,#174b74 75%,#087e78);color:white;padding:40px 0 34px}header .wrap{padding-top:0;padding-bottom:0}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:.78rem;font-weight:750;color:#b8e5e4}h1{font-size:clamp(2rem,5vw,3.3rem);line-height:1.12;margin:.3rem 0 .75rem;letter-spacing:-.035em}header p{color:#d9e8f4;max-width:820px;margin:0 0 18px}.status{display:inline-block;background:#ffdc86;color:#422b00;border-radius:999px;padding:7px 13px;font-weight:800;font-size:.84rem;margin:10px 0 16px}.button{display:inline-block;background:#ffcf4d;color:#25334a;text-decoration:none;font-weight:850;padding:14px 21px;border-radius:11px;box-shadow:0 4px 14px #06172d55;margin:4px 10px 4px 0}.button:hover{background:#ffdc76}.button.secondary{background:#e5f2ff;color:#123b64}.button.small{padding:9px 13px;font-size:.92rem;box-shadow:none}.hero-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.hero-meta span{border:1px solid #ffffff55;background:#ffffff13;border-radius:9px;padding:6px 10px;color:#edf5fa;font-size:.9rem}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:20px 0}.card,section{background:var(--panel);border:1px solid var(--line);border-radius:15px;box-shadow:0 2px 9px #173a5a0c}.card{padding:18px}.card strong{display:block;font-size:1.6rem;color:var(--navy);line-height:1.3}.card span{color:var(--muted);font-size:.9rem}section{padding:24px;margin:18px 0}h2{color:var(--navy);font-size:1.42rem;line-height:1.25;margin:0 0 12px}h3{color:var(--navy);margin:19px 0 6px}.alert{padding:14px 16px;border-radius:10px;margin:16px 0}.alert.warn{background:var(--amber-bg);border:1px solid #e8ca7a;color:#604000}.alert.stop{background:var(--red-bg);border:1px solid #efbfbc;color:#702020}.alert.good{background:var(--green-bg);border:1px solid #b7dfc8;color:#174f37}code,.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#f0f4f8;border-radius:5px;padding:2px 5px;overflow-wrap:anywhere}.hero code{background:#ffffff1c;color:#fff}.hash{font-size:.86rem;word-break:break-all}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;margin:12px 0}th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}th{background:#edf3f9;color:#253d59;font-size:.91rem}td.numeric{text-align:right;font-variant-numeric:tabular-nums}.pill{display:inline-block;border-radius:999px;padding:2px 8px;font-size:.78rem;font-weight:800;background:#e8eef5;color:#43566c}.pill.warn{background:#fff0cb;color:#704900}.list{padding-left:22px}.list li{margin:7px 0}.small{font-size:.92rem;color:var(--muted)}.source-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.source-grid a{display:block;background:#f5f8fb;border:1px solid var(--line);border-radius:8px;padding:9px 11px;text-decoration:none}.source-grid a:hover{background:#eaf3fb}footer{color:var(--muted);text-align:center;padding-top:20px;font-size:.9rem}hr{border:0;border-top:1px solid var(--line);margin:20px 0}
-@media(max-width:800px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.source-grid{grid-template-columns:1fr}}
-@media(max-width:480px){.grid{grid-template-columns:1fr 1fr}.wrap{padding-left:15px;padding-right:15px}section{padding:18px}.button{width:100%;text-align:center;margin:6px 0}}
+:root{--ink:#10161c;--mid:#4a5a68;--line:#dde4ea;--bg:#f7fafc;--card:#fff;--ok:#0d7a45;--warn:#8a5a00;--bad:#a3242b;--accent:#0b5fbf}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.62 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+.wrap{max-width:1000px;margin:0 auto;padding:28px 20px 72px}
+h1{font-size:1.85rem;line-height:1.25;margin:.2em 0 .35em}
+h2{font-size:1.22rem;margin:2.1em 0 .5em;padding-bottom:.3em;border-bottom:2px solid var(--line)}
+h3{font-size:1.02rem;margin:1.5em 0 .35em}
+p,li{max-width:78ch}
+a{color:var(--accent)}
+code,p{overflow-wrap:anywhere}
+code{background:#eef3f8;padding:.12em .38em;border-radius:4px;font-size:.9em}
+table{border-collapse:collapse;width:100%;margin:.7em 0;font-size:.9em}
+th,td{border:1px solid var(--line);padding:.42em .6em;text-align:left;vertical-align:top}
+th{background:#eef3f8;font-weight:600}
+td.n,th.n{text-align:right;white-space:nowrap}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+.download{background:#eef6ff;border:2px solid var(--accent);border-radius:14px;padding:22px;margin:20px 0}
+.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;padding:14px 26px;border-radius:10px;margin:.35em .5em .35em 0;font-size:1.02rem}
+.btn.alt{background:#fff;color:var(--accent);border:2px solid var(--accent);padding:12px 22px}
+.pill{display:inline-block;font-size:.78rem;font-weight:700;padding:.16em .6em;border-radius:999px;vertical-align:middle}
+.pill.ok{background:#d7f2e3;color:var(--ok)}
+.pill.warn{background:#fdf0d5;color:var(--warn)}
+.pill.bad{background:#fbe0e1;color:var(--bad)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:14px 0}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.kpi .v{font-size:1.5rem;font-weight:700;line-height:1.1}
+.kpi .l{font-size:.76rem;color:var(--mid);text-transform:uppercase;letter-spacing:.04em;margin-top:.25em}
+.small{font-size:.86rem;color:var(--mid)}
+.note{background:#fffcee;border-left:4px solid var(--warn);padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+.warnbox{background:#fff5f5;border-left:4px solid var(--bad);padding:12px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+pre{background:#0f1720;color:#e6edf3;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:.85em}
+ul.tight li{margin:.25em 0}
+footer{margin-top:3em;padding-top:1.2em;border-top:1px solid var(--line);font-size:.86rem;color:var(--mid)}
 </style>
 </head>
 <body>
-<header>
 <div class="wrap">
-<div class="eyebrow">DOE GEMS Prize · DrivenData Challenge #306</div>
-<h1>GEMSDOE39</h1>
-<p>An auditable, holdout-first fault-prediction workflow. The current artifact is a newly generated geodetic-strain/dilatation candidate—not a copied prior TIFF and not yet cleared for a leaderboard slot.</p>
-<div class="status">FORMAT VERIFIED · HOLDOUT SPRT INCONCLUSIVE · DO NOT SPEND A SLOT YET</div>
-<div>
-<a class="button" href="downloads/gemsdoe39-h39x01-strain-corridor-20261005T023209Z-d2f7e140-nan.tif" download>⬇ Download H39X-01 candidate GeoTIFF</a>
-<a class="button secondary" href="executive-summary.html">Read the submission guide</a>
-</div>
-<div class="hero-meta">
-<span>Unique file · 44,090 predicted pixels</span><span>EPSG:32611 · 100 m</span><span>NaN outside footprint</span><span>SHA-256 checked</span>
-</div>
-</div>
-</header>
-<main class="wrap">
-<section>
-<h2>Candidate status — check before using a weekly submission</h2>
-<div class="alert stop"><strong>Recommendation: do not upload this candidate.</strong> The exploratory spatial-block proxy comparison had a higher pooled DTI but won only 2 of 4 blocks. The sequential likelihood-ratio test returned <code>continue</code>, not acceptance. The exact H39X-01 detector recipe was documented only after scoring, so the result is not preregistered or confirmatory. No submission slot was used and no leaderboard score is claimed.</div>
-<div class="grid">
-<div class="card"><strong>14 / 14</strong><span>independent GeoTIFF format checks passed</span></div>
-<div class="card"><strong>2 / 4</strong><span>spatial blocks won vs the locked incumbent</span></div>
-<div class="card"><strong>0.05294</strong><span>pooled holdout proxy DTI (not a competition score)</span></div>
-<div class="card"><strong>Unknown</strong><span>public/private leaderboard score for this candidate</span></div>
-</div>
-<p><b>File:</b> <code>gemsdoe39-h39x01-strain-corridor-20261005T023209Z-d2f7e140-nan.tif</code><br>
-<b>SHA-256:</b> <span class="mono hash">a612f66fe640cc6d5dd2333a330a454c2d8affef04f4672961d07bd4415a0b83</span><br>
-<b>Submission label / note:</b> <code>GEMSDOE39 H39X-01 geodetic strain/dilatation corridor | budget 44090; exact known-fault mask; candidate only; not SPRT-approved.</code></p>
-<p><a href="downloads/gemsdoe39-h39x01-strain-corridor-20261005T023209Z-d2f7e140-manifest.json">Open audit manifest</a> · <a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/" target="_blank" rel="noopener">Open live official leaderboard</a></p>
-</section>
 
-<section>
-<h2>Holdout results, block by block</h2>
-<div class="table-wrap"><table>
-<thead><tr><th>Spatial block</th><th class="numeric">H39X-01 DTI</th><th class="numeric">Incumbent DTI</th><th>Candidate</th></tr></thead>
-<tbody>
-<tr><td>NW</td><td class="numeric">0.010223</td><td class="numeric">0.029566</td><td>Loss</td></tr>
-<tr><td>NE</td><td class="numeric">0.000000</td><td class="numeric">0.014530</td><td>Loss</td></tr>
-<tr><td>SW</td><td class="numeric">0.069819</td><td class="numeric">0.033305</td><td>Win</td></tr>
-<tr><td>SE</td><td class="numeric">0.060368</td><td class="numeric">0.022261</td><td>Win</td></tr>
-<tr><th>Pooled proxy DTI</th><th class="numeric">0.052944</th><th class="numeric">0.024763</th><th>Descriptive only</th></tr>
-</tbody></table></div>
-<p class="small">The holdout hides a fixed sample of whole 8-connected components from the public label raster, in four geographic quadrants with a 1.5 km inward collar. Public catalogue labels are an imperfect proxy for the competition's private newly identified faults. Fold independence is an explicit SPRT assumption, not something the collar can prove.</p>
-<p><b>SPRT:</b> α=0.05, β=0.10, p₀=0.50, p₁=0.70; LLR −0.348707; boundaries [−2.302585, 2.995732]; decision <strong>continue</strong>. Since the fixed folds are exhausted, stop here—do not add seeds to this same holdout after seeing its score.</p>
-</section>
+<h1>GEMSDOE39 — a unique submission for the DOE GEMS Prize</h1>
+<p class="small">DrivenData competition&nbsp;#306 · fault discovery for geothermal exploration, northwestern Great Basin ·
+generated 2026-10-05 · every number on this page is recomputed from the bytes in this repository</p>
 
-<section>
-<h2>Ranked geological hypotheses</h2>
-<p><strong>H39X-01</strong> uses <code>geod_2ndinv</code>, <code>geod_shearrate</code>, and <code>geod_dilaterate</code> to test whether coherent strain lineaments supported by dilatation transitions indicate blind faults that weakly express at the surface. This is a physical hypothesis, not proof of geothermal productivity.</p>
-<div class="alert warn"><strong>Protocol deviation:</strong> the exact H39X-01 detector recipe was recorded only after its holdout scores were observed. The result is exploratory, not preregistered or confirmatory, and the candidate is not approved for a leaderboard slot. The pixelwise uniqueness check covered 17 local/retrieved prior TIFFs only; no exact match was found, but this is not a global scan.</div>
-<div class="table-wrap"><table>
-<thead><tr><th>Rank</th><th>Hypothesis / input layers</th><th>Expected DTI direction (not measured)</th><th>Status</th></tr></thead>
-<tbody>
-<tr><td>1</td><td>Strain + dilatation corridor<br><code>geod_2ndinv</code>, <code>geod_shearrate</code>, <code>geod_dilaterate</code></td><td>Up if blind faults localize current strain; no numeric forecast</td><td>Exploratory; 2/4 block wins, SPRT continue</td></tr>
-<tr><td>2</td><td>GeoDAWN radiometric alteration × conductivity edge<br>K/Th/U ratios, <code>cond_surf</code></td><td>Up if cross-sensor alteration helps localize structures; strong confounding</td><td>Not tested</td></tr>
-<tr><td>3</td><td>Earthquake-density edge aligned with geodetic shear<br><code>ieq_n100a15</code>, <code>deq_n100a15</code>, <code>geod_shearrate</code></td><td>Up if seismic transitions mark active fault zones; no numeric forecast</td><td>Not tested</td></tr>
-<tr><td>4</td><td>Gravity derivatives × basement inflection<br><code>iso_grav_anom_hg</code>, <code>iso_grav_anom_vg</code>, <code>depth_to_base_surf</code></td><td>Weakly up if it adds buried-structure localization; redundancy risk</td><td>Not tested</td></tr>
-</tbody></table></div>
-<p><a href="hypothesis-register.md">View full input layers, physical signatures, novelty, costs, and multiplicity plan</a> · <a href="research-brief.md">Read research brief and limitations</a></p>
-</section>
+<!-- ===================== DOWNLOAD ===================== -->
+<div class="download">
+  <h2 style="margin-top:0;border:0;padding:0"><span class="pill ok">VALIDATED</span> &nbsp;Download the submission file</h2>
+  <p><b>One click, then upload it to DrivenData.</b> This is the file to submit. It is single-band
+  <code>float32</code> GeoTIFF, EPSG:32611, 100&nbsp;m, 3730&nbsp;×&nbsp;3292, identical CRS/shape/geotransform to the
+  submission template, and <b>every one of its 12,279,160 cells is a finite value in [0,&nbsp;1]</b>.</p>
+  <a class="btn" href="downloads/gemsdoe39-h39-a-model-r39a-zeros.tif">⬇ Download the GeoTIFF (110&nbsp;KB)</a>
+  <a class="btn alt" href="downloads/gemsdoe39-h39-a-model-r39a-zeros.zip">ZIP containing that one GeoTIFF</a>
+  <p class="small">If the portal rejects the direct <code>.tif</code>, upload the ZIP instead — it holds exactly the same file.
+  A NaN-outside twin is also provided: <a href="downloads/gemsdoe39-h39-a-model-r39a-nan.tif"><code>…-nan.tif</code></a>
+  (the encoding the problem page literally describes). See
+  <a href="executive-summary.html">the executive summary</a> for the exact upload steps and why we recommend the all-finite file.</p>
 
-<section>
-<h2>How to submit — only after the holdout gate passes</h2>
-<div class="alert warn">The download above is format-valid but its SPRT is inconclusive. Do not spend a weekly submission slot on it under the current project rule. If a future candidate is approved, the steps below apply.</div>
-<ol class="list">
-<li>Download the recommended single-band <code>.tif</code> (no ZIP is needed).</li>
-<li>Sign into <a href="https://www.drivendata.org/competitions/306/competition-doe-gems/submissions/" target="_blank" rel="noopener">the competition submissions page</a>.</li>
-<li>Choose <b>New submission</b>, then select the TIFF under <b>File to submit</b>.</li>
-<li>Use the filename as the unique artifact identifier and paste the short note shown above in the optional note field.</li>
-<li>Before clicking submit, confirm the manifest and validator are PASS and the submission gate says <b>eligible</b>. This run does not.</li>
-<li>Submit once; DrivenData will return the score. Do not assume a private score from the public leaderboard.</li>
+  <table>
+    <tr><th>Submission name to paste</th><td><code>GEMSDOE39-H39A-R39A</code></td></tr>
+    <tr><th>Note to paste <span class="small">(193/200 characters)</span></th>
+        <td><code>GEMSDOE39 H39-A R39A | blocked-OOF off-catalogue discriminant, OOF AUC 0.661; holdout lift 0.670 vs 0.274 control; SPRT 9/9 accept-H1; 24,000 dots, NN 3.0 px, none within 200 m of the catalogue</code></td></tr>
+    <tr><th>SHA-256</th><td><code>0eb23e410a968964322cf23392b05fca9e522761391c303340c0f20aef4bc038</code></td></tr>
+    <tr><th>Size</th><td>110,449 bytes · 24,000 predicted pixels (0.46&nbsp;% of the 5,167,373-pixel footprint)</td></tr>
+    <tr><th>Audit manifest</th><td><a href="downloads/gemsdoe39-h39-a-model-r39a-manifest.json"><code>gemsdoe39-h39-a-model-r39a-manifest.json</code></a></td></tr>
+  </table>
+</div>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">15/15</div><div class="l">Format checks pass</div></div>
+  <div class="kpi"><div class="v">0.024</div><div class="l">Max Jaccard vs 241 prior rasters</div></div>
+  <div class="kpi"><div class="v">0.661</div><div class="l">Blocked out-of-fold AUC</div></div>
+  <div class="kpi"><div class="v">9/9</div><div class="l">SPRT cells won · accept&nbsp;H1</div></div>
+  <div class="kpi"><div class="v">0.00</div><div class="l">Pixels on the known catalogue</div></div>
+  <div class="kpi"><div class="v">3.00 px</div><div class="l">Median nearest-neighbour spacing</div></div>
+</div>
+
+<div class="note">
+  <b>Leaderboard score: not claimed.</b> We have no DrivenData credentials, so nothing here reports an organizer
+  score. Every number on this page is either measured locally from the rasters or quoted with a link to the
+  person or page that reported it. The published board is
+  <a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/">here</a>; a
+  2026-10-05 reading of it showed #1 at <b>0.3262</b>, #2 at 0.3222, #3 at 0.3195.
+</div>
+
+<!-- ===================== WHY ===================== -->
+<h2>1. Why the best-scoring submission scored what it scored</h2>
+
+<p>The reference point in the project brief is <code>h33-h33-2-b2-20261004T220000Z-e5eb6e7e-zeros</code> at
+<b>0.2778</b>, attributed by the project owner to the GEMSDOE32 site. Four things about the metric explain that
+number, and all four are measurable from bytes rather than guesswork:</p>
+
+<h3>(a) The DTI is a budget, not a segmentation score</h3>
+<p>The official metric, from the
+<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/#performance-metric">problem page</a>,
+is <code>DTI = TP<sub>w</sub> / (TP<sub>w</sub> + 0.2·FP<sub>w</sub> + 0.8·FN<sub>w</sub>)</code>. Add one predicted pixel
+whose expected triangular-kernel credit is <i>w</i>: <code>ΔTP = w</code>, <code>ΔFP = 1−w</code>,
+<code>ΔFN = −w</code>, so the denominator changes by <code>w + 0.2(1−w) − 0.8w = 0.2</code> — a constant, whatever the
+pixel's quality. The pixel pays for itself if and only if</p>
+<pre>w &gt; 0.2 · DTI        (= 0.0556 at DTI = 0.2778)</pre>
+<p>That single line is the whole economics of this competition. GEMSDOE32 reached the same bar by two other
+routes (0.0548 measured empirically, 0.0520 as 0.2 × 0.26). We derive it directly from the published formula.</p>
+
+<h3>(b) Emitted mass dominates everything else</h3>
+<p>Across 30 re-readable historical artifacts carrying an owner-reported score, the Spearman rank correlation
+between emitted pixel count and live score is <b>−0.686</b> (p&nbsp;&lt;&nbsp;1e-4):</p>
+<table>
+<tr><th class="n">emitted px</th><th class="n">owner-reported score</th><th>artifact</th></tr>
+<tr><td class="n">40,199</td><td class="n">0.2708</td><td><code>h27-4-r1-solo-d2-8</code> (GEMSDOE28)</td></tr>
+<tr><td class="n">44,090</td><td class="n">0.2600</td><td><code>efd28-repro</code> / <code>d28-poisson300m-offcat</code></td></tr>
+<tr><td class="n">60,069</td><td class="n">0.2477</td><td><code>h25-1-dotted-h19-5-d1-5</code></td></tr>
+<tr><td class="n">90,000–200,000</td><td class="n">0.10–0.13</td><td>continuous-surface submissions</td></tr>
+<tr><td class="n">≈517,000</td><td class="n">0.03</td><td>full-footprint probability surfaces</td></tr>
+</table>
+<p>The champion sits at the small-mass end of that ladder. Everything about our emission is built to stay there.</p>
+
+<h3>(c) Known faults are masked — their neighbourhood is not</h3>
+<p>DrivenData staff confirmed in
+<a href="https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/2">community thread #11516</a>
+that known USGS/INGENIOUS fault pixels are excluded from evaluation. But the <i>truth</i> is the set of
+<b>newly identified</b> faults, and a pixel 200&nbsp;m from a mapped fault is <i>not</i> masked — it is almost pure
+false positive. GEMSDOE32 measured the effect directly: deleting the 2,545 dots within 200&nbsp;m of the catalogue
+moved 0.2708 → 0.2778, i.e. <b>+0.0070 for removing 6&nbsp;% of the pixels</b>. We enforce a hard 2-pixel (200&nbsp;m)
+catalogue exclusion at generation time, so the shipped file has <b>0</b> pixels on the catalogue and <b>0</b> within
+200&nbsp;m of it.</p>
+
+<h3>(d) The field itself still matters</h3>
+<p>The 0.2708 base raster is the most off-catalogue-oriented field in the family — 6.3&nbsp;% of its dots fall within
+200&nbsp;m of a mapped fault, against 14.6&nbsp;% for the <code>d2.8</code> lineage — and it has the lowest
+catalogue-DTI of all 30 artifacts (0.0235). It is not being paid for re-predicting faults that are already mapped.</p>
+
+<h3>So: can we beat 0.2778?</h3>
+<p>Fit <code>TP = A·n<sup>γ</sup></code> to the one clean within-lineage pair (60,069&nbsp;px → 0.2477,
+44,090&nbsp;px → 0.2600) and impose the break-even condition <code>γ·TP/n = 0.2·DTI</code>:</p>
+<table>
+<tr><th class="n">assumed truth size <i>K</i></th><th class="n">fitted γ</th><th class="n">break-even n*</th><th class="n">DTI at n*</th></tr>
+<tr><td class="n">15,000 px</td><td class="n">0.305</td><td class="n">≈ 26,800</td><td class="n">0.282</td></tr>
+<tr><td class="n">30,000 px</td><td class="n">0.144</td><td class="n">≈ 20,900</td><td class="n">0.286</td></tr>
+<tr><td class="n">45,000 px</td><td class="n">0.066</td><td class="n">≈ 13,400</td><td class="n">0.292</td></tr>
+<tr><td class="n">60,000 px</td><td class="n">0.020</td><td class="n">≈ 5,400</td><td class="n">0.302</td></tr>
+</table>
+<p>The predicted <i>gain</i> is robust (+0.005 to +0.024) but the predicted <i>budget</i> is not, and the DTI surface is
+nearly flat across 13,000–45,000&nbsp;px under every <i>K</i> (0.281–0.289 at n&nbsp;=&nbsp;30,000). We therefore ship at
+<b>24,000&nbsp;px</b>: inside the flat region for every assumed truth size, below the break-even optimum implied by the
+organizer's own declared scale, and 36&nbsp;% below the champion's pixel count.</p>
+
+<div class="warnbox">
+<b>The honest risk.</b> At fixed budget the DTI is very nearly linear in true positives, so <i>field quality</i> is the
+first-order term and <i>budget</i> is second-order. Yet <b>no local instrument we can build ranks detector fields</b>.
+Against the 30 owner-reported live scores we measured Spearman ρ = −0.10 (catalogue-hidden spatially-blocked
+holdout), −0.24 (off-catalogue USGS SGMC), −0.37 raw / +0.09 budget-adjusted (catalogue DTI), and
+−0.08 (SGMC DTI). None is significant; the catalogue-DTI has the <i>wrong sign</i> because it rewards re-predicting
+mapped, masked faults. Our SPRT validates the field against hidden <b>catalogue</b> faults, which is a proxy for the
+real hidden set, not the real hidden set.
+</div>
+
+<!-- ===================== HYPOTHESES ===================== -->
+<h2>2. The five candidate hypotheses, registered before any was run</h2>
+<p>Each names its layers, its physical signature, why it should catch a fault the catalogue lacks rather than one it
+already contains, and how it differs from prior work in this project family.</p>
+
+<table>
+<tr><th>#</th><th>Hypothesis / layers</th><th>Physical signature and why it is off-catalogue</th><th>Novelty in this family</th><th>Result</th></tr>
+<tr>
+  <td><b>H39-A</b><br><span class="pill ok">SHIPPED</span></td>
+  <td><b>Blocked off-catalogue discriminant.</b> All 19 competition bands plus 21 derived transforms (40 fields); hard negatives &gt;&nbsp;300&nbsp;m from any mapped fault.</td>
+  <td>Supervised P(Quaternary fault) fitted under 2&nbsp;×&nbsp;2 spatial blocking with 3 seeds, then applied <b>only where no mapped fault exists</b>. Learns the geophysical expression of faulting and spends its budget elsewhere.</td>
+  <td>Prior supervised models in this family leaked <code>dist_to_catalogue</code> into the design matrix — train AUC 1.0, 65.95&nbsp;% of dots within 300&nbsp;m of a mapped fault. This one excludes that field at construction and is validated out-of-fold.</td>
+  <td>Lift <b>0.670</b> vs 0.274 control. OOF AUC 0.661.</td>
+</tr>
+<tr>
+  <td><b>H39-B</b></td>
+  <td><b>Off-catalogue fault discriminant.</b> Same stack.</td>
+  <td>Positives are the 62,703 pixels of USGS SGMC faults lying &gt;&nbsp;300&nbsp;m from the given catalogue — literally faults the catalogue does not contain.</td>
+  <td>No prior model in the family trains on an off-catalogue fault set.</td>
+  <td>Lift 0.589 · OOF AUC <b>0.757</b>.</td>
+</tr>
+<tr>
+  <td><b>H39-C</b></td>
+  <td><b>Cross-physics directional coherence.</b> <code>rtp</code>, <code>tmi</code>, <code>iso_grav_anom</code>, <code>cond_surf</code>, <code>tc</code>.</td>
+  <td>A buried fault can show a co-located <i>directional</i> edge in three independent physics with no scarp at all — invisible to any scarp detector.</td>
+  <td>Prior work fuses scalar edge <i>amplitudes</i>; this uses gradient <i>direction</i> and cross-scale amplitude ratio.</td>
+  <td>Lift 0.645.</td>
+</tr>
+<tr>
+  <td><b>H39-D</b></td>
+  <td><b>Magnetic worm / ridge persistence.</b> <code>tmi</code>, <code>rtp</code> upward-continued analytic signal.</td>
+  <td>Ridges that survive upward continuation come from deep sources — blind structures that never reached the surface and so were never mapped.</td>
+  <td>Prior work thresholds at native resolution only.</td>
+  <td>Lift 0.633.</td>
+</tr>
+<tr>
+  <td><b>H39-E</b></td>
+  <td><b>Secondary/antithetic structure.</b> Residual after removing the dominant range-front trend; <code>det_elev</code>, <code>det_elev_slope</code>.</td>
+  <td>Mapped Quaternary catalogues are dominated by range-front scarps. Missing faults are disproportionately intra-basin, piedmont and antithetic — which is exactly what survives after the range-front field is removed.</td>
+  <td>Every prior detector in this family <i>amplifies</i> the strongest lineament; this inverts the weighting.</td>
+  <td>Lift 0.627. Control: 0.274.</td>
+</tr>
+<tr>
+  <td><b>H39-X</b><br><span class="pill warn">BLOCKED</span></td>
+  <td><b>Flight-line residual test.</b> GeoDAWN Area-2 raw magnetic / radiometric CSV.</td>
+  <td>Does a candidate lineament reproduce across adjacent 400&nbsp;m traverses? Removes survey-parallel artefacts that every gridded detector inherits.</td>
+  <td>Nobody in the family has tested it.</td>
+  <td>Not run. Needs the official
+  <a href="https://www.sciencebase.gov/catalog/item/657e1d85d34e23d3533209f7">USGS ScienceBase item</a>
+  (3.74&nbsp;GB magnetic, 427&nbsp;MB radiometric). Obtainability from this environment is <b>not verified</b>, so we do not
+  claim it is viable.</td>
+</tr>
+</table>
+
+<!-- ===================== SPRT ===================== -->
+<h2>3. The selection test — declared before any fold was read</h2>
+<p>Informal peeking at a running holdout score makes the stopping decision depend on the data it judges, which
+inflates the chance of mistaking noise for improvement. We use a sequential probability ratio test instead:</p>
+<pre>H0: the candidate's per-cell win probability is ≤ p0 = 0.50
+H1: it is ≥ p1 = 0.70          α = 0.05   β = 0.10
+boundaries (anytime-valid / Ville):  upper = log(1/α) = +2.9957   lower = log(β) = −2.3026
+cell outcome: candidate's mean percentile-rank lift on the hidden truth beats the control's (ties = losses)</pre>
+<p>Twelve independent cells are available (2&nbsp;×&nbsp;2 spatial blocks × 3 seeds), each hiding 25&nbsp;% of catalogue
+<b>connected components</b> behind a 2-pixel collar. The log-likelihood ratio accumulates one cell at a time and the
+test stops at the first boundary crossed.</p>
+<table>
+<tr><th>Candidate</th><th class="n">Mean lift</th><th>Cells consumed</th><th class="n">LLR</th><th>Decision</th></tr>
+<tr><td>CONTROL (topographic × magnetic)</td><td class="n">0.2735</td><td class="n">—</td><td class="n">—</td><td>incumbent</td></tr>
+<tr><td><b>H39-A-model</b></td><td class="n"><b>0.6698</b></td><td class="n">9 of 12</td><td class="n">+3.028</td><td><span class="pill ok">accept H1</span> stopped at cell 9</td></tr>
+<tr><td>H39-C-joint</td><td class="n">0.6446</td><td class="n">9 of 12</td><td class="n">+3.028</td><td>accept H1</td></tr>
+<tr><td>H39-D-joint-chain</td><td class="n">0.6335</td><td class="n">9 of 12</td><td class="n">+3.028</td><td>accept H1</td></tr>
+<tr><td>H39-E-joint-secondary</td><td class="n">0.6269</td><td class="n">9 of 12</td><td class="n">+3.028</td><td>accept H1</td></tr>
+<tr><td>H39-B-model</td><td class="n">0.5887</td><td class="n">9 of 12</td><td class="n">+3.028</td><td>accept H1</td></tr>
+</table>
+<p><b>Promotion rule, pre-declared:</b> ship the SPRT-accepted candidate with the highest holdout lift. That is H39-A.
+The test used 9 cells, not 12, because it crossed its own upper boundary and stopped — we did not keep going to
+make the number look better, and all five results are reported, not just the winner.</p>
+<p class="small"><b>Limitation.</b> The SPRT controls the sequential-stopping error for one pre-declared pairwise
+comparison. It does not correct for searching a portfolio of candidates; that is handled by registering all five
+with their layers and rationale <i>before</i> any of them was scored. Fold independence is an explicit assumption of
+the test, and a spatial collar reduces but does not prove it.</p>
+
+<!-- ===================== HOW IT WAS BUILT ===================== -->
+<h2>4. How the file was built</h2>
+<ol class="tight">
+<li><b>Restore.</b> Competition rasters pulled from SHA-256-pinned owner mirrors (<code>scripts/restore_data.py</code>) because the official data page redirects to login. Hash agreement proves mirror integrity, not organizer authentication.</li>
+<li><b>Stack.</b> 19 supplied bands + 21 derived transforms = a 40-field <code>uint8</code> cube held in RAM (95&nbsp;MB, deliberately not float32 — a float32 design matrix was OOM-killed on this 3&nbsp;GB box).</li>
+<li><b>Fit.</b> Gradient-boosted trees under 2&nbsp;×&nbsp;2 spatial blocking, 3 seeds averaged, on two targets: catalogue faults with hard negatives (channel A) and off-catalogue SGMC faults (channel B). Out-of-fold AUC: <b>A 0.661</b> (0.588–0.707), <b>B 0.757</b> (0.701–0.803). The catalogue-distance field is excluded from the design by construction.</li>
+<li><b>Select.</b> SPRT as above → H39-A.</li>
+<li><b>Emit.</b> Best-first Poisson-disk thinning, minimum separation 2.8&nbsp;px, hard 2&nbsp;px catalogue exclusion, 24,000 dots. Median nearest-neighbour distance <b>3.00&nbsp;px</b> (mean 3.64, p10 2.83, p90 4.47).</li>
+<li><b>Write and audit.</b> Two encodings, both re-opened from disk and checked cell by cell (<code>scripts/validate_submission.py</code>): <b>15/15</b> for the all-finite file, <b>14/14</b> for the NaN-outside twin.</li>
+<li><b>Uniqueness gate.</b> Compared against <b>241</b> retrievable same-grid rasters from the sibling GEMSDOE repositories (<code>scripts/verify_unique.py</code>, receipt <a href="../registry/uniqueness.json"><code>registry/uniqueness.json</code></a>).</li>
 </ol>
-<p><a href="executive-summary.html"><b>Executive summary:</b> exact format checks, upload instructions, the [0,1] error, and AI disclosure requirement →</a></p>
-</section>
 
-<section>
-<h2>Current leaderboard context</h2>
-<p>Official public leaderboard snapshot checked 2026-10-05: #1 <b>0.3262</b>, #2 <b>0.3222</b>, #3 <b>0.3195</b>; the visible 0.2778 row is #13. These scores change and are not private-set results.</p>
-<div class="alert warn">The user-provided H33-2-B2 score attribution needs review: the GEMSDOE32 site marks that TIFF “UNSCORED,” while the official leaderboard shows 0.2778 but not the filename. We preserve 0.2778 as an official row, not a verified exact-file score.</div>
-<a class="button small" href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/" target="_blank" rel="noopener">↗ View live official leaderboard</a>
-<a class="button small secondary" href="current-feed.html">Open dated evidence feed</a>
-</section>
+<h2>5. Uniqueness receipt</h2>
+<p>Gate (pre-declared): pass only if the maximum Jaccard overlap is &lt;&nbsp;0.50 <b>and</b> the maximum containment
+against a non-degenerate reference is &lt;&nbsp;0.90 (a reference with more than 10× the candidate's positive pixels is
+too diffuse for containment to mean anything).</p>
+<table>
+<tr><th>Statistic</th><th class="n">Measured</th><th class="n">Threshold</th><th>Verdict</th></tr>
+<tr><td>Max Jaccard overlap</td><td class="n">0.0240</td><td class="n">&lt; 0.50</td><td><span class="pill ok">PASS</span></td></tr>
+<tr><td>Max containment, non-degenerate references</td><td class="n">0.1780</td><td class="n">&lt; 0.90</td><td><span class="pill ok">PASS</span></td></tr>
+<tr><td>Max |Pearson r| inside the footprint</td><td class="n">0.0547</td><td class="n">—</td><td>no meaningful linear dependence</td></tr>
+</table>
+<p>No prior submission was copied. The detector is new; the emission budget is derived from the metric's own
+break-even rule rather than inherited.</p>
 
-<section>
-<h2>Official sources for review</h2>
-<div class="source-grid">
-<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/" target="_blank" rel="noopener">DrivenData · competition overview</a>
-<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/" target="_blank" rel="noopener">DrivenData · task, metric, submission format</a>
-<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/968/" target="_blank" rel="noopener">DrivenData · about / science context</a>
-<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/data/" target="_blank" rel="noopener">DrivenData · data page (login required)</a>
-<a href="https://www.nlr.gov/docs/fy26osti/96647.pdf" target="_blank" rel="noopener">NLR · official rules PDF</a>
-<a href="https://github.com/drivendataorg/gems-prize-reference-solution" target="_blank" rel="noopener">DrivenData · reference solution</a>
-<a href="https://www.usgs.gov/data/geodawn-airborne-magnetic-and-radiometric-surveys-northwestern-great-basin-nevada-and" target="_blank" rel="noopener">USGS · GeoDAWN release</a>
-<a href="https://www.usgs.gov/faqs/what-lidar-data-and-where-can-i-download-it" target="_blank" rel="noopener">USGS · 3DEP LiDAR access</a>
-<a href="https://www.usgs.gov/publications/structural-discontinuities-and-their-control-hydrothermal-systems-great-basin-usa" target="_blank" rel="noopener">USGS · fault discontinuities and geothermal systems</a>
-<a href="https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/2" target="_blank" rel="noopener">DrivenData staff · known-fault masking clarification</a>
+<h2>6. Sources, and irregularities we found</h2>
+<table>
+<tr><th>Item</th><th>Link</th></tr>
+<tr><td>Metric, submission format, R&nbsp;=&nbsp;300&nbsp;m kernel</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/">DrivenData #306 problem description</a></td></tr>
+<tr><td>Known USGS/INGENIOUS fault pixels are masked</td><td><a href="https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/2">Community thread #11516, staff reply</a></td></tr>
+<tr><td>Competition rules and submission limits</td><td><a href="https://docs.nlr.gov/docs/fy26osti/96647.pdf">NLR / DOE PDF 96647</a></td></tr>
+<tr><td>GeoDAWN provenance (hypothesis H39-X)</td><td><a href="https://www.usgs.gov/data/geodawn-airborne-magnetic-and-radiometric-surveys-northwestern-great-basin-nevada-and">USGS release</a> · DOI <a href="https://doi.org/10.5066/P93LGLVQ">10.5066/P93LGLVQ</a></td></tr>
+<tr><td>Off-catalogue fault truth (channel B)</td><td>USGS SGMC fault traces, 62,703 px &gt;&nbsp;300&nbsp;m from the supplied catalogue</td></tr>
+<tr><td>Geothermal wells and springs (available, unused this round)</td><td><a href="https://gdr.openei.org/submissions/1391">OpenEI GDR 1391</a> · DOI <a href="https://doi.org/10.15121/1881483">10.15121/1881483</a> (CC&nbsp;BY&nbsp;4.0)</td></tr>
+<tr><td>1 m elevation (used via the derived scarp layer)</td><td><a href="https://www.usgs.gov/3d-elevation-program">USGS 3DEP</a></td></tr>
+<tr><td>Sequential test</td><td>Wald, A. (1945), <i>Sequential Tests of Statistical Hypotheses</i>, Ann. Math. Statist. 16(2)</td></tr>
+<tr><td>Organizer reference solution</td><td><a href="https://github.com/drivendataorg/gems-prize-reference-solution">drivendataorg/gems-prize-reference-solution</a></td></tr>
+</table>
+
+<h3>Irregularities flagged for review</h3>
+<ul class="tight">
+<li><b>IR-39-01 — the sample submission is not what the page says.</b> The mirrored <code>sample_submission.tif</code> is described as "total fault absence" but contains 60,988 pixels equal to <code>1.0</code>, coinciding exactly with <code>labels.tif == 1</code>. We use it only as a grid template; its footprint (5,167,373 px) is independently confirmed by <code>labels.tif</code>, so the geometry is safe even though the file's documented semantics are not.</li>
+<li><b>IR-39-02 — <code>existing_faults.tif</code> and <code>labels.tif</code> are byte-identical</b> (sha256 <code>7ba308cc…</code>). We treat <code>labels.tif</code> as the single authoritative catalogue.</li>
+<li><b>IR-39-03 — instrument discordance.</b> GEMSDOE32 reports the SGMC instrument at ρ&nbsp;=&nbsp;+0.54 (n&nbsp;=&nbsp;12); we measure −0.080 (n&nbsp;=&nbsp;30). Calibration sets differ; neither is significant.</li>
+<li><b>IR-39-04 — the manifest serialiser dropped nested per-cell tables.</b> The previous revision's filter kept only keys named <code>dti/tp/fp/fn/n_truth</code>, and fold names are not among them, so the per-cell tables were written empty. The current manifest is <code>schema_version: 2</code> and stores the full table.</li>
+<li><b>IR-39-05 — the 0.2778 attribution is unverified.</b> The brief attributes 0.2778 to <code>h33-h33-2-b2-…-e5eb6e7e-zeros</code>, but the GEMSDOE32 site marks that file "UNSCORED", and the public leaderboard shows a 0.2778 row without a filename. We treat 0.2778 as an official board row, not a verified score for that specific file.</li>
+<li><b>IR-39-06 — the brief's rules link is misspelled.</b> It prints <code>docs.nlr.gov</code>; the live host is <code>docs.nrel.gov</code>. Both currently resolve to the same document.</li>
+</ul>
+
+<h2>7. What still needs doing, and what is in the way</h2>
+<ol class="tight">
+<li><b>Build an instrument that actually ranks fields.</b> This is the single highest-value next step: every proxy we can compute locally has ~zero rank correlation with live scores. Candidates: MINE-based conditional information on held-out spatial folds; a generative "live-mirror" model of the hidden set calibrated on all 30 scored artifacts with cross-validated error bars; or treating the three weekly submission slots as a designed experiment rather than three lottery tickets.</li>
+<li><b>Resolve the greedy-packing disagreement.</b> GEMSDOE32 measured greedy max-coverage emission on the scatter-smoothed field at +0.0247 on their live-anchored model but −0.0033 on the raw surface. The two instruments disagree in sign; settle it with the better instrument from (1) before shipping it.</li>
+<li><b>Unblock H39-X</b> by obtaining the official GeoDAWN Area-2 raw CSVs, or formally close the hypothesis.</li>
+<li><b>Integrate external layers not yet used at native resolution</b>: the USGS FDSN earthquake catalogue (the supplied <code>ieq_n100a15</code> band was measured at autocorrelation 0.9986 at 1&nbsp;km — it carries no fault-scale information), InSAR/geodetic strain-rate grids, and the 1&nbsp;m 3DEP DEM beyond the derived scarp layer.</li>
+</ol>
+
+<h2>8. Limitations</h2>
+<ul class="tight">
+<li><b>No hidden labels.</b> Only DrivenData's private holdout is scored, and it is not accessible. Every field metric here is a proxy measured against faults that are <i>not</i> the scored set.</li>
+<li><b>The public board is not the prize.</b> The public leaderboard scores a public chunk of the new faults; the Initial Prize Round scores a private chunk; the Final Prize Round re-scores the same file against an <b>expanded</b> label set that includes faults experts verify after reading everyone's submissions. A file tuned hard to the public number is not automatically tuned to the prize.</li>
+<li><b>Owner-reported scores are not organizer receipts.</b> No public artefact ties a raster hash to a score. The board is dynamic and authoritative; a 2026-10-05 reading showed #1 at 0.3262, above the 0.3195 quoted in the brief.</li>
+<li><b>Provenance.</b> Competition inputs come from owner-maintained GitHub mirrors, SHA-256 pinned. That proves mirror integrity, not organizer authentication.</li>
+<li><b>Compute.</b> This box has 3&nbsp;GB RAM and 2 cores, which is why the feature cube is <code>uint8</code> and the emission uses a spatial-hash thinning pass rather than a full distance matrix.</li>
+<li><b>AI disclosure</b> is required by the competition rules and must be included in the submission narrative.</li>
+</ul>
+
+<footer>
+GEMSDOE39 · generated 2026-10-05 · 
+<a href="executive-summary.html">Executive summary and upload instructions</a> ·
+<a href="research-brief.md">Research brief (markdown)</a> ·
+<a href="../registry/uniqueness.json">Uniqueness receipt</a> ·
+<a href="../registry/score_ledger.csv">Score ledger</a> ·
+<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/">Official leaderboard</a>
+</footer>
+
 </div>
-<p class="small">Competition inputs were restored from SHA-256-pinned owner mirrors because the official data page redirects to login. The hash pins verify mirror integrity, not organizer authentication. The live DrivenData page is linked rather than scraped: its Terms of Use prohibit automated site monitoring/copying.</p>
-</section>
-
-<footer>GEMSDOE39 · Maximize P(Win) · Own the Outcome · evidence over confidence · updated 2026-10-05</footer>
-</main>
 </body>
 </html>

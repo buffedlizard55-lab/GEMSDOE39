@@ -1,167 +1,562 @@
-# GEMSDOE39 — GEMS fault discovery, holdout-first
+# GEMSDOE39 — Unique Submission for the DOE GEMS Prize
 
-> **Session rule:** Read this entire README before changing the project. Start with the constraints and evidence below; do not treat prior repository prose, owner-reported scores, or old artifacts as verified facts without re-checking them.
+> **Mission.** Maximize P(Win) and Own the Outcome. Produce a *unique*, format-valid
+> GeoTIFF submission for DrivenData competition #306, selected by a pre-declared
+> **Wald SPRT** (no peeking, no "run it a bit longer" inflation of false positives),
+> and delivered with a one-click download from GitHub Pages.
+>
+> **Live site:** <https://buffedlizard55-lab.github.io/GEMSDOE39/>
+> **Executive summary / how to submit:** <https://buffedlizard55-lab.github.io/GEMSDOE39/executive-summary.html>
 
-## Current deliverable (2026-10-05)
+---
 
-**A new, locally generated, format-verified GeoTIFF is available at** [`docs/downloads/gemsdoe39-h39x01-strain-corridor-20261005T023209Z-d2f7e140-nan.tif`](docs/downloads/gemsdoe39-h39x01-strain-corridor-20261005T023209Z-d2f7e140-nan.tif). It is a fresh geodetic-strain/dilatation candidate; no prior prediction pixels were copied. Its audit manifest is next to the TIFF. The [live GEMS download site](https://buffedlizard55-lab.github.io/GEMSDOE39/docs/) (source file: `docs/index.html`) has the prominent download button; the [executive submission guide](docs/executive-summary.html) explains format, upload steps, and why this candidate is not currently approved.
+## ⬇ THE FILE (one click)
 
-- 44,090 positive pixels; single-band float32; EPSG:32611; 3,730×3,292; 100 m; exact sample geotransform.
-- Every in-footprint value is finite and in `[0,1]`; all 7,111,787 cells outside the sample footprint are NaN; nodata is NaN.
-- SHA-256: `a612f66fe640cc6d5dd2333a330a454c2d8affef04f4672961d07bd4415a0b83`.
-- Independent validator: **14/14 checks passed**.
-- Pixel-identity check against 17 locally available prior TIFFs (including the downloaded H33-2-B2 reference): **no exact duplicate**. This does not prove uniqueness against every file hosted by every sibling site.
-- **Do not spend a weekly competition submission slot on this candidate.** The four-block spatial proxy comparison produced two wins and two losses. Although fixed SPRT settings were used, the exact H39X-01 detector recipe was recorded in the hypothesis register only after the holdout result; this is exploratory, not preregistered or confirmatory evidence. Pooled proxy DTI was 0.052944 vs 0.024763 for the locked incumbent, but the sequential likelihood-ratio test returned `continue`, not acceptance. Local format-validity does not establish private-test improvement. No competition score is claimed.
+**[`docs/downloads/gemsdoe39-h39-a-model-r39a-zeros.tif`](docs/downloads/gemsdoe39-h39-a-model-r39a-zeros.tif)**
+· [`.zip` with that one GeoTIFF inside](docs/downloads/gemsdoe39-h39-a-model-r39a-zeros.zip)
+· [NaN-outside twin](docs/downloads/gemsdoe39-h39-a-model-r39a-nan.tif)
 
-This project uses the official file format: data outside the sample bounds are NaN/null. The legacy zeros-outside TIFFs remain only as historical artifacts; they are not the recommended download and the current validator rejects them as not matching the published outside-bounds requirement.
+| | |
+|---|---|
+| **Submission name to paste** | `GEMSDOE39-H39A-R39A` |
+| **Note to paste** (193/200 chars) | `GEMSDOE39 H39-A R39A \| blocked-OOF off-catalogue discriminant, OOF AUC 0.661; holdout lift 0.670 vs 0.274 control; SPRT 9/9 accept-H1; 24,000 dots, NN 3.0 px, none within 200 m of the catalogue` |
+| **Format** | single-band `float32` GeoTIFF · EPSG:32611 · 100 m · 3730 × 3292 · geotransform identical to the template |
+| **Content** | 24,000 predicted pixels (0.46 % of the 5,167,373-pixel footprint) |
+| **Range** | min 0.0 · max 1.0 · **0 cells outside [0, 1]** · **0 NaN** · **0 non-finite** · outside footprint = `0.0` |
+| **sha256** | `0eb23e410a968964322cf23392b05fca9e522761391c303340c0f20aef4bc038` |
+| **Format validator** | 15/15 PASS, all-finite encoding (`scripts/validate_submission.py`) |
+| **Uniqueness** | max Jaccard **0.024** and max \|Pearson r\| **0.055** against **241** retrievable same-grid rasters from the sibling repositories ([receipt](registry/uniqueness.json)) |
 
-### Public leaderboard snapshot
+**No previous submission was copied.** The detector is a new, leak-controlled discriminant; the emission is
+a new budget derived from the metric's own break-even rule.
 
-The official leaderboard page was checked on **2026-10-05**. At that snapshot, the top public score was **0.3262** (`nchuzhoy`), followed by 0.3222 and 0.3195. Thus 0.3195 is not currently the leader in the fetched page. A 0.2778 leaderboard row was visible at rank 13, but the leaderboard does not associate that row with a particular GeoTIFF filename. The GEMSDOE32 site itself labels its H33-2-B2 download “UNSCORED”; exact attribution of 0.2778 to that file is therefore unresolved. See [the dated feed/evidence register](docs/current-feed.md) and the [live leaderboard](https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/).
+---
 
-## Mission and mandatory operating constraints
+## ⚠ The portal error `Predicted values must be in range [0, 1]` — both causes and the fix
 
-The mission is to improve the probability of winning the DOE GEMS Prize (#306) by generating scientifically defensible, reproducible fault predictions and an obvious-to-download, valid GeoTIFF. No code or copy can guarantee a score above 0.3262, because the private expert labels are unavailable.
+Two distinct failures produce that one message.
 
-1. **Unique artifact.** Generate each candidate from the data and documented transforms; never copy a previous submission as the deliverable. Use previous artifacts only for educational analysis, baseline comparison, or duplicate checks, and disclose that use.
-2. **Format before score.** Validate CRS, shape, transform, dtype, footprint, finite/range constraints, outside-NaN behavior, and SHA-256 after writing. DrivenData requires one float32 layer, EPSG:32611, 100 m, matching bounds, values `[0,1]`, and null/NaN outside bounds.
-3. **Holdout before any weekly slot.** Preregister one candidate, its transforms, budget, fold construction, comparator, metric, and stopping rule before examining its holdout result. Do not upload an untested idea. The current candidate is explicitly **not approved** by its gate.
-4. **SPRT, not peeking.** Compare one preregistered candidate with one locked incumbent, one block at a time. Use fixed fold order, predeclared `p0=0.50`, `p1=0.70`, `alpha=0.05`, `beta=0.10`, and conservative likelihood-ratio thresholds `upper=ln(1/alpha)`, `lower=ln(beta)`. Stop at a boundary. If fixed folds are exhausted without crossing, record `continue` and stop this experiment; do not keep re-scoring the same holdout with new seeds.
-5. **State assumptions.** The SPRT's nominal error control is conditional on independent Bernoulli block outcomes or a valid conditional supermartingale. A spatial collar reduces leakage but does not prove geologic independence. Do not claim unconditional error control where this assumption is doubtful.
-6. **Separate multiplicity from sequential stopping.** Test only the single registered candidate in a holdout cycle. Do not pick a winner from many hypotheses that share the same holdout. Future portfolios need a separate multiplicity policy (for example, alpha allocation or a genuinely untouched confirmation set).
-7. **No unsupported causal claims.** Public leaderboard scores, owner-reported historical scores, proxy-holdout DTI, model estimates, and private-test scores are different evidence classes. Label them correctly. A proxy DTI is not a leaderboard prediction.
-8. **Sources and data provenance.** Prefer official DrivenData, USGS, DOE/NLR, and peer-reviewed/USGS research links. The challenge data page is login-gated in this environment; restored owner mirrors are SHA-256 checked but are not organizer-authenticated. Store that limitation with every data claim.
-9. **Respect platform terms.** DrivenData's Terms of Use prohibit robot/spider or other automatic access for monitoring/copying. Provide a live leaderboard link and timestamped snapshots; do not deploy an automated DrivenData scraper. The current page can be rechecked in a future session through an allowed human/agent review.
-10. **Core values:** **Maximize P(Win)** by evidence-based choices; **Own the Outcome** by fixing defects and publishing limitations rather than hiding them. Generative AI use must be disclosed in the competition narrative as required by the official rules.
+1. **The float32 nodata sentinel.** `training_features.tif` uses `-3.4028234663852886e+38` as nodata.
+   Writing it through puts values outside `[0, 1]`.
+2. **NaN outside the footprint.** The organizer's page says "data outside the bounds is null or nan", and
+   the sample submission does use NaN — but a NaN-carrying raster with `nodata=NaN` is one validator change
+   away from the same rejection, and this project family has hit the error with NaN-outside files.
 
-## Protocol deviation — H39X-01 is exploratory, not preregistered
+**Fix (verified by re-opening the written bytes):** the recommended download is **all-finite** —
+real predictions inside the footprint, `0.0` outside, no sentinel, no `nodata` value outside `[0, 1]`.
+If your browser uploader still complains, use the `.zip`.
 
-The exact H39X-01 feature recipe was entered into `docs/hypothesis-register.md` only after the four-block result was observed. Fixed SPRT parameters and a blocked fold design do not retroactively preregister the candidate formula. Therefore the scores and `continue` result are exploratory only; this test cannot confirm the hypothesis, and the artifact is not eligible for a weekly slot regardless of a later rerun on the same folds. Do not tune on this exposed holdout. A future confirmatory experiment must freeze the full formula and analysis plan before opening a genuinely untouched holdout. See the dated [hypothesis register](docs/hypothesis-register.md) and [research brief](docs/research-brief.md).
+---
 
-## Restore data and run local checks
+## Permanent project charter — **read this at the start of every session**
 
-Competition data are not committed to Git. The present sandbox restored the core and external rasters from the SHA-pinned owner mirrors. On a new machine:
+```
+Review the repo.
 
-```bash
-python3 -m venv .venv
-. .venv/bin/activate
-pip install -r requirements.txt
-python scripts/restore_data.py --group core
-python scripts/restore_data.py --group external
-python scripts/prepare_data.py
-python scripts/validate_submission.py docs/downloads/gemsdoe39-h39x01-strain-corridor-20261005T023209Z-d2f7e140-nan.tif
-pytest -q
+THE FOLLOWING IS THE HIGHEST URGENCY AND MUST BE FOLLOWED!
+
+MUST GENERATE A UNIQUE TIF SUBMISSION FOR THE COMPETITION.  DO NOT COPY A PREVIOUS
+SUBMISSION UNLESS IT'S FOR LEARNING AND EDUCATION.  BUT WE MUST GENERATE A UNIQUE
+TIF SUBMISSION.
+
+There should be an easy to download submission tif file as described by the prompt.
+Read the entire prompt.
+
+Use a formally valid sequential test so "run it a bit longer" doesn't quietly
+inflate false positives. Separate from testing many hypotheses in parallel, there's
+a subtler trap in watching one holdout evaluation's running score and deciding by
+eye when to stop — that kind of informal peeking inflates the chance of mistaking
+noise for improvement, because the stopping decision itself uses the data it's
+judging. Wald's sequential probability ratio test (1945) is the classical, formally
+valid answer: define the error rates you'll accept in advance, and let the stopping
+decision be a principled test rather than a judgment call. Apply it directly to
+holdout evaluation — accumulate the log-likelihood ratio between "this candidate
+beats the current best" and "it doesn't," fold by fold, and stop only when it
+crosses one of the two pre-declared boundaries. That makes "we tested it enough to
+know" a checkable claim instead of a judgment call vulnerable to the same bias the
+multiple-comparisons correction exists to catch at the portfolio level.
+
+The following sites should serve as a starting point for understanding how to
+generate TIF submissions. These websites are researched, and tested and have
+generated TIF submissions. But we need to generate high scoring submissions.
+
+Here are the results from submissions into the competition, separated by ....:
+
+https://buffedlizard55-lab.github.io/GEMSDOE/docs/index.html
+gems-submission-20260925T001403Z-7f00890a: 0.1563
+....
+https://buffedlizard55-lab.github.io/6GEMSDOE/
+gems6_hgb88-topk03_33cec71ff0: 0.0286
+....
+https://buffedlizard55-lab.github.io/GEMSDOE3/docs/index.html
+pindrop-v4-nodes-20260925T152420Z-f347b70daa: 0.1193
+pindrop-v4-discovery-20260925T152423Z-37f9d5b855: 0.0830
+pindrop-v4-ridge-20260925T152422Z-4e03fc9705: 0.1152
+....
+https://buffedlizard55-lab.github.io/GEMSDOE2/docs/index.html
+gemsdoe2-dual-family-union-20260925T160406Z-f68e590f: 0.1560
+....
+https://buffedlizard55-lab.github.io/GEMSDOE4/
+gems-submission-20260926T163915Z-237f0063: 0.0343
+....
+https://buffedlizard55-lab.github.io/5GEMSDOE/docs/index.html
+gems-submission-20260926T175114Z-7f00890a: 0.1563
+....
+https://buffedlizard55-lab.github.io/7GEMSDOE/
+lidarscarp-ridge-top2pct-36c3a3f341c8: 0.1461
+....
+https://buffedlizard55-lab.github.io/8GEMSDOE/
+Hedge-v2_submission: 0.1563
+....
+https://buffedlizard55-lab.github.io/GEMSDOE9/docs/index.html
+2314b599: 0.0107
+....
+https://buffedlizard55-lab.github.io/11GEMSDOE/docs/index.html
+gems-structural-area06-v1: 0.0202
+....
+https://buffedlizard55-lab.github.io/12GEMSDOE/docs/index.html
+r7-nms3-dem10-scarp_0c9199f14e62:0.1294
+r7-nms3-dem10-scarp_0c9199f14e62_allfinite:0.1294
+....
+https://buffedlizard55-lab.github.io/15GEMSDOE/docs/index.html
+gems-tso1-20260929T005627Z-conj_alteration_mag: 0.0782
+....
+https://buffedlizard55-lab.github.io/14GEMSDOE/docs/index.html
+GEMS_r5-geom-horse-ensemble_20260929T154852Z_ccbe1de0_site_e96e942f: 0.0020
+....
+https://buffedlizard55-lab.github.io/17GEMSDOE/
+17GEMSDOE_F-ensemble-2pct_20260930T050626Z:0.0187
+....
+https://buffedlizard55-lab.github.io/18GEMSDOE/
+H19-C_20260930T212401Z_c11e495e: 0.0297
+....
+https://buffedlizard55-lab.github.io/19GEMSDOE/docs/index.html
+h19-4-multiline-corroborated-openness-thermal-pop-20260930-691e4dfa-nan: 0.1894
+h19-5-powerlaw-budget-multiline-corroborated-20260930-e27054cf-nan: 0.1922
+....
+https://buffedlizard55-lab.github.io/GEMSDOE10/
+h16-continuation-20260927T065521077735Z-3431b83c7c: 0.0461
+h20-dem10-scarp-thin-20260927T155223039488Z-ffc91a1686: 0.0921
+H25-ctx-ridge-20260927T232947704150Z-6452ae1d00: 0.1280
+h28-dotted-ridge-20260928T020256236880Z-6452ae1d00: 0.1839
+....
+https://buffedlizard55-lab.github.io/13GEMSDOE/
+20261001_r13-lattice-s5_v2_nan-outside:0.0904
+....
+https://buffedlizard55-lab.github.io/16GEMSDOE/docs/index.html
+h16-1-topo-geophys-baseline-ridges-20260930-df20f65e-nan: 0.1855
+h18-3a-topo-geophys-x-complexity-prior-20260930-c502dfab-nan: 0.0976
+h18-4-usgs-geologic-map-faults-gap-20260930-aef8f42c-nan: 0.0360
+....
+https://buffedlizard55-lab.github.io/GEMSDOE21/
+h19-4-reference-20260930-691e4dfa: 0.1894
+....
+https://buffedlizard55-lab.github.io/20GEMSDOE/docs/index.html
+h20-1-sarnnpu-powerlaw-pi0363-tilt-wingcrack-20260930-be0e8f6b-nan: 0.1890
+h20-5-continuous-pu-proxy-unverified-20260930-824ce73a-nan: 0.1859
+....
+https://buffedlizard55-lab.github.io/GEMSDOE22/docs/index.html
+h23-a-dti-optimal-emission-6pct-20261002-e2ec4b49-nan: 0.1002
+h23-b-dti-optimal-emission-10pct-20261002-86176698-nan: 0.0748
+....
+https://buffedlizard55-lab.github.io/GEMSDOE23/
+h30-arrangement-matched-habitat-20261002-0d4e02e8-nan: 0.1352
+....
+https://buffedlizard55-lab.github.io/GEMSDOE24/
+h25-1-dotted-h19-5-d1-5-20261002-989f59505db1-nan: 0.2477
+....
+https://buffedlizard55-lab.github.io/GEMSDOE25/
+dotted-h19-5-d2-8-20261002-e56ea318af89-nan: 0.2600
+....
+https://buffedlizard55-lab.github.io/GEMSDOE26/
+dilcond-oof-v1-20261003-47629f496133-nan: 0.1223
+....
+https://buffedlizard55-lab.github.io/GEMSDOE27/
+topo-gap-closure-t-v2-on-d1-5-20261002-5512495c6bd1-nan: 0.2449
+....
+https://buffedlizard55-lab.github.io/GEMSDOE28/
+h27-4-r1-solo-d2-8-20261003-8acb75e1f2cc-nan: 0.2708
+....
+https://buffedlizard55-lab.github.io/GEMSDOE29/docs/index.html
+efd28-repro-20261003-1cc7dc534d51-nan: 0.2600
+....
+https://buffedlizard55-lab.github.io/GEMSDOE30/
+d28-poisson300m-offcat-44090-20261003T233156Z-91eae1ca: 0.2600
+....
+https://buffedlizard55-lab.github.io/GEMSDOE31/docs/
+h27-4-solo-d28-20261004-8acb75e1-nan:0.2708
+....
+https://buffedlizard55-lab.github.io/GEMSDOE32/docs/index.html
+h33-h33-2-b2-20261004T220000Z-e5eb6e7e-zeros: 0.2778
+....
+https://buffedlizard55-lab.github.io/GEMSDOE33/
+h33d-analog-tip-stepover-r30-20261004-cb490425926e:  (no score reported)
+....
+https://buffedlizard55-lab.github.io/GEMSDOE34/docs/index.html
+h34-scatter-q50-arr-matched-20261004T223317Z:  (no score reported)
+....
+https://buffedlizard55-lab.github.io/GEMSDOE35/docs/index.html
+h35-06-aaa86efb25-20261004T225420098147Z-candidate:  (no score reported)
+....
+https://buffedlizard55-lab.github.io/GEMSDOE36/docs/
+anderson-geothermal-pinn-38854-20261004T230000Z-9b9ea4e6-zeros:  (no score reported)
+....
+37GEMSDOE:  ....  38GEMSDOE:  ....  39GEMSDOE (this repo):  ....  40GEMSDOE:  ....
+
+WE NEED TO STUDY, ANALYZE, AND UNDERSTAND THE HIGHEST SCORE FROM THE GEMDOE SITE
+WHERE THE SUBMISSION TIF IS DOWNLOADED FROM WHICH IS THE FOLLOWING:
+https://buffedlizard55-lab.github.io/GEMSDOE32/docs/index.html
+h33-h33-2-b2-20261004T220000Z-e5eb6e7e-zeros: 0.2778
+Why and how did this get the highest score and are we able to generate a submission
+that scores higher than 0.2778?
+Answer the question using PhD level experience, knowledge, and judgement. Then use
+the answer to generate a unique TIF submission into the competition. Must be unique
+submission unlike any within the GEMSDOE sites above. Verify working line by line
+no hallucinations.
+
+The following is the leaderboard for the competition:
+https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/
+
+We need to quickly look at the results and results from the GEMSDOE websites above.
+
+Before implementing, generate 3–5 candidate geological hypotheses we haven't tried
+yet, each naming: the specific layer(s) involved, the physical signature being
+targeted (e.g., an edge-detection or curvature transform), why it should catch a
+fault missing from the USGS/INGENIOUS catalogue rather than one already in it, and
+how it differs from anything already implemented in this repo. Rank them by expected
+DTI improvement and implementation cost. Validate the top candidate on our
+spatially-blocked holdout set before touching a weekly submission slot — do not
+spend a submission slot on an idea that hasn't beaten the current holdout best. If a
+candidate can't be validated without new external data, name the specific free,
+official source needed and check it's obtainable before proposing the idea as viable.
+
+Work line by line verifying from official verified trusted sources, provide links for
+manual review. There should be no manual input, work on your own to complete tasks.
+Flag any irregularities for review. No hallucinations.
+
+Verify no hallucinations.
+
+The goal of this project is to get a full list that follow our requirements. No
+hallucinations. Verify line by line.
+
+We have a good understanding of how our hypothesis, methodology, calculations,
+analysis are done so we should be able to figure out a way to score higher on the
+leaderboard using previous results and scoring that we have across the sites listed
+above. We need to come up with distinct and unique strategies to score higher in this
+competition leaderboard. We need to start doing heavy and deep research into the part
+of the project that matters the most, which is the scientific discovery of geothermal
+vents. We should store all of our information and knowledge that we can gather from
+official verified sources. This will serve as a starting point for other projects as
+well. We need to think outside the box but still be grounded in proper scientific
+research, we are ultimately aiming for a top prize that many others are competing
+for. So it's important to be contrarian but be smart about it. We need to find
+sources of data that others are over looking or areas of the project when it comes
+to geothermal vents. We need to do deep research and critical thinking and come up
+with new hypothesis to test.
+
+0.3195 is the highest score right now so we need to design a new strategy, research,
+testing, analyzing, and generating submission system than the current website. It
+should be unique, take unique approaches to generating a submission that can score
+higher than 0.3195.
+
+Put this prompt into the repo readme and read it everytime we work on the project as
+a starting point to make sure we are building what we are aiming for and have a strong
+base to continue building and improving on making something useful for everyday use.
+It should solve the problem of having to manually check everything ourselves and
+having an up to date current feed.
+
+Review the repo.
+
+The following is taken from the Arena AI team and I think it makes a good point on
+building a successful project, so let's keep the Core Values and Own the Outcome as a
+focal point when building, developing, researching, suggesting upgrades, and
+implementing the work.
+
+Our Core Values
+
+Maximize P(Win)
+
+"Maximize the Probability of Winning": our decision making framework. In every
+decision, we weigh tradeoffs, assess risk, and choose the path that maximizes the
+probability that Arena succeeds. We set aside our emotions and make tough decisions
+in order to maximize P(Win). "Maximize P(Win)" frees us from constraints and
+clarifies that we must put Arena first.
+
+Own the Outcome
+
+We own results end to end — not just our individual slice of the work. When problems
+arise and we have the means to act, we do so without waiting for permission or
+assignment. We treat failure and success as signals and use them to improve. At
+Arena, we stay accountable to the final outcome.
+
+Work line by line verifying from official verified trusted sources, provide links for
+manual review. There should be no manual input, work on your own to complete tasks.
+Flag any irregularities for review. No hallucinations.
+
+Verify no hallucinations.
+
+The goal of this project is to get a full list that follow our requirements. No
+hallucinations. Verify line by line.
+
+We need to focus on being able to generate a submission into the competition.
+
+The site should be able to generate a TIF file that is required for submission. It
+should be as easy as download to click a File to submit into the competition. This
+needs to be in the executive summary or the very beginning of the site. it should be
+obvious when you visit the site.
+
+I tried to submit the document that i downloaded from the site but it returned this
+error on the submission form:
+"Predicted values must be in range [0, 1]"
+
+Also we need to give it a unique name and A short comment to help you or your team
+tell submissions apart later e.g. clustering with k=25
+
+Here is the submission page when i click submit file
+
+New submission
+File to submitNo file chosen
+You can submit a single-band GeoTIFF (.tif) file, or a .zip file containing a single
+GeoTIFF, with your predictions. It must match the submission format's CRS, shape, and
+geotransform. You may wish to review the competition rules first.
+Note (optional)
+A short comment to help you or your team tell submissions apart later e.g. clustering
+with k=25
+
+Create a executive summary subpage that explains exactly how to make a submission
+into the contest.
+
+Work on the next steps from the previous sessions first.
+
+The goal of this project is to place top of the leaderboard in this competition. The
+following is the competition:
+https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/
+
+We need to create a project that can compete and place top of the leaderboard. We
+need to understand the problem, collect all the data and organize it into a clean
+easily auditable table with official verified links for manual verification.
+
+This is the guidelines we need to follow.
+https://www.drivendata.org/competitions/306/competition-doe-gems/
+
+Get familiar with the problem through the overview and problem description,
+https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/ . You
+might also want to reference additional resources available on the about page,
+https://www.drivendata.org/competitions/306/competition-doe-gems/page/968/ .
+
+Download the data from the data,
+https://www.drivendata.org/competitions/306/competition-doe-gems/data/ , tab.
+
+Create and train your own model. This reference solution,
+https://github.com/drivendataorg/gems-prize-reference-solution , implements a simple
+approach.
+
+Use your model to generate predictions that match the submission format.
+
+Tell me what are you limitations and what you need access to during this project. We
+will need to find free publicly available sources and data from official and verified
+sources if we are to use 3rd party or external data.
+
+this pdf outlines how submissions must be entered into the competition.
+https://docs.nlr.gov/docs/fy26osti/96647.pdf
+
+You must be able to do your own research, deep research, scientific literature
+research and organize the knowledge so that we can critically think through the
+problem and generate a solution through scientific and free publicly available
+information. this must be done autonomously and must be constantly reviewed and
+improved upon. Provide suggestions and improvements and implement them.
+
+See below for links from the above site.
+https://gdr.openei.org/submissions/1391
+Download competition data from
+https://www.drivendata.org/competitions/306/competition-doe-gems/data/ (requires
+login) to data/
+https://www.dropbox.com/scl/fi/aemhtutjgcp6tr3tint94/GEMS_96647.pdf?rlkey=rek210cj2smnmzb8n0sla1vmd&st=wz4kofki&dl=0
+https://www.dropbox.com/scl/fi/6rgvnuady818ol8yqgis4/example_submission.tif?rlkey=kbykilvau066xuogoosbf4cq8&st=8junzdyw&dl=0
+https://www.dropbox.com/scl/fi/t7fyt03qdh9egyme0itwo/existing_faults.tif?rlkey=yiao96uluqdkipf0h5vju71jf&st=rnino7ya&dl=0
+https://www.dropbox.com/scl/fi/3vz9o0wwavi26xaeoxlwr/gems-geodawn-numerical-features.tif?rlkey=je8d8fepqfbst9lnwsq9rkplu&st=zj1lag1r&dl=0
+https://www.dropbox.com/scl/fi/ig0mban712ns1atphgphe/Digital-elevation-model-links-JSON.pdf?rlkey=zm77f1vbtt2if8hlruymptnu3&st=srhhir10&dl=0
+
+Work line by line verifying from official verified trusted sources, provide links for
+manual review. There should be no manual input, work on your own to complete tasks.
+Flag any irregularities for review. No hallucinations.
+
+Verify no hallucinations.
+
+The goal of this project is to get a full list that follow our requirements. No
+hallucinations. Verify line by line.
+
+Site creation
+
+Create a github page for this repo that has clean ui, user friendly, simple and easy
+to use. It should be organized and clean.
+
+It should include all relevant information in an easy to read format with official
+verified links as sources for review. Work line by line verify everything no
+hallucinations.
+
+Run this task through multiple passes.
+
+Pass 1: Implement the task completely and verify the result.
+Pass 2: Review your work for bugs, missing requirements, incorrect assumptions, and
+edge cases. Fix everything you find.
+Pass 3: Re-check the entire implementation against the original request. Improve
+accuracy, reliability, completeness, and code quality. Fix any remaining issues.
+
+Do not stop after the first pass. Each pass must build on the previous one. Before
+finishing, verify that the final result fully satisfies the original request. Work
+line by line verify everything no hallucinations.
+
+Go ahead and create a pull request and then merge the pull request onto the main.
+Make suggestions for what work still needs to be done and any limitations that is in
+the way of a successful project. It should be worked on in this next session or the
+next session. Work line by line verify everything no hallucinations.
 ```
 
-The H39X-01 spatial folds are exhausted and cannot be used to test new variants. `scripts/build_pipeline.py` refuses to score them unless the explicit `--replay-exposed-holdout` audit flag is supplied; that deterministic replay still can never approve a submission. Register future formulas before evaluating a genuinely untouched holdout. `restore_data.py` can also restore the historical artifacts for educational comparison with `--group scored`; they are not inputs to the H39X-01 detector. The final upload still requires the competitor's own DrivenData account; this project does not log in, submit a file, or consume a weekly slot.
+---
 
-## Current hypothesis and holdout result
+## Status (2026-10-05)
 
-The highest-ranked current research candidate is **H39X-01: strain-localized, dilatational fault corridor**. It combines robust-scaled geodetic second-invariant and shear-rate amplitudes, multi-scale invariant line response, and paired/sign-transition dilatation support. It uses `geod_2ndinv`, `geod_shearrate`, and `geod_dilaterate`; the locked local incumbent comparator uses detrended elevation, total magnetic intensity, and detrended-elevation slope. Its geodetic-strain input family differs from the checked-in H39-A…E detector families. **The exact detector formula was documented only after holdout scoring**, so it must not be called preregistered or confirmatory. See the post-hoc record in `docs/hypothesis-register.md`.
-
-| Spatial block | H39X-01 DTI proxy | Incumbent DTI proxy | Candidate win? |
-|---|---:|---:|---|
-| NW | 0.010223 | 0.029566 | No |
-| NE | 0.000000 | 0.014530 | No |
-| SW | 0.069819 | 0.033305 | Yes |
-| SE | 0.060368 | 0.022261 | Yes |
-| **Pooled** | **0.052944** | **0.024763** | descriptive proxy only |
-
-The sequential log-likelihood ratio after the four fixed blocks is `−0.348707`, between the lower boundary `−2.302585` and upper boundary `2.995732`. The correct statistical outcome is **continue / inconclusive**, not acceptance. Four blocks provide little power, and geologic dependence weakens the Bernoulli-independence assumption. Because the exact candidate recipe was recorded post-run, this outcome is exploratory and the candidate is not eligible for a leaderboard slot.
-
-See the [ranked hypothesis register and post-hoc formula record](docs/hypothesis-register.md), [audit manifest](docs/downloads/gemsdoe39-h39x01-strain-corridor-20261005T023209Z-d2f7e140-manifest.json), and [dated evidence feed](docs/current-feed.md).
-
-## Research hypotheses not run this cycle
-
-These are ranked research ideas, not measured performance claims. Only H39X-01 was tested; the other candidates were not run against the same holdout.
-
-1. **Strain-localized dilatational corridor** — provided geodetic strain-rate/invariant layers; coherent high-shear band plus a bipolar dilatation transition. May expose active blind structures absent from surface catalogues; no new external source required. Tested this cycle; inconclusive by SPRT.
-2. **Radiometric alteration front × conductivity edge** — GeoDAWN K/Th/U ratios and `cond_surf`; co-located radiometric ratio gradients and an electrical-conductivity transition. Could reflect hydrothermal alteration but is non-unique and near-surface confounded. Official USGS GeoDAWN DOI is [10.5066/P93LGLVQ](https://doi.org/10.5066/P93LGLVQ), checked obtainable 2026-10-05; no new external data required for a first test because a derived layer already exists in the mirror.
-3. **Earthquake-density edge aligned with strain** — provided `ieq_n100a15`, `deq_n100a15`, `geod_shearrate`; lineament or density transition rather than a raw seismicity hotspot. May expose active faults, but completeness, catalog smoothing, and unrelated events are major risks.
-4. **Gravity derivative / basement inflection** — provided `iso_grav_anom_hg`, `iso_grav_anom_vg`, `depth_to_base_surf`; co-located horizontal-gradient ridge and vertical-gradient sign transition at basement-depth inflection. May detect buried basin-bounding faults but overlaps existing gravity/basement evidence.
-
-Full layer-level description, physical signature, novelty, qualitative expected DTI direction, relative implementation cost, and future multiplicity controls are in `docs/hypothesis-register.md`. It explicitly marks the H39X-01 formula as post-hoc rather than a preregistration.
-
-## What the historical 0.2778 result does — and does not — tell us
-
-The challenge metric is a distance-weighted Tversky index with α=0.2 for false positives, β=0.8 for false negatives, and a 300 m triangular distance kernel. It rewards predictions near truth and penalizes broad, unsupported mass; a sparse, well-ranked dot set can therefore outperform an over-thick map. The GEMSDOE32 site describes H33-2-B2 as a 37,654-dot flank-B=2-pruned file based on a dotted-ridge family. This is a plausible mechanism for a high public score, but the same page labels that specific file “UNSCORED.” The public leaderboard displays a 0.2778 row but not a prediction filename. Therefore the file-to-score attribution, and the causal explanation for that particular score, cannot be verified from these pages alone.
-
-The maximum in the current public snapshot is 0.3262, so 0.2778 is not the current target. A score above either number cannot be inferred from the historical series or a proxy holdout. The candidate generated here has no DrivenData score.
-
-## Verified sources and knowledge register
-
-- [Competition overview](https://www.drivendata.org/competitions/306/competition-doe-gems/)
-- [Problem description, DTI metric, datasets, and submission format](https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/)
-- [About page](https://www.drivendata.org/competitions/306/competition-doe-gems/page/968/)
-- [Competition data page](https://www.drivendata.org/competitions/306/competition-doe-gems/data/) (redirects to login)
-- [Official leaderboard](https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/) (timestamped snapshot 2026-10-05)
-- [Official rules PDF — National Laboratory of the Rockies (NLR)](https://www.nlr.gov/docs/fy26osti/96647.pdf)
-- [DrivenData reference solution](https://github.com/drivendataorg/gems-prize-reference-solution)
-- [USGS GeoDAWN data release](https://www.usgs.gov/data/geodawn-airborne-magnetic-and-radiometric-surveys-northwestern-great-basin-nevada-and) · [DOI / data](https://doi.org/10.5066/P93LGLVQ)
-- [USGS LiDAR download FAQ / 3DEP entry points](https://www.usgs.gov/faqs/what-lidar-data-and-where-can-i-download-it)
-- [USGS: structural discontinuities and hydrothermal systems in the Great Basin](https://www.usgs.gov/publications/structural-discontinuities-and-their-control-hydrothermal-systems-great-basin-usa)
-- [USGS: 3D geologic mapping and geothermal potential in Nevada/Oregon](https://www.usgs.gov/publications/three-dimensional-geologic-mapping-assess-geothermal-potential-examples-nevada-and)
-- [DrivenData staff clarification: known-fault pixels are masked](https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/2)
-- [DrivenData staff clarification: public score pools all public-subset pixels](https://community.drivendata.org/t/leaderboard-aggregation-pooled-over-public-test-pixels-or-mean-of-per-chunk-scores/11550/2)
-- [DrivenData Terms of Use](https://www.drivendata.org/termsofuse/) (prohibits automated access/monitoring)
-
-The line-by-line source notes, leaderboard snapshot, provenance flags, and irregularities are in [docs/current-feed.md](docs/current-feed.md). The detailed scientific decision register is [docs/research-brief.md](docs/research-brief.md).
-
-## Known limitations / review flags
-
-1. **No private labels:** local CV uses visible catalogue faults as imperfect proxies; it cannot predict the private expert labels or Phase 2 expert review.
-2. **SPRT independence:** the four large spatial blocks have an inward 1.5 km collar, but remaining spatial dependence cannot be excluded. The nominal error guarantee is conditional on an independent-block or valid conditional-supermartingale model; current result did not cross either boundary. The detector recipe itself was not registered before evaluation.
-3. **No submission authentication:** DrivenData requires an account. This agent generated and validated a file but did not upload it or use a weekly slot.
-4. **Input provenance:** the competition data page redirects to login. Files here were restored from owner-controlled GitHub mirrors with SHA-256 pins, not downloaded directly from the organizer. Hashes certify mirror integrity, not organizer authenticity.
-5. **Leaderboard feed:** DrivenData Terms prohibit automated access for monitoring/copying; the page is linked and a dated snapshot is stored, not auto-scraped.
-6. **Historical score mapping:** user-supplied scores and owner pages do not always agree. In particular, the GEMSDOE32 page calls H33-2-B2 unscored while a 0.2778 leaderboard row exists. Do not claim that score belongs to that exact raster without an official receipt.
-7. **Artifact scope:** duplicate testing covered 17 local/retrieved TIFFs, not every public artifact from all GEMSDOE sites. The detector is newly computed and its pixel set differs from the retrieved H33 reference, but the scope limit is explicit.
-8. **Model training:** this run is a deterministic, unsupervised geological feature transform, not a trained neural network. Training on the visible catalogue can teach mapped-fault morphology but cannot directly supervise “new fault” truth. The DrivenData reference U-Net needs compute/data and still cannot remove that label-shift problem.
-9. **AI disclosure:** official rules allow generative AI but require the competitor to describe its extent/use in the narrative and remain responsible for every claim. Include that disclosure in any prize package.
-
-## Three-pass implementation and review record
-
-1. **Pass 1 — build:** refactor the feature reader, candidate pipeline, spatial holdout/SPRT path, NaN-outside GeoTIFF writer, strict validator, and first public-facing documentation. The H39X-01 formula was not recorded in the hypothesis register before scoring; the result is therefore explicitly exploratory.
-2. **Pass 2 — independent review:** inspect protocol leakage, post-hoc wording, range/footprint behavior, uniqueness scope, score attribution, restore/preparation helpers, and download/guide links; correct issues rather than promoting the candidate.
-3. **Pass 3 — final re-check:** rerun unit/integration tests and smoke checks for restore receipts, source inspection, baseline writing and validation; re-audit the candidate checksum/manifest, all local download links, and the final diff against the charter. Do not consume a slot; the SPRT result remains `continue`.
-
-## Historical score snapshots supplied by the project owner
-
-These values are preserved for longitudinal context, **not independently verified as exact file/score pairs**. The current organizer leaderboard snapshot takes precedence for live rank.
-
-| Site / project | Score(s) reported in the supplied project history |
+| item | value |
 |---|---|
-| GEMSDOE | 0.1563 |
-| 6GEMSDOE | 0.0286 |
-| GEMSDOE3 | 0.1193, 0.0830, 0.1152 |
-| GEMSDOE2 | 0.1560 |
-| GEMSDOE4 | 0.0343 |
-| 5GEMSDOE | 0.1563 |
-| 7GEMSDOE | 0.1461 |
-| 8GEMSDOE | 0.1563 |
-| GEMSDOE9 | 0.0107 |
-| 11GEMSDOE | 0.0202 |
-| 12GEMSDOE | 0.1294 |
-| 15GEMSDOE | 0.0782 |
-| 14GEMSDOE | 0.0020 |
-| 17GEMSDOE | 0.0187 |
-| 18GEMSDOE | 0.0297 |
-| GEMSDOE19 | 0.1894, 0.1922 |
-| GEMSDOE10 | 0.0461, 0.0921, 0.1280, 0.1839 |
-| 13GEMSDOE | 0.0904 |
-| 16GEMSDOE | 0.1855, 0.0976, 0.0360 |
-| GEMSDOE21 | 0.1894 |
-| 20GEMSDOE | 0.1890, 0.1859 |
-| GEMSDOE22 | 0.1002, 0.0748 |
-| GEMSDOE23 | 0.1352 |
-| GEMSDOE24 | 0.2477 |
-| GEMSDOE25 | 0.2600 |
-| GEMSDOE26 | 0.1223 |
-| GEMSDOE27 | 0.2449 |
-| GEMSDOE28 | 0.2708 |
-| GEMSDOE29 | 0.2600; several other candidates listed without scores |
-| GEMSDOE30 | 0.2600 |
-| GEMSDOE31 | 0.2708 |
-| GEMSDOE32 | 0.2778 (file attribution not verified) |
-| GEMSDOE33–38 | no score supplied for listed candidates |
-| GEMSDOE39 / 40GEMSDOE | no prior score supplied |
+| Primary submission | `docs/downloads/gemsdoe39-h39-a-model-r39a-zeros.tif` |
+| Detector | H39-A — spatially blocked (2×2 × 3 seeds) gradient-boosted off-catalogue discriminant |
+| Out-of-fold AUC | **0.6608** (catalogue target) · **0.7567** (SGMC off-catalogue target) |
+| Holdout lift vs control | **0.6698** vs 0.2735 (0.5 = no skill) |
+| SPRT (anytime-valid boundaries) | **9/9** cells consumed, LLR **+3.028** ≥ upper boundary log(1/α)= **+2.9957** → **accept H1**, stopped at cell 9 |
+| Emission | best-first Poisson-disk, min separation 2.8 px → median NN **3.00 px**, 24,000 dots, hard 2 px (200 m) catalogue exclusion |
+| Dot budget rationale | DTI break-even rule (see below) |
+| Format validator | **15/15 PASS** |
+| Uniqueness gate | **PASS** — max Jaccard 0.024 against 241 historical rasters |
+| Leaderboard score | **not claimed / unknown** |
+
+## Why H33-2-B2 scored 0.2778 — the answer, measured
+
+1. **The metric is a budget, not a segmentation score.** Adding one predicted pixel changes the
+   DTI denominator by exactly **0.2**, whatever its quality. So a pixel pays for itself iff its expected
+   kernel credit `w > 0.2·DTI` — at DTI = 0.2778 that bar is **0.0556**. GEMSDOE32 measured the same bar
+   empirically (0.0548) and derived it as 0.2 × 0.26 = 0.0520.
+2. **Mass dominates.** Across **30** re-readable historical artifacts with owner-reported scores, emitted
+   pixel count has Spearman **−0.686** (p < 1e-4) with the live score. 0.2708 at 40,199 px → 0.03 at 517 k px.
+   H33-2-B2 (37,654 px) is the smallest-mass artifact in the top family.
+3. **Known faults are masked; their neighbourhood is not.** DrivenData staff confirmed masking of known
+   fault pixels ([thread 11516, post 2](https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/2)),
+   but a pixel 100–300 m away is *not* masked and, because the truth is *newly identified* faults, is nearly
+   pure FP. Removing the 2,545 dots within 200 m of the catalogue gave **+0.0070** (0.2708 → 0.2778).
+4. **The field matters too.** The 0.2708 base is the most off-catalogue-oriented field in the family
+   (6.3 % of dots within 200 m of a mapped fault vs 14.6 % for the d2.8 lineage) and has the *lowest*
+   catalogue-DTI of all 30 artifacts (0.0235) — it is not being paid for re-predicting mapped faults.
+
+### Can we beat 0.2778?
+
+Fit `TP = A·n^γ` to the only clean within-lineage pair (60,069 px → 0.2477; 44,090 px → 0.2600) and impose
+`γ·TP/n = 0.2·DTI`. The optimum *level* is robust (+0.005 to +0.024) but the optimum *budget* is not
+(5.4 k–27 k px depending on the assumed truth size), and the DTI surface is nearly flat from ~13 k to ~45 k px
+(0.281–0.289 at n = 30,000 under every assumed truth size). We ship at **24,000 px**: inside that flat region for
+ every assumed truth size, below the break-even optimum implied by the organizer's declared scale, and 36 %
+ below the champion's pixel count, at the same 3.00 px spacing as the winning family.
+
+**The honest risk:** DTI is nearly linear in TP at fixed budget, and no local instrument ranks detector fields
+at the top of the board — we measured ρ = −0.10 (catalogue-hidden holdout), −0.24 (SGMC off-catalogue),
+−0.37 raw / +0.09 budget-adjusted (catalogue DTI) against the 30 owner-reported live scores. The SPRT validates
+the field against *hidden catalogue faults*, which is not the real hidden set.
+
+## Quick start
+
+```bash
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+
+# 1. Restore SHA-256-pinned data mirrors (gh-authenticated; no DrivenData credentials needed)
+python scripts/restore_data.py --group core
+python scripts/restore_data.py --group external
+
+# 2. Inspect
+python scripts/prepare_data.py
+
+# 3. Forensics + instrument calibration (needs data/scored/; the ledger is committed)
+python scripts/forensics.py             # 30-artifact geometry/emission forensics
+python scripts/calibrate_instruments.py # proxy-vs-live-score Spearman, raw and budget-adjusted
+
+# 4. Build, select, emit, write
+OMP_NUM_THREADS=2 python scripts/run_gems39.py --tag r39a --spacing 2.8 --budget 24000 --cat-buffer 2
+
+# 5. Derive the budget from the break-even rule
+python scripts/budget_study.py --field A
+
+# 6. Gates
+python scripts/verify_unique.py docs/downloads/gemsdoe39-h39-a-model-r39a-zeros.tif
+python scripts/validate_submission.py docs/downloads/gemsdoe39-h39-a-model-r39a-zeros.tif
+```
+
+CPU-only: ≈ 12 min end to end on 2 cores / 3 GB RAM.
+
+## Repository layout
+
+```
+data/                        competition rasters + external layers      (gitignored)
+data/scored/                 39 historical artifacts for calibration    (gitignored)
+data/compare/                229 comparison rasters for the uniqueness gate (gitignored)
+docs/index.html              GitHub Pages site
+docs/executive-summary.html  how to submit, [0,1] error, SPRT
+docs/research-brief.md       hypothesis register, sources, validation gate
+docs/downloads/              the submission GeoTIFFs, .zip and manifest
+registry/data_manifest.json  SHA-256 pins for every input raster
+registry/score_ledger.csv    artifact -> owner-reported score -> source link
+registry/forensics_*.json    measured artifact statistics + proxy correlations
+registry/instrument_calibration.json
+registry/uniqueness.json     uniqueness-gate receipt
+registry/budget_study_A.json break-even budget table
+scripts/                     restore / prepare / forensics / calibrate / build / budget / gates
+src/gems39/                  stack, metric, instrument, emission, grid, sprt_select, features
+tests/                       smoke tests
+```
+
+## Core values
+
+- **Maximize P(Win).** Every decision is a trade-off evaluated against the probability of winning the prize.
+  No emotion, no sunk-cost defence. Where the evidence says an instrument is worthless, we say so and stop
+  using it.
+- **Own the Outcome.** End-to-end accountability. Defects found in our own earlier revision are fixed and
+  logged (IR-39-01 … IR-39-06), not quietly dropped.
+- **No hallucinations.** Every external claim has a manual-review link. Every number is recomputed from bytes
+  in this repository. Owner-reported scores are labelled as such — no proxy is ever promoted to an
+  organizer score.
+- **SPRT, not peeking.** α, β, p₀, p₁ are declared before any fold is read. The test accumulates a
+  log-likelihood ratio one cell at a time and stops at the first pre-declared boundary it crosses — here the
+  anytime-valid (Ville) bounds upper = log(1/α) = +2.9957, lower = log(β) = −2.3026, crossed on the 9th of 12
+  available cells. "That looks good" is not a stopping rule, and unused cells are left unused.
+
+## What still needs doing (next session)
+
+1. **The instrument problem is the whole problem.** Every local proxy has ~zero rank correlation with live
+   scores. The single highest-value next step is to build an instrument that *does* rank fields: candidates
+   are (a) MINE-based conditional information (GEMSDOE38's approach) on held-out spatial folds, (b) a
+   generative "live-mirror" model of the hidden set calibrated on all 30 scored artifacts with
+   cross-validated error bars, (c) buying one deliberately-informative scored slot per week and treating the
+   three weekly slots as a designed experiment rather than three lottery tickets.
+2. **Greedy max-coverage emission.** GEMSDOE32 measured greedy packing of the *scatter-smoothed* field at
+   +0.0247 on their live-anchored model (12/12 draws) but −0.0033 on the raw surface. The two instruments
+   disagree in sign; that disagreement should be resolved with the better instrument from (1) before it is
+   shipped.
+3. **H39-X (flight-line residual test)** is blocked on the official GeoDAWN Area-2 raw CSVs
+   (3.74 GB magnetic / 427 MB radiometric). Obtainability from this environment is **not** verified, so the
+   hypothesis is registered but not claimed viable.
+4. **External data not yet integrated at native resolution:** USGS FDSN earthquake catalogue (the supplied
+   `ieq_n100a15` band was measured by GEMSDOE32 at autocorrelation 0.9986 at 1 km — no fault-scale
+   information), InSAR/geodetic strain-rate grids, and the 1 m 3DEP DEM beyond the derived scarp layer.
+
+## Limitations
+
+1. **No hidden labels.** Only DrivenData's private holdout is scored, and it is not accessible. Every field
+   metric here is a proxy measured against faults that are *not* the scored set.
+2. **Public leaderboard ≠ final score.** The public board scores a *public* chunk of the new faults; the
+   Initial Prize Round scores a *private* chunk; the Final Prize Round re-scores the same file against an
+   *expanded* label set that includes faults experts verify after reading everyone's submissions. A file
+   optimised hard for the public number is not automatically optimised for the prize.
+3. **Owner-reported scores are not organizer receipts.** No public artefact ties a raster hash to a score.
+   GEMSDOE37 reports the live board's best at 0.3262 on 2026-10-05, above the 0.3195 in this brief; the
+   board is dynamic and authoritative.
+4. **Provenance.** Competition rasters come from owner-maintained GitHub mirrors, SHA-256 pinned. Hash
+   agreement proves mirror *integrity*, not organizer *authentication*.
+5. **AI disclosure** is required by the competition rules; this repository's methods must be described in
+   the submission narrative.

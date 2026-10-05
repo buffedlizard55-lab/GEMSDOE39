@@ -24,3 +24,6 @@ data/*.pdf
 data/*.json
 data/external/*.tif
 data/scored/*.tif
+
+# Whole data directory is restored regenerable content (822 MB; mirrors, caches, comparison corpus)
+data/

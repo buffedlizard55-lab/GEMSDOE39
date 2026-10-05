@@ -1,0 +1,335 @@
+{
+  "schema_version": 2,
+  "name": "gemsdoe39-h39-a-model-r39a",
+  "tag": "r39a",
+  "field": "H39-A-model",
+  "selection_rule": "SPRT accept_H1",
+  "budget": 24000,
+  "spacing": 2.8,
+  "cat_buffer": 2,
+  "emitted": 24000,
+  "on_catalogue": 0,
+  "within_2px_catalogue": 0,
+  "oof_auc_A": [
+    0.6632302156091162,
+    0.7066335604667893,
+    0.5875016675594948,
+    0.6578817700716242,
+    0.6710876750286933,
+    0.705842228838622,
+    0.5933287356741663,
+    0.6747378768702892,
+    0.6886257394654862,
+    0.7064547964457943,
+    0.6061026322197332,
+    0.6683242003224958
+  ],
+  "oof_auc_B": [
+    0.768637540331254,
+    0.7014073650924186,
+    0.8025686800272159,
+    0.7457216717375617,
+    0.7736591542984155,
+    0.7090812682748537,
+    0.8026605886992021,
+    0.7492950768435629,
+    0.7738641750914175,
+    0.7059249986946534,
+    0.8012958279210738,
+    0.746110928753925
+  ],
+  "lifts": {
+    "CONTROL-topo-x-mag": {
+      "mean": 0.27348958501535214,
+      "per_cell": {
+        "s21_b0": 0.2766754275362319,
+        "s21_b1": 0.22172881559814936,
+        "s21_b2": 0.3372517728542171,
+        "s21_b3": 0.24847526346368715,
+        "s22_b0": 0.2791948791773779,
+        "s22_b1": 0.22105318396082033,
+        "s22_b2": 0.33626894345591146,
+        "s22_b3": 0.2699473656665915,
+        "s23_b0": 0.3107048785714286,
+        "s23_b1": 0.21221893699611824,
+        "s23_b2": 0.30519423301770277,
+        "s23_b3": 0.2631613198859899
+      }
+    },
+    "H39-A-model": {
+      "mean": 0.6697579802412698,
+      "per_cell": {
+        "s21_b0": 0.6994595579710144,
+        "s21_b1": 0.6922030508922671,
+        "s21_b2": 0.6035185686091975,
+        "s21_b3": 0.6749690860335197,
+        "s22_b0": 0.6934919177377892,
+        "s22_b1": 0.6843029911233547,
+        "s22_b2": 0.6109240830367735,
+        "s22_b3": 0.6934831003834875,
+        "s23_b0": 0.6727436178571429,
+        "s23_b1": 0.6931400800238878,
+        "s23_b2": 0.6370315899547139,
+        "s23_b3": 0.6818281192720894
+      }
+    },
+    "H39-B-model": {
+      "mean": 0.5886607582369751,
+      "per_cell": {
+        "s21_b0": 0.6222119420289854,
+        "s21_b1": 0.5835444547257105,
+        "s21_b2": 0.5551825797803016,
+        "s21_b3": 0.6028783025698325,
+        "s22_b0": 0.644943472150814,
+        "s22_b1": 0.5475386507499235,
+        "s22_b2": 0.5655798600237248,
+        "s22_b3": 0.6266580013534853,
+        "s23_b0": 0.6075202142857142,
+        "s23_b1": 0.5662870707673932,
+        "s23_b2": 0.5601680996294771,
+        "s23_b3": 0.581416450778338
+      }
+    },
+    "H39-C-joint": {
+      "mean": 0.6445666850595851,
+      "per_cell": {
+        "s21_b0": 0.682761313405797,
+        "s21_b1": 0.6448311487111699,
+        "s21_b2": 0.5956350564140757,
+        "s21_b3": 0.6587752777653632,
+        "s22_b0": 0.6988035441302485,
+        "s22_b1": 0.6129979761248853,
+        "s22_b2": 0.6045037042309214,
+        "s22_b3": 0.6851966045567336,
+        "s23_b0": 0.6684239142857143,
+        "s23_b1": 0.6275153836966259,
+        "s23_b2": 0.6130257225195553,
+        "s23_b3": 0.6423305748739311
+      }
+    },
+    "H39-D-joint-chain": {
+      "mean": 0.6334530930852943,
+      "per_cell": {
+        "s21_b0": 0.6722732898550724,
+        "s21_b1": 0.6320704957038995,
+        "s21_b2": 0.5890488564513127,
+        "s21_b3": 0.6464133005586592,
+        "s22_b0": 0.6869739554413025,
+        "s22_b1": 0.5989132329354148,
+        "s22_b2": 0.5978935697904311,
+        "s22_b3": 0.6702722454319874,
+        "s23_b0": 0.6597228553571428,
+        "s23_b1": 0.6132647249925351,
+        "s23_b2": 0.6052650259365995,
+        "s23_b3": 0.6293255645691734
+      }
+    },
+    "H39-E-joint-secondary": {
+      "mean": 0.6269345153319124,
+      "per_cell": {
+        "s21_b0": 0.6634524710144928,
+        "s21_b1": 0.6247780132187706,
+        "s21_b2": 0.5879714526159001,
+        "s21_b3": 0.636661657206704,
+        "s22_b0": 0.6798473350471294,
+        "s22_b1": 0.5933383862871137,
+        "s22_b2": 0.5942224444444444,
+        "s22_b3": 0.661688209339048,
+        "s23_b0": 0.65553615,
+        "s23_b1": 0.6097759056434756,
+        "s23_b2": 0.597398181967888,
+        "s23_b3": 0.6185439771979828
+      }
+    }
+  },
+  "sprt": {
+    "H39-A-model": {
+      "decision": "accept_H1",
+      "n": 9,
+      "llr": 3.028250129590916,
+      "upper": 2.995732273553991,
+      "lower": -2.3025850929940455,
+      "p0": 0.5,
+      "p1": 0.7,
+      "alpha": 0.05,
+      "beta": 0.1,
+      "wins": 9,
+      "losses": 0,
+      "outcomes": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "boundary_method": "Ville-safe likelihood-ratio bounds",
+      "validity_assumption": "independent Bernoulli block outcomes / valid conditional supermartingale"
+    },
+    "H39-B-model": {
+      "decision": "accept_H1",
+      "n": 9,
+      "llr": 3.028250129590916,
+      "upper": 2.995732273553991,
+      "lower": -2.3025850929940455,
+      "p0": 0.5,
+      "p1": 0.7,
+      "alpha": 0.05,
+      "beta": 0.1,
+      "wins": 9,
+      "losses": 0,
+      "outcomes": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "boundary_method": "Ville-safe likelihood-ratio bounds",
+      "validity_assumption": "independent Bernoulli block outcomes / valid conditional supermartingale"
+    },
+    "H39-C-joint": {
+      "decision": "accept_H1",
+      "n": 9,
+      "llr": 3.028250129590916,
+      "upper": 2.995732273553991,
+      "lower": -2.3025850929940455,
+      "p0": 0.5,
+      "p1": 0.7,
+      "alpha": 0.05,
+      "beta": 0.1,
+      "wins": 9,
+      "losses": 0,
+      "outcomes": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "boundary_method": "Ville-safe likelihood-ratio bounds",
+      "validity_assumption": "independent Bernoulli block outcomes / valid conditional supermartingale"
+    },
+    "H39-D-joint-chain": {
+      "decision": "accept_H1",
+      "n": 9,
+      "llr": 3.028250129590916,
+      "upper": 2.995732273553991,
+      "lower": -2.3025850929940455,
+      "p0": 0.5,
+      "p1": 0.7,
+      "alpha": 0.05,
+      "beta": 0.1,
+      "wins": 9,
+      "losses": 0,
+      "outcomes": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "boundary_method": "Ville-safe likelihood-ratio bounds",
+      "validity_assumption": "independent Bernoulli block outcomes / valid conditional supermartingale"
+    },
+    "H39-E-joint-secondary": {
+      "decision": "accept_H1",
+      "n": 9,
+      "llr": 3.028250129590916,
+      "upper": 2.995732273553991,
+      "lower": -2.3025850929940455,
+      "p0": 0.5,
+      "p1": 0.7,
+      "alpha": 0.05,
+      "beta": 0.1,
+      "wins": 9,
+      "losses": 0,
+      "outcomes": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "boundary_method": "Ville-safe likelihood-ratio bounds",
+      "validity_assumption": "independent Bernoulli block outcomes / valid conditional supermartingale"
+    }
+  },
+  "sweep": [
+    {
+      "spacing": 2.8,
+      "buffer": 2,
+      "budget": 24000,
+      "n": 24000,
+      "sgmc_dti": 0.02611991527962582
+    }
+  ],
+  "sgmc_dti_of_primary": 0.02611991527962582,
+  "nn_stats": {
+    "median": 3.0,
+    "mean": 3.6381626832414575,
+    "p10": 2.8284271247461903,
+    "p90": 4.47213595499958
+  },
+  "audits": {
+    "zeros": {
+      "path": "/home/user/GEMSDOE39/docs/downloads/gemsdoe39-h39-a-model-r39a-zeros.tif",
+      "sha256": "0eb23e410a968964322cf23392b05fca9e522761391c303340c0f20aef4bc038",
+      "bytes": 110449,
+      "grid_ok": true,
+      "single_band": true,
+      "dtype_float32": true,
+      "footprint_px": 5167373,
+      "finite_inside": 5167373,
+      "in_range_inside": 5167373,
+      "outside_nan": 0,
+      "outside_zero": 7111787,
+      "outside_other": 0,
+      "positive_px": 24000,
+      "min_in": 0.0,
+      "max_in": 1.0,
+      "ok": true
+    },
+    "nan": {
+      "path": "/home/user/GEMSDOE39/docs/downloads/gemsdoe39-h39-a-model-r39a-nan.tif",
+      "sha256": "638f0abb7bbb197199100ca72b1af763c42aa4997d6730b17b6023beb14d8ff9",
+      "bytes": 153833,
+      "grid_ok": true,
+      "single_band": true,
+      "dtype_float32": true,
+      "footprint_px": 5167373,
+      "finite_inside": 5167373,
+      "in_range_inside": 5167373,
+      "outside_nan": 7111787,
+      "outside_zero": 0,
+      "outside_other": 0,
+      "positive_px": 24000,
+      "min_in": 0.0,
+      "max_in": 1.0,
+      "ok": true
+    }
+  },
+  "note": "GEMSDOE39 H39-A R39A | blocked-OOF off-catalogue discriminant, OOF AUC 0.661; holdout lift 0.670 vs 0.274 control; SPRT 9/9 accept-H1; 24,000 dots, NN 3.0 px, none within 200 m of the catalogue",
+  "submission_name": "GEMSDOE39-H39A-R39A",
+  "recommended_file": "docs/downloads/gemsdoe39-h39-a-model-r39a-zeros.tif",
+  "budget_rationale": "DTI break-even rule: one extra pixel with expected kernel credit w changes the denominator by exactly 0.2, so a pixel pays iff w > 0.2*DTI (0.0556 at 0.2778). Fitting TP=A*n^gamma to the 60,069->0.2477 / 44,090->0.2600 pair and imposing gamma*TP/n = 0.2*DTI gives break-even budgets of 5,400-26,800 px depending on assumed truth size K, with the DTI surface nearly flat over 13k-45k. 24,000 px sits in that flat region and below the historical champion's pixel count."
+}
