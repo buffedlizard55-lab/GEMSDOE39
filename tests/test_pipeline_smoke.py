@@ -41,25 +41,35 @@ def test_sprt_boundaries():
 
 
 def test_submission_format():
-    sub = ROOT / "docs" / "downloads"
-    tifs = list(sub.glob("gemsdoe39-*-zeros.tif"))
-    assert tifs, "no submission built"
-    p = tifs[-1]
+    """EVERY shipped zeros twin must pass, not just whichever glob returned last.
+
+    The previous revision took ``tifs[-1]``, which is glob order, not name order:
+    with both the H39 and H40 artifacts present it silently validated whichever
+    one the filesystem happened to list last.
+    """
     import rasterio
-    with rasterio.open(p) as s:
-        assert s.count == 1
-        assert s.dtypes[0] == "float32"
-        assert str(s.crs).upper().startswith("EPSG:32611")
-        assert s.height == 3730 and s.width == 3292
-        a = s.read(1)
+    sub = ROOT / "docs" / "downloads"
+    tifs = sorted(sub.glob("gemsdoe39-*-zeros.tif"))
+    assert tifs, "no submission built"
     sample = ROOT / "data" / "sample_submission.tif"
+    foot = None
     if sample.exists():
         with rasterio.open(sample) as r:
             foot = np.isfinite(r.read(1))
-            assert tuple(s.transform)[:6] == tuple(r.transform)[:6]
-        assert np.isfinite(a[foot]).all()
-        assert (a[foot] >= 0).all() and (a[foot] <= 1).all()
-        assert (a[~foot] == 0).all()
+            ref_transform = tuple(r.transform)[:6]
+    for p in tifs:
+        with rasterio.open(p) as s:
+            assert s.count == 1, p.name
+            assert s.dtypes[0] == "float32", p.name
+            assert str(s.crs).upper().startswith("EPSG:32611"), p.name
+            assert s.height == 3730 and s.width == 3292, p.name
+            a = s.read(1)
+            if foot is not None:
+                assert tuple(s.transform)[:6] == ref_transform, p.name
+                assert np.isfinite(a[foot]).all(), p.name
+                assert (a[foot] >= 0).all() and (a[foot] <= 1).all(), p.name
+                assert (a[~foot] == 0).all(), p.name
+        assert set(np.unique(a).tolist()) <= {0.0, 1.0}, f"{p.name} is not binary"
 
 
 if __name__ == "__main__":

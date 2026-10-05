@@ -24,3 +24,12 @@ data/*.pdf
 data/*.json
 data/external/*.tif
 data/scored/*.tif
+
+# H40 round: large local-only intermediates and restored mirror payloads
+artifacts/h40_channels.npz
+artifacts/h40_raw_channels.npz
+data/external2/
+data/calib/
+data/scored/
+data/restore_receipt.json
+.venv/

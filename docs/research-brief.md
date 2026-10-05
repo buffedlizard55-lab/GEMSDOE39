@@ -1,26 +1,49 @@
-# Research brief and decision register
+# Research brief — GEMSDOE39
 
-**Date:** 2026-10-05. This is a hypothesis register, not evidence of leaderboard performance. The competition score list in the user brief is not independently verified in this checkout.
+**This brief is superseded.** The round-1 (H39) register is retained below for
+provenance only; it is not the basis of the current artifact.
 
-## Ranked candidates (pre-registration)
+The current round is **H40 — play-fairway permeability targeting**. Its register,
+calibration, validation protocol, ranked hypotheses and irregularity list live in:
 
-1. **Multi-scale DEM curvature residual (medium cost).** Layers: DEM bands; signature: Laplacian-of-Gaussian at several pixel scales, then remove a buffer around `existing_faults`. Target: short-wavelength breaks in slope that are not already catalogued. Distinct from raw ridge/topographic scoring in the prior project records. No external data required.
-2. **Positive/negative openness asymmetry (low cost).** DEM-derived sky-view/openess difference across opposing azimuths, excluding catalogue buffers. Target: asymmetric scarps whose line is absent from a catalogue. Distinct transform from elevation/ridge features. No external data required.
-3. **Directional relief anisotropy (medium cost).** DEM layer; maximum directional gradient minus median directional gradient over azimuths. Target: coherent linear terrain texture below absolute-relief thresholds. Distinct from isotropic curvature. No external data required.
-4. **Thermal/geophysical proxy × curvature (high cost).** Available competition proxy bands crossed with DEM curvature outside catalogue buffers. Target: structural and geothermal coincidence. Viable only if the official feature raster documents such a band; otherwise do not invent one.
-5. **Independent USGS 3DEP cross-resolution disagreement (high cost).** Official 3DEP DEM versus competition DEM after CRS/grid audit. Target: acquisition-independent narrow scarps. Source: https://www.usgs.gov/3d-elevation-program . Requires network access and a reproducible tile selection.
+* **[`docs/research/h40-hypotheses.md`](research/h40-hypotheses.md)** — the seven
+  ranked H40 hypotheses, the inverse-DTI calibration that identifies `|G|`, the
+  break-even emission price, the pre-declared SPRT design, and every flagged
+  irregularity with its fix.
+* [`docs/index.html`](index.html) — the landing page and download button,
+  generated from the run manifest by `scripts/build_site.py`.
+* [`docs/executive-summary.html`](executive-summary.html) — the six-step upload
+  procedure, the zeros-vs-NaN decision, and the source register.
+* [`README.md`](../README.md) — the permanent project charter, status, quick
+  start and limitations.
 
-## Validation gate
+Why the round-1 register is not used: its holdout proxy returned DTI values of
+0.0022–0.0051 for artifacts the organizer scored at 0.24–0.28, a ~60× scale
+error, and its `catalogue_hidden_folds` records were empty while its SPRT block
+claimed `n=8, wins=8`. Ranking on that proxy is close to ranking on noise. See
+irregularities 6 and 7 in the H40 register.
 
-No candidate should consume a weekly submission slot until it beats the locked spatial-block holdout best. Compare one aggregate score per independent spatial block; use `scripts/sprt.py` with alpha and beta declared before reading outcomes. Wald SPRT controls sequential stopping for the specified pair of hypotheses; it does **not** correct selection across a portfolio of candidates. Record all tried candidates and use a separate multiplicity policy.
+---
 
-## Verified-source register
+## Round-1 (H39) register — retained for provenance
 
-- Competition overview/data: https://www.drivendata.org/competitions/306/competition-doe-gems/ and https://www.drivendata.org/competitions/306/competition-doe-gems/data/
-- Reference solution: https://github.com/drivendataorg/gems-prize-reference-solution
-- USGS 3DEP: https://www.usgs.gov/3d-elevation-program
-- NREL report URL supplied by the brief: https://docs.nrel.gov/docs/fy26osti/96647.pdf . The brief also printed `docs.nlr.gov`; that domain spelling is an irregularity and is not treated as verified.
+| Rank | ID | Hypothesis | Layers |
+|---|---|---|---|
+| 1 | H39-B | Scarp-curvature step-over / horsetail splay | `det_elev`, `det_elev_slope`, 1 m LiDAR scarp composite |
+| 2 | H39-A | Cross-gradient tensor multi-physics edge eigen-coherence | `rtp`, `tmi`, `iso_grav_anom`, `cond_surf` |
+| 3 | H39-C | Tilt-derivative analytic-signal edge | `tc`, `tmi`, `rtp` |
+| 4 | H39-D | Magnetic upward-continued "worm" ridges | `rtp`, `tmi` |
+| 5 | H39-E | Basement-depth × conductivity co-located parallel edge | `depth_to_base_surf`, `cond_surf` |
 
-## Current limitations
+Two of these were invalidated by defects found in the H40 round:
 
-The repository has no competition rasters and no DrivenData credentials. Consequently no real submission can be generated or claimed scored here. The downloadable demo is intentionally a format smoke test only. A real run needs the official `training_features.tif`, `labels.tif`, and `sample_submission.tif`, plus a documented holdout evaluator. External data must be independently downloaded, licensed, checksum-recorded, reprojected, and tested for leakage.
+* **H39-C read the wrong band.** `grid.read_all_bands` placed `tc` at index 18,
+  where the raster's own `band_name` metadata puts `iso_grav_anom_hg`. `tc` is
+  band 6. H39-C therefore measured the isostatic-gravity horizontal gradient.
+* **H39-A/B/D/E could not reach 11 of the 19 bands**, because bands 3–11 and 16
+  were placeholders (`b3`…`b11`, `b16`) in the same hardcoded list. The
+  geodetic strain-rate bands, both seismic bands, `tmi_hg`, `tmi_vg` and three
+  gravity-gradient bands were unreachable.
+
+Both defects are fixed and pinned by
+`tests/test_h40.py::test_band_order_is_read_from_the_file_not_hardcoded`.
