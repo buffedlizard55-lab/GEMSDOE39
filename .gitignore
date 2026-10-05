@@ -1,0 +1,4 @@
+/data/
+*.tif
+!artifacts/demo_unique_submission.tif
+__pycache__/
