@@ -471,7 +471,7 @@ for every candidate, so the stopping point is auditable.
 ## 7. Measured outcome of the H40 round
 
 Machine-readable records: `artifacts/h40_selection.json` (selection stage) and
-`docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-manifest.json` (build stage).
+`docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T080000Z-manifest.json` (build stage).
 Every number below is read out of those two files, not transcribed.
 
 **Instrument calibration.** The live-scored 0.2778 artifact run through the same
@@ -558,7 +558,7 @@ anchor**, per-dot hit rate **6.488% = 2.347x**, truth coverage
 
 | | |
 |---|---|
-| file | `docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-zeros.tif` |
+| file | `docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T080000Z-zeros.tif` |
 | SHA-256 (zeros twin) | `8489991c787d98f06ac48a271a665def2cb02ca0a1fa0ccfd23ebfbe88d85d18` |
 | SHA-256 (nan twin) | `fbb4c10726adfffddcc912513e8e7ffd19bc0c7428d2351106f25524807f7e1a` |
 | active dots | 45,962 -- the argmax of the calibrated price curve, **not** the anchor's 37,654 |

@@ -512,7 +512,8 @@ def main():
     nan_path = out / f"{name_base}-nan.tif"
     zero_path = out / f"{name_base}-zeros.tif"
     grid.write_submission(pred, ddir / "sample_submission.tif", nan_path, foot, outside="nan")
-    grid.write_submission(pred, ddir / "sample_submission.tif", zero_path, foot, outside="zero")
+    grid.write_submission(pred, ddir / "sample_submission.tif", zero_path, foot,
+                          outside="zero", allow_non_spec_outside=True)
     aud_nan = grid.audit_submission(nan_path, foot)
     aud_zero = grid.audit_submission(zero_path, foot)
     for tagname, aud in (("nan", aud_nan), ("zeros", aud_zero)):
@@ -522,6 +523,15 @@ def main():
         assert len(aud["sha256"]) == 64, "malformed digest"
     receipt["submissions"] = {"nan": {**aud_nan, "path": str(nan_path.relative_to(ROOT))},
                               "zeros": {**aud_zero, "path": str(zero_path.relative_to(ROOT))}}
+    # The NaN twin is the recommendation, on evidence recorded in grid.write_submission.
+    receipt["recommended_twin"] = "nan"
+    receipt["twin_policy"] = (
+        "Submit the -nan twin: it matches the published format ('data outside the bounds is "
+        "null or nan'), matches sample_submission.tif's own encoding, is what five of the "
+        "owner-reported scored artifacts in registry/live_scores.json use, and passes the "
+        "independent validator 14/14 against 13/14 for the zeros twin. Keep the -zeros twin "
+        "only as a fallback if an uploader rejects NaN with 'Predicted values must be in "
+        "range [0, 1]'; it does not satisfy the strict reading of the spec.")
     # ---- uniqueness audit: the standing requirement is that this artifact is NOT
     # a copy of any previous submission.  It is checkable, so it is checked.
     print("  uniqueness audit vs every mirrored scored artifact ...")
@@ -562,7 +572,8 @@ def main():
     mf.write_text(json.dumps(receipt, indent=2, default=float) + "\n")
     print(f"  manifest: {mf}")
     print("\nDONE.")
-    print(f"  DOWNLOAD (submit this one): {zero_path}")
+    print(f"  DOWNLOAD (submit this one): {nan_path}")
+    print(f"  fallback only if the uploader rejects NaN: {zero_path}")
     return 0
 
 

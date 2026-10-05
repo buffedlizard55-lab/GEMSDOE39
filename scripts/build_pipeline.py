@@ -1,24 +1,11 @@
 #!/usr/bin/env python3
-"""End-to-end pipeline for GEMSDOE39.
+"""Reproduce and audit the exploratory H39X-01 candidate.
 
-Steps:
-  1. Read competition rasters + external layers.
-  2. Compute the five novel H39 detector surfaces (H39-A … H39-E).
-  3. Build a matched-budget greedy-emission binary prediction per hypothesis.
-  4. Evaluate on the spatially-blocked quadrant holdout (8 folds).
-  5. Apply Wald's SPRT (alpha=0.05, beta=0.10, p0=0.5, p1=0.7) per-candidate vs
-     the best-incumbent dotted-H19-5 baseline, comparing per-fold wins.
-  6. If a candidate clears the SPRT accept-H1 boundary (in favour of beating
-     incumbent), write it as the primary submission; otherwise fall back to
-     the baseline with no catalogue contamination.
-  7. Write submission tif strictly in [0,1], with NaN outside footprint (and a
-     twin zeros-outside for validators that reject NaN).
-  8. Write an audit manifest JSON.
-
-Line-by-line verification: no label/sample_submission prediction values are
-copied from any prior submission. All detector surfaces are computed from
-raw float32 bands; the emission is a deterministic greedy cover on the
-detector field. No hidden labels are read during detector construction.
+The exact detector formula was recorded in the hypothesis register only after
+its 2026-10-05 holdout result. This script can reproduce that exposed analysis,
+but it can NEVER approve H39X-01 for a weekly slot, even if a future rerun
+changes the SPRT state. Fixed test settings do not retroactively preregister a
+candidate. This script neither uploads nor consumes a submission slot.
 """
 from __future__ import annotations
 
@@ -26,206 +13,375 @@ import argparse
 import datetime as dt
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 
 import numpy as np
+import rasterio
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from gems39 import grid, features, emission, holdout as hmod, metric  # noqa: E402
-from gems39.sprt_select import sprt_pairwise  # noqa: E402
+from gems39 import emission, features, grid, holdout  # noqa: E402
+from gems39.metric import dti  # noqa: E402
+from gems39.sprt_select import PairwiseSPRT  # noqa: E402
+
+FEATURE_BANDS = [
+    "geod_2ndinv",
+    "geod_shearrate",
+    "geod_dilaterate",
+    "det_elev",
+    "tmi",
+    "det_elev_slope",
+]
+HYPOTHESIS_ID = "H39X-01-strain-dilatation-corridor"
+DEFAULT_BUDGET = 44_090
+MIN_DISTANCE_PX = 2.7
+HIDE_FRACTION = 0.20
+HOLDOUT_SEED = 20261005
+COLLAR_PX = 15
+SPRT_P0 = 0.50
+SPRT_P1 = 0.70
+SPRT_ALPHA = 0.05
+SPRT_BETA = 0.10
 
 
-def sha_file(p: Path) -> str:
-    h = hashlib.sha256()
-    with p.open("rb") as fh:
-        for c in iter(lambda: fh.read(1 << 20), b""):
-            h.update(c)
-    return h.hexdigest()
+def _sha256_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--data-dir", default=str(ROOT / "data"))
-    ap.add_argument("--out-dir", default=str(ROOT / "docs" / "downloads"))
-    ap.add_argument("--budget", type=int, default=44090,
-                    help="Matched emission budget (positive pixels). 44090 matches the "
-                         "dotted-ridge d2.8 family that scored 0.2600-0.2708.")
-    ap.add_argument("--cat-buffer-px", type=int, default=2,
-                    help="Block candidates within this distance (px) of known catalogue.")
-    ap.add_argument("--sprt-alpha", type=float, default=0.05)
-    ap.add_argument("--sprt-beta", type=float, default=0.10)
-    ap.add_argument("--sprt-p0", type=float, default=0.5)
-    ap.add_argument("--sprt-p1", type=float, default=0.7)
-    ap.add_argument("--tag", default=None, help="Unique submission tag (default: UTC timestamp).")
-    args = ap.parse_args()
+def _display_path(path: Path) -> str:
+    resolved = path.resolve()
+    try:
+        return resolved.relative_to(ROOT).as_posix()
+    except ValueError:
+        return str(resolved)
 
-    ddir = Path(args.data_dir)
-    out = Path(args.out_dir)
-    out.mkdir(parents=True, exist_ok=True)
-    tag = args.tag or dt.datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
 
-    # ---- 1. Load data ------------------------------------------------------
-    print("[1/7] Loading rasters...")
-    # Authoritative footprint is the sample submission's finite mask (5,167,373 px)
-    foot = grid.read_footprint_from_sample(ddir / "sample_submission.tif")
-    print(f"  footprint pixels: {int(foot.sum()):,} / {foot.size:,}")
-    bands = grid.read_all_bands(ddir / "training_features.tif", foot)
-    labels = grid.read_labels(ddir / "labels.tif") & foot
-    print(f"  labels (visible) positives: {int(labels.sum()):,}")
+def _manifest_hashes() -> dict[str, str]:
+    path = ROOT / "registry" / "data_manifest.json"
+    if not path.exists():
+        return {}
+    manifest = json.loads(path.read_text())
+    return {item["id"]: item["sha256"] for item in manifest.get("files", [])}
 
-    # ---- 2. Build H39 detector surfaces -----------------------------------
-    print("[2/7] Building H39 detector surfaces...")
-    surfaces = {}
-    for key, (name, layers, fn) in features.DETECTORS.items():
-        print(f"  - {key}: {name}")
-        try:
-            if key == "H39-B":
-                surfaces[key] = fn(bands, foot, ddir=Path(ddir))
-            else:
-                surfaces[key] = fn(bands, foot)
-        except Exception as exc:
-            import traceback; traceback.print_exc()
-            print(f"    FAILED: {exc}")
-    # Build ensemble
-    surfaces["H39-ENS"] = features.build_ensemble(
-        {k: surfaces[k] for k in ("H39-A", "H39-C", "H39-D", "H39-E") if k in surfaces}, foot)
-    # Baseline incumbent proxy: multi-scale Hessian ridge on det_elev + mag + slope-break
-    # (deterministic reconstruction of the d2.8 dotted-ridge family, NOT a copy
-    # of any prior submission's pixels).
-    ridge = np.zeros(foot.shape, np.float32)
-    det_elev = features._fill_nearest(bands["det_elev"], foot)
-    tmi = features._fill_nearest(bands["tmi"], foot)
-    slope = features._fill_nearest(bands["det_elev_slope"], foot)
-    for sig in (1.0, 2.0, 3.5):
-        r = features._line_response(det_elev, sig, sign=-1)
-        ridge += features._robust_unit(r, foot)
-    mg = np.hypot(*features._grad(tmi, 1.5))
-    sl_br = np.hypot(*features._grad(features._gauss(slope, 1.5), 1.0))
-    ridge = features._robust_unit(ridge / 3.0, foot) \
-        * (0.55 + 0.25 * features._robust_unit(mg, foot)
-           + 0.20 * features._robust_unit(sl_br, foot))
-    surfaces["BASELINE-dotted-ridge"] = ridge
-    # PRIMARY fusion: weighted combination that rewards baseline structure
-    # but boosts locations where multi-physics H39 channels concur (unique new info).
-    w_base, w_a, w_b, w_c, w_d, w_e = 0.45, 0.12, 0.10, 0.13, 0.12, 0.08
-    combined = (
-        w_base * surfaces["BASELINE-dotted-ridge"]
-        + w_a * surfaces.get("H39-A", 0)
-        + w_b * surfaces.get("H39-B", 0)
-        + w_c * surfaces.get("H39-C", 0)
-        + w_d * surfaces.get("H39-D", 0)
-        + w_e * surfaces.get("H39-E", 0)
-    )
-    surfaces["H39-PRIMARY"] = features._robust_unit(combined, foot)
 
-    # ---- 3. Holdout context -----------------------------------------------
-    print("[3/7] Preparing spatially-blocked holdout...")
-    ctx = hmod.load_holdout(ddir)
-
-    # ---- 4. Build emissions & evaluate ------------------------------------
-    print(f"[4/7] Emitting (fast Poisson-disk best-first, budget={args.budget}, cat_buffer={args.cat_buffer_px}px)...")
-    results = {}
-    masks = {}
-    for key, surf in surfaces.items():
-        m = emission.emit_fast(
-            surf, foot, target_n=args.budget, min_dist=2.7,
-            catalogue=labels, cat_buffer_px=args.cat_buffer_px,
-        )
-        masks[key] = m
-        ev = hmod.evaluate(m, ctx)
-        results[key] = ev
-        print(f"  {key:25s}  emitted={ev['emitted_pixels']:6d}  "
-              f"on_cat={ev['on_catalogue_pixels']:5d}  "
-              f"holdout_dti={ev['catalogue_hidden_mean']:.4f}  "
-              f"sgmc_dti={ev['sgmc_off_catalogue_dti']:.4f}")
-
-    # ---- 5. SPRT selection (per-fold pairwise wins vs BASELINE) -----------
-    print("[5/7] Applying Wald SPRT (paired per-fold) vs BASELINE-dotted-ridge...")
-    base_key = "BASELINE-dotted-ridge"
-    base_folds = results[base_key]["catalogue_hidden_folds"]
-    candidates = [k for k in results if k != base_key]
-    decisions = {}
-    for key in candidates:
-        wins = []
-        for fk, fv in results[key]["catalogue_hidden_folds"].items():
-            bv = base_folds[fk]["dti"]
-            wins.append(fv["dti"] > bv)
-        decisions[key] = sprt_pairwise(wins, p0=args.sprt_p0, p1=args.sprt_p1,
-                                       alpha=args.sprt_alpha, beta=args.sprt_beta)
-        print(f"  {key:25s}  wins={sum(wins)}/{len(wins)}  decision={decisions[key]['decision']}  "
-              f"llr={decisions[key]['llr']:.3f}")
-
-    # Pick best: SPRT accept-H1 wins; if no candidate has crossed the upper boundary
-    # (8 folds gives limited power at alpha=0.05,beta=0.10 so continue is expected),
-    # promote the unique candidate that (a) has zero on-catalogue pixels and
-    # (b) has highest combined (catalogue_hidden + 0.5*sgmc) score. This is a
-    # preregistered tie-break, not informal peeking: the SGMC instrument is the
-    # off-catalogue corroboration.
-    accepted = [k for k, d in decisions.items() if d["decision"] == "accept_H1"]
-    if accepted:
-        primary = max(accepted, key=lambda k: results[k]["catalogue_hidden_mean"])
-        print(f"  SPRT selected: {primary}")
-    else:
-        def _score(k):
-            r = results[k]
-            return r["catalogue_hidden_mean"] + 0.5 * r["sgmc_off_catalogue_dti"]
-        eligible = [k for k in candidates if results[k]["on_catalogue_pixels"] == 0
-                    and k.startswith("H39")]
-        primary = max(eligible, key=_score)
-        print(f"  SPRT continue (insufficient folds at n=8 for tight power). "
-              f"Promoting highest-combined-score unique candidate: {primary}")
-
-    primary_mask = masks[primary]
-
-    # ---- 6. Write submissions (nan-outside + zeros-outside twin) -----------
-    print("[6/7] Writing submission GeoTIFFs...")
-    template = ddir / "sample_submission.tif"
-    name_base = f"gemsdoe39-{primary.lower().replace('_','-')}-{tag}"
-    # Binary prediction written as float32 {0,1} (strictly in [0,1]).
-    pred = primary_mask.astype(np.float32)
-    nan_path = out / f"{name_base}-nan.tif"
-    zero_path = out / f"{name_base}-zeros.tif"
-    grid.write_submission(pred, template, nan_path, foot, outside="nan")
-    grid.write_submission(pred, template, zero_path, foot, outside="zero")
-
-    # Audit
-    aud_nan = grid.audit_submission(nan_path, foot)
-    aud_zero = grid.audit_submission(zero_path, foot)
-    print(f"  nan-outside:  {aud_nan['bytes']} bytes  sha256={aud_nan['sha256'][:16]}  ok={aud_nan['ok']}")
-    print(f"  zero-outside: {aud_zero['bytes']} bytes  sha256={aud_zero['sha256'][:16]}  ok={aud_zero['ok']}")
-    assert aud_nan["ok"], "nan submission failed range/finite audit"
-    assert aud_zero["ok"], "zero submission failed range/finite audit"
-
-    # ---- 7. Manifest -------------------------------------------------------
-    print("[7/7] Writing manifest...")
-    manifest = {
-        "schema_version": 1,
-        "name": name_base,
-        "note": f"GEMSDOE39 {primary} | multi-physics cross-gradient + magnetic-worm + tilt-analytic-signal ensemble; greedy max-cover budget {args.budget}, cat-buffer {args.cat_buffer_px}px; SPRT alpha={args.sprt_alpha}, beta={args.sprt_beta}",
-        "primary": primary,
-        "sprt_decisions": decisions,
-        "candidate_results": {k: {kk: (vv if not isinstance(vv, dict) else
-                                       {kkk: vvv for kkk, vvv in vv.items()
-                                        if kkk in ('dti', 'tp', 'fp', 'fn', 'n_truth')})
-                                  for kk, vv in v.items()}
-                              for k, v in results.items()},
-        "nan_submission": {**aud_nan, "path": str(nan_path.relative_to(ROOT))},
-        "zero_submission": {**aud_zero, "path": str(zero_path.relative_to(ROOT))},
-        "budget": args.budget,
-        "cat_buffer_px": args.cat_buffer_px,
-        "emitted_pixels": int(primary_mask.sum()),
-        "on_catalogue_pixels": int((primary_mask & labels).sum()),
+def _check_no_duplicate_pixels(candidate: Path, footprint: np.ndarray) -> dict:
+    """Check local and restored historical GeoTIFFs for identical in-footprint values."""
+    search_roots = [ROOT / "docs" / "downloads", ROOT / "artifacts", ROOT / "data" / "scored"]
+    compared = []
+    duplicate_of = []
+    with rasterio.open(candidate) as new:
+        candidate_values = new.read(1)[footprint]
+    candidate_values = np.nan_to_num(candidate_values, nan=-999.0, posinf=-999.0, neginf=-999.0)
+    for folder in search_roots:
+        if not folder.exists():
+            continue
+        for path in sorted(folder.glob("*.tif")):
+            if path.resolve() == candidate.resolve():
+                continue
+            try:
+                with rasterio.open(path) as prior:
+                    if prior.shape != footprint.shape:
+                        continue
+                    prior_values = prior.read(1)[footprint]
+                prior_values = np.nan_to_num(prior_values, nan=-999.0, posinf=-999.0, neginf=-999.0)
+                compared.append(str(path.relative_to(ROOT)))
+                if np.array_equal(candidate_values, prior_values):
+                    duplicate_of.append(str(path.relative_to(ROOT)))
+            except Exception:
+                # A corrupt/unreadable prior artifact is not treated as proof of uniqueness.
+                continue
+    return {
+        "compared_artifacts": compared,
+        "compared_count": len(compared),
+        "duplicate_of": duplicate_of,
+        "unique_vs_checked_local_artifacts": not duplicate_of,
+        "scope_note": "This local check does not inspect every file in all sibling GEMSDOE repositories.",
     }
-    mf = out / f"{name_base}-manifest.json"
-    mf.write_text(json.dumps(manifest, indent=2, default=float) + "\n")
-    print(f"  manifest: {mf}")
-    print("\nDONE. Submission ready.")
-    print(f"  Download: {zero_path}  (zeros variant is safer for 'predicted values in [0,1]' validator)")
+
+
+def _pooled_dti(results: list[dict]) -> float:
+    tp = sum(float(r["tp"]) for r in results)
+    fp = sum(float(r["fp"]) for r in results)
+    fn = sum(float(r["fn"]) for r in results)
+    return dti(tp, fp, fn)
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--data-dir", default=str(ROOT / "data"))
+    parser.add_argument("--out-dir", default=str(ROOT / "docs" / "downloads"))
+    parser.add_argument("--tag", default=None, help="Optional unique filename suffix.")
+    parser.add_argument(
+        "--replay-exposed-holdout",
+        action="store_true",
+        help="Recompute the exact locked exploratory run for audit only; never slot-eligible.",
+    )
+    args = parser.parse_args()
+    if not args.replay_exposed_holdout:
+        parser.error(
+            "The H39X-01 holdout is exhausted. Refusing to re-score by default; "
+            "the manifest already records the result. Use --replay-exposed-holdout "
+            "only for exact deterministic reproduction, never for variant selection."
+        )
+
+    print("NOTE: this is a locked replay of an exposed exploratory run; it cannot approve a submission.")
+
+    data_dir = Path(args.data_dir)
+    out_dir = Path(args.out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    required = ["training_features.tif", "labels.tif", "sample_submission.tif"]
+    missing = [name for name in required if not (data_dir / name).is_file()]
+    if missing:
+        raise SystemExit(
+            "Missing competition inputs in " + str(data_dir) + ": " + ", ".join(missing)
+            + ". Restore the SHA-256-pinned owner mirror with scripts/restore_data.py --group core, "
+            + "or place the authenticated DrivenData downloads there."
+        )
+
+    print("[1/6] Read sample footprint and explicitly named feature bands")
+    footprint = grid.read_footprint_from_sample(data_dir / "sample_submission.tif")
+    print(f"  footprint={int(footprint.sum()):,}/{footprint.size:,} cells")
+    bands = grid.read_bands(data_dir / "training_features.tif", footprint, names=FEATURE_BANDS)
+    candidate_field = features.build_h39x01_strain(bands, footprint)
+    incumbent_field = features.build_incumbent_ridge(bands, footprint)
+    del bands
+
+    print("[2/6] Reconstruct the exposed exploratory spatial holdout (not a confirmation set)")
+    context = holdout.load_holdout(
+        data_dir,
+        hide_fraction=HIDE_FRACTION,
+        seed=HOLDOUT_SEED,
+        collar_px=COLLAR_PX,
+    )
+    print(
+        f"  components={context.component_count:,}; folds={len(context.folds)}; "
+        f"collar={context.collar_px} px ({context.collar_px * 100:,} m); "
+        f"hide_fraction={context.hide_fraction:.2f}; seed={context.seed}"
+    )
+
+    print("[3/6] Evaluate candidate and fixed incumbent fold-by-fold; update SPRT immediately")
+    sprt = PairwiseSPRT(
+        p0=SPRT_P0,
+        p1=SPRT_P1,
+        alpha=SPRT_ALPHA,
+        beta=SPRT_BETA,
+    )
+    fold_records = []
+    candidate_fold_scores = []
+    incumbent_fold_scores = []
+    candidate_components = []
+    incumbent_components = []
+    for fold in context.folds:
+        candidate_mask = emission.emit_fast(
+            candidate_field,
+            context.footprint,
+            target_n=DEFAULT_BUDGET,
+            min_dist=MIN_DISTANCE_PX,
+            catalogue=fold.train_catalogue,
+            cat_buffer_px=0,
+        )
+        incumbent_mask = emission.emit_fast(
+            incumbent_field,
+            context.footprint,
+            target_n=DEFAULT_BUDGET,
+            min_dist=MIN_DISTANCE_PX,
+            catalogue=fold.train_catalogue,
+            cat_buffer_px=0,
+        )
+        candidate_result = holdout.evaluate_fold(candidate_mask, fold)
+        incumbent_result = holdout.evaluate_fold(incumbent_mask, fold)
+        win = float(candidate_result["dti"]) > float(incumbent_result["dti"]) + 1e-12
+        sprt_state = sprt.update(win)
+        candidate_fold_scores.append(candidate_result["dti"])
+        incumbent_fold_scores.append(incumbent_result["dti"])
+        candidate_components.append(candidate_result)
+        incumbent_components.append(incumbent_result)
+        record = {
+            "fold": fold.name,
+            "hidden_components": int(fold.hidden_component_ids.size),
+            "hidden_truth_pixels": fold.n_truth,
+            "candidate": candidate_result,
+            "incumbent": incumbent_result,
+            "candidate_wins_fold": bool(win),
+            "sprt_after_fold": sprt_state,
+            "candidate_emitted_pixels": int(candidate_mask.sum()),
+            "incumbent_emitted_pixels": int(incumbent_mask.sum()),
+        }
+        fold_records.append(record)
+        print(
+            f"  {fold.name}: candidate={candidate_result['dti']:.6f}, "
+            f"incumbent={incumbent_result['dti']:.6f}, win={win}, "
+            f"LLR={sprt_state['llr']:.4f}/{sprt_state['upper']:.4f}, "
+            f"decision={sprt_state['decision']}"
+        )
+        del candidate_mask, incumbent_mask
+        if sprt_state["decision"] != "continue":
+            print("  SPRT boundary crossed; no additional folds were evaluated.")
+            break
+
+    candidate_pooled = _pooled_dti(candidate_components)
+    incumbent_pooled = _pooled_dti(incumbent_components)
+    candidate_mean = float(np.mean(candidate_fold_scores)) if candidate_fold_scores else 0.0
+    incumbent_mean = float(np.mean(incumbent_fold_scores)) if incumbent_fold_scores else 0.0
+    beats_pooled = candidate_pooled > incumbent_pooled + 1e-12
+    nominal_screen_pass = sprt.decision == "accept_H1" and beats_pooled
+    # The exact detector formula was documented post-hoc. Never convert a
+    # rerun on the same exposed folds into a submission recommendation.
+    eligible = False
+    print("[4/6] Decision")
+    print(f"  pooled DTI proxy: candidate={candidate_pooled:.6f}, incumbent={incumbent_pooled:.6f}")
+    print(f"  unweighted block mean: candidate={candidate_mean:.6f}, incumbent={incumbent_mean:.6f}")
+    print(f"  SPRT={sprt.decision}; nominal_screen_pass={nominal_screen_pass}; "
+          f"recipe_registration=posthoc; eligible_for_submission_slot={eligible}")
+
+    print("[5/6] Emit a fresh full-footprint candidate (no prior prediction pixels are reused)")
+    labels = grid.read_labels(data_dir / "labels.tif") & footprint
+    final_mask = emission.emit_fast(
+        candidate_field,
+        footprint,
+        target_n=DEFAULT_BUDGET,
+        min_dist=MIN_DISTANCE_PX,
+        catalogue=labels,
+        cat_buffer_px=0,
+    )
+    pixel_digest = _sha256_bytes(np.packbits(final_mask, bitorder="little").tobytes())
+    timestamp = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    suffix = re.sub(r"[^A-Za-z0-9-]+", "-", args.tag).strip("-") if args.tag else timestamp
+    if not suffix:
+        raise SystemExit("--tag must contain at least one alphanumeric character")
+    # Hash suffix avoids collisions if a rerun occurs in the same UTC second.
+    name = f"gemsdoe39-h39x01-strain-corridor-{suffix}-{pixel_digest[:8]}"
+    output_path = out_dir / f"{name}-nan.tif"
+    if output_path.exists():
+        raise SystemExit(f"Refusing to overwrite existing candidate: {output_path}")
+    prediction = final_mask.astype(np.float32)
+    grid.write_submission(
+        prediction,
+        data_dir / "sample_submission.tif",
+        output_path,
+        footprint,
+        outside="nan",
+    )
+    audit = grid.audit_submission(output_path, footprint, data_dir / "sample_submission.tif")
+    audit["path"] = _display_path(output_path)
+    if not audit["ok"]:
+        raise SystemExit(f"Generated GeoTIFF failed its independent audit: {audit}")
+    duplicate_audit = _check_no_duplicate_pixels(output_path, footprint)
+    if duplicate_audit["duplicate_of"]:
+        output_path.unlink(missing_ok=True)
+        raise SystemExit(f"Candidate prediction pixels duplicate a checked prior artifact: {duplicate_audit}")
+    print(f"  path={_display_path(output_path)}")
+    print(f"  pixels={audit['positive_px']:,}; sha256={audit['sha256']}; bytes={audit['bytes']:,}")
+    print(
+        f"  duplicate_check={duplicate_audit['compared_count']} local files; "
+        f"unique_vs_checked_local_artifacts={duplicate_audit['unique_vs_checked_local_artifacts']}"
+    )
+
+    note = (
+        "GEMSDOE39 H39X-01 geodetic strain/dilatation corridor | "
+        f"budget {DEFAULT_BUDGET}; exact known-fault mask; exploratory post-hoc candidate; "
+        "not eligible for a weekly submission slot."
+    )
+    manifest = {
+        "schema_version": 2,
+        "name": name,
+        "note_for_drivendata": note,
+        "hypothesis_id": HYPOTHESIS_ID,
+        "hypothesis_registration": {
+            "status": "post_hoc_exploratory",
+            "exact_detector_recipe_recorded_after_holdout_scoring": True,
+            "confirmatory": False,
+            "weekly_slot_eligible": False,
+            "note": "Do not describe fixed SPRT settings or the current register as retroactive preregistration.",
+        },
+        "created_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
+        "method": {
+            "detector": "robust-rank geodetic second-invariant and shear amplitude; multi-scale strain-invariant line response; paired local dilatation or dilatation-gradient support",
+            "feature_bands": FEATURE_BANDS,
+            "candidate_feature_bands": ["geod_2ndinv", "geod_shearrate", "geod_dilaterate"],
+            "incumbent_feature_bands": ["det_elev", "tmi", "det_elev_slope"],
+            "band_preprocessing": {
+                "names_from": "GeoTIFF band_name tag or band description; no numeric-order inference",
+                "valid_cells": "finite and greater than the float32 nodata sentinel threshold",
+                "invalid_in_footprint": "nearest-valid fill",
+                "clip_quantiles": [0.001, 0.999],
+                "outside_footprint_value": 0.0,
+            },
+            "feature_transform_parameters": {
+                "robust_quantiles": [0.02, 0.995],
+                "dilatation_gaussian_sigma_px": 1.5,
+                "dilatation_pair_window_px": 7,
+                "dilatation_gradient_sigma_px": 3.0,
+                "strain_invariant_line_scales_px": [2.0, 4.0],
+                "linear_weights": {"strain_amplitude": 0.50, "line_response": 0.30, "dilatation_support": 0.20},
+            },
+            "emitter": {"type": "best-first Poisson-disk", "target_pixels": DEFAULT_BUDGET, "min_distance_px": MIN_DISTANCE_PX, "known_fault_buffer_px": 0},
+            "prediction_encoding": "binary float32 0/1 inside footprint; NaN outside",
+            "source_prediction_copied": False,
+        },
+        "inputs": {
+            "provenance": "SHA-256-pinned owner mirror; hashes verify mirror integrity, not organizer authentication",
+            "sha256": _manifest_hashes(),
+        },
+        "holdout": {
+            "proxy_only": True,
+            "description": (
+                "Exposed exploratory proxy holdout: four geographic quadrants; hide whole "
+                f"8-connected catalogue components totalling approximately {HIDE_FRACTION:.3f} "
+                f"of fold label pixels; {COLLAR_PX * 100:g} m inward collar; seed {HOLDOUT_SEED}; "
+                "not the private expert-label test set. Exact H39X-01 formula was recorded after "
+                "scoring; do not reuse for confirmation."
+            ),
+            "fold_order": [record["fold"] for record in fold_records],
+            "seed": HOLDOUT_SEED,
+            "hide_fraction": HIDE_FRACTION,
+            "collar_px": COLLAR_PX,
+            "candidate_pooled_dti": candidate_pooled,
+            "incumbent_pooled_dti": incumbent_pooled,
+            "candidate_unweighted_fold_mean": candidate_mean,
+            "incumbent_unweighted_fold_mean": incumbent_mean,
+            "candidate_wins": sprt.wins,
+            "candidate_losses": sprt.losses,
+            "exploratory_only": True,
+            "confirmatory": False,
+            "fold_results": fold_records,
+            "sprt": sprt.as_dict(),
+            "statistical_assumption": "SPRT alpha/beta control is conditional on independent Bernoulli block outcomes or a valid conditional supermartingale; spatial collar does not prove this assumption.",
+        },
+        "multiplicity": {
+            "current_pipeline_candidate_count": 1,
+            "development_variants_fully_registered": False,
+            "current_result_exploratory": True,
+            "future_policy": "Use one candidate selected on development data with a fresh holdout, or preallocate family-wise alpha across every candidate on a fresh holdout; never reuse these exposed folds.",
+        },
+        "submission_gate": {
+            "eligible_for_weekly_slot": bool(eligible),
+            "reason": (
+                "Not eligible: the exact H39X-01 formula was recorded after holdout scoring; the exposed exploratory folds cannot approve this candidate."
+                + (" The SPRT was also not accepted." if sprt.decision != "accept_H1" else "")
+                + (" Pooled proxy DTI did not beat the comparator." if not beats_pooled else "")
+            ),
+            "leaderboard_score": None,
+        },
+        "artifact": audit,
+        "uniqueness_audit": duplicate_audit,
+        "official_sources": {
+            "problem_description": "https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/",
+            "organizer_known_fault_masking": "https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/2",
+            "usgs_geodawn": "https://doi.org/10.5066/P93LGLVQ",
+        },
+    }
+    manifest_path = out_dir / f"{name}-manifest.json"
+    manifest_path.write_text(json.dumps(manifest, indent=2, allow_nan=False) + "\n")
+    print("[6/6] Complete")
+    print(f"  audit_manifest={_display_path(manifest_path)}")
+    print(f"  submission_note={note}")
+    print(f"  submission_slot_status={'APPROVED' if eligible else 'NOT APPROVED / candidate-only'}")
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    raise SystemExit(main())

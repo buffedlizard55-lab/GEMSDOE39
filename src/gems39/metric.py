@@ -45,8 +45,14 @@ def dti_components(pred, truth, valid=None, known=None):
         raise ValueError("shape mismatch")
     valid = np.ones(pred.shape, bool) if valid is None else np.asarray(valid, bool)
     known = np.zeros(pred.shape, bool) if known is None else np.asarray(known, bool)
+    if valid.shape != pred.shape or known.shape != pred.shape:
+        raise ValueError("valid/known mask shape mismatch")
     active = valid & ~known
-    p = np.where(active & np.isfinite(pred), pred, 0.0).astype(np.float64)
+    if not np.isfinite(pred[active]).all():
+        raise ValueError("active predictions must be finite")
+    if np.any((pred[active] < 0.0) | (pred[active] > 1.0)):
+        raise ValueError("active predictions must be in [0, 1]")
+    p = np.where(active, pred, 0.0).astype(np.float64)
     g = active & truth
     H, W = p.shape
     yy, xx = np.nonzero(g)
@@ -71,6 +77,8 @@ def dti_binary(pred_bool, truth, valid=None, known=None):
     truth = np.asarray(truth, bool)
     valid = np.ones(pred_bool.shape, bool) if valid is None else np.asarray(valid, bool)
     known = np.zeros(pred_bool.shape, bool) if known is None else np.asarray(known, bool)
+    if truth.shape != pred_bool.shape or valid.shape != pred_bool.shape or known.shape != pred_bool.shape:
+        raise ValueError("prediction/truth/valid/known shape mismatch")
     active = valid & ~known
     p = pred_bool & active
     g = truth & active

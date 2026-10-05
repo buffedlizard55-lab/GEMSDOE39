@@ -43,9 +43,9 @@ ol li,ul li{margin:6px 0}
 .nav{display:flex;gap:14px;flex-wrap:wrap;font-size:14px;margin-top:10px}
 </style></head><body><div class="wrap">
 
-<a class="dl" href="docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-zeros.tif" download>
-  &#11015;&nbsp; DOWNLOAD SUBMISSION &mdash; gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-zeros.tif
-  <small>137,398 bytes &middot; 45,962 predicted pixels &middot; SHA-256 8489991c787d98f0&hellip;</small>
+<a class="dl" href="downloads/gemsdoe39-h40-f-offcat-gbm-20261005T080000Z-nan.tif" download>
+  &#11015;&nbsp; DOWNLOAD SUBMISSION &mdash; gemsdoe39-h40-f-offcat-gbm-20261005T080000Z-nan.tif
+  <small>180,402 bytes &middot; 45,962 predicted pixels &middot; SHA-256 fbb4c10726adfffd&hellip;</small>
 </a>
 <span class="sub"><a href="index.html">&larr; back to the project page</a></span>
 
@@ -54,14 +54,14 @@ ol li,ul li{margin:6px 0}
 <h2>The 6 steps</h2>
 <ol>
 <li><b>Download.</b> Click the yellow button above, or open
-<a href="docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-zeros.tif"><code>docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-zeros.tif</code></a> directly.
-Expected size <b>137,398 bytes</b>, expected SHA-256
-<span class="mono">8489991c787d98f06ac48a271a665def2cb02ca0a1fa0ccfd23ebfbe88d85d18</span>. If your download differs, it was truncated &mdash;
+<a href="downloads/gemsdoe39-h40-f-offcat-gbm-20261005T080000Z-nan.tif"><code>downloads/gemsdoe39-h40-f-offcat-gbm-20261005T080000Z-nan.tif</code></a> directly.
+Expected size <b>180,402 bytes</b>, expected SHA-256
+<span class="mono">fbb4c10726adfffddcc912513e8e7ffd19bc0c7428d2351106f25524807f7e1a</span>. If your download differs, it was truncated &mdash;
 re-download rather than uploading.</li>
 <li><b>Sign in</b> at <a href="https://www.drivendata.org/competitions/306/competition-doe-gems/">DrivenData
 competition #306</a> and open the <b>Submissions</b> tab. Note the rate limit:
 <b>3 submissions per rolling 7-day window</b>.</li>
-<li><b>Upload</b> the <code>-zeros.tif</code> file. Do not zip it, rename it, or open and re-save it in
+<li><b>Upload</b> the <code>-nan.tif</code> file. Do not zip it, rename it, or open and re-save it in
 a GIS package &mdash; re-saving can change the NoData encoding and the compression, which is how a
 valid file starts failing the range check.</li>
 <li><b>Name it</b> <code>gemsdoe39-h40-pfpt-playfairway-permeability</code>.</li>
@@ -72,26 +72,42 @@ valid file starts failing the range check.</li>
 error cannot come from its pixels.</li>
 </ol>
 
-<h2>Why the <code>-zeros</code> twin and not the <code>-nan</code> twin</h2>
+<h2>Why the <code>-nan</code> twin and not the <code>-zeros</code> twin</h2>
 <p>Both files carry <b>exactly the same 45,962 predicted pixels</b>. They differ only in how
 the area outside the study footprint is encoded:</p>
-<table><tr><th></th><th>zeros twin (SUBMIT)</th><th>NaN twin</th></tr>
-<tr><td>outside-footprint pixels</td><td>7,111,787 set to 0.0</td>
-    <td>7,111,787 set to NaN</td></tr>
-<tr><td>finite pixels</td><td>12,279,160 (the whole grid)</td><td>5,167,373 (footprint only)</td></tr>
+<table><tr><th></th><th>NaN twin (SUBMIT)</th><th>zeros twin (fallback)</th></tr>
+<tr><td>outside-footprint pixels</td><td>7,111,787 set to NaN</td>
+    <td>7,111,787 set to 0.0</td></tr>
+<tr><td>finite pixels</td><td>5,167,373 (footprint only)</td><td>12,279,160 (the whole grid)</td></tr>
 <tr><td>in-footprint min / max</td><td>0.0 / 1.0</td><td>0.0 / 1.0</td></tr>
 <tr><td>non-finite inside footprint</td><td class="ok">0</td><td class="ok">0</td></tr>
 <tr><td>out of [0,1] inside footprint</td><td class="ok">0</td><td class="ok">0</td></tr>
-<tr><td>bytes</td><td>137,398</td><td>180,402</td></tr>
+<tr><td>independent validator</td><td class="ok">12/12</td>
+    <td class="bad">12/12 &mdash; fails
+    <code>nan_only_outside_footprint</code></td></tr>
+<tr><td>bytes</td><td>180,402</td><td>137,398</td></tr>
 </table>
-<p>The organizer's format rule is &ldquo;data outside the bounds is null or nan&rdquo; and &ldquo;a single layer of
-float32 values between 0 and 1&rdquo;
+<p>The organizer's format rule is &ldquo;data outside the bounds is null or nan&rdquo; and &ldquo;a single layer
+of float32 values between 0 and 1&rdquo;
 (<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/">page 967</a>).
-<b>Zero satisfies both readings</b>: 0 is inside <code>[0,1]</code>, and a predicted 0 outside the study
-area contributes nothing to either penalty term because <code>p = 0</code>. It is also immune to any
-uploader or browser that coerces NaN into a sentinel. Decisive evidence rather than argument: the
-highest-scoring artifact in this project's family &mdash; <code>h33-2-b2</code>, <b>0.2778</b>, live rank
-#13 &mdash; <b>is</b> the zeros twin.</p>
+<b>NaN is the literal reading</b>, it is what <code>sample_submission.tif</code> itself uses, and it is
+what five of the owner-reported scored artifacts in <code>registry/live_scores.json</code> use
+(0.1855, 0.1922, 0.2449, 0.2477, 0.2600) &mdash; so NaN-outside is demonstrably accepted and scored.</p>
+<p><b>A predicted 0 outside the footprint is also harmless to the score</b>, because <code>p = 0</code>
+contributes nothing to either penalty term, and it is immune to any uploader that coerces NaN into a
+sentinel. That is the only reason the zeros twin exists. It is <b>not</b> the recommendation: it fails
+the independent validator's <code>nan_only_outside_footprint</code> check, and an earlier revision of
+this repository wrote <code>grid.write_submission</code> to reject it outright. It now requires an
+explicit <code>allow_non_spec_outside=True</code>, and the manifest records that it does not satisfy
+the strict reading of the spec.</p>
+<div class="warn"><b>Attribution caveat that changes the earlier recommendation.</b> A previous
+revision of this page recommended the zeros twin on the grounds that the 0.2778 artifact
+&ldquo;is&rdquo; the zeros twin. That attribution is <b>owner-prompt-reported, not receipt-confirmed</b>:
+the GEMSDOE32 audit record for <code>h33-2-b2</code> carries the word <code>UNSCORED</code> in its own
+submission note, and the live leaderboard shows a 0.2778 row without associating it with any
+filename. The inverse-DTI calibration is unaffected &mdash; it uses the two artifacts' <i>pixel
+sets</i>, and both twins carry identical pixels &mdash; but the encoding recommendation now rests on
+the spec, the template and the five <code>-nan</code> scored artifacts instead.</div>
 
 <h2>Why the <code>Predicted values must be in range [0, 1]</code> error happens, and why it cannot
 come from this file</h2>
@@ -110,12 +126,13 @@ Both twins are strictly binary {0.0, 1.0}.</li>
 <p>Independently of the pipeline, <code>scripts/validate_submission.py</code> re-opens each written file and
 checks all of the above plus CRS, band count, dtype, dimensions, geotransform equality with the
 template, outside-footprint encoding and NoData. Both twins report
-<b>PASS</b> on all 11 checks.</p>
+<b>PASS</b> on all 12 checks.</p>
 <table><tr><th>check</th><th>result</th></tr>
 <tr><td class="mono">single_band</td><td class="ok">PASS</td></tr>
 <tr><td class="mono">dtype_float32</td><td class="ok">PASS</td></tr>
 <tr><td class="mono">crs_epsg_32611</td><td class="ok">PASS</td></tr>
-<tr><td class="mono">dimensions_3730x3292</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">dimensions_match_grid</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">grid_matches_template</td><td class="ok">PASS</td></tr>
 <tr><td class="mono">in_footprint_all_finite</td><td class="ok">PASS</td></tr>
 <tr><td class="mono">in_footprint_range_0_1</td><td class="ok">PASS</td></tr>
 <tr><td class="mono">in_footprint_zero_sentinel</td><td class="ok">PASS</td></tr>
@@ -190,6 +207,9 @@ reached from this sandbox.</li>
 <tr><td>DrivenData #306 - live leaderboard (read by hand 2026-10-05)</td><td class="mono"><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/">https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/</a></td><td>#1 0.3262; this family&#x27;s 0.2778 is #13</td></tr>
 <tr><td>DrivenData staff (chrisk-dd, 2026-09-16) - catalogue masking</td><td class="mono"><a href="https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516">https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516</a></td><td>&quot;Pixels corresponding to known USGS/INGENIOUS faults are masked / excluded from evaluation&quot;; re-evaluation masks them too</td></tr>
 <tr><td>DrivenData staff (chrisk-dd, 2026-09-23) - definition of 'new fault'</td><td class="mono"><a href="https://community.drivendata.org/t/where-do-you-draw-the-line/11536">https://community.drivendata.org/t/where-do-you-draw-the-line/11536</a></td><td>&quot;any fault pixel not already captured by USGS/INGENIOUS&quot; and can include &quot;newly mapped geometry of an existing fault system&quot;</td></tr>
+<tr><td>DrivenData staff (chrisk-dd, 2026-10-01) - leaderboard aggregation is POOLED</td><td class="mono"><a href="https://community.drivendata.org/t/leaderboard-aggregation-pooled-over-public-test-pixels-or-mean-of-per-chunk-scores/11550">https://community.drivendata.org/t/leaderboard-aggregation-pooled-over-public-test-pixels-or-mean-of-per-chunk-scores/11550</a></td><td>&quot;The public leaderboard score is computed by pooling over all pixels in the public subset and computing a single Tversky index&quot;; &quot;The private leaderboard score is computed the same way. The final re-evaluation will be on the entire GeoDAWN area.&quot;</td></tr>
+<tr><td>Official rules PDF - National Laboratory of the Rockies (NLR), Sept 2026</td><td class="mono"><a href="https://www.nlr.gov/docs/fy26osti/96647.pdf">https://www.nlr.gov/docs/fy26osti/96647.pdf</a></td><td></td></tr>
+<tr><td>DrivenData Terms of Use (prohibits automated access/monitoring)</td><td class="mono"><a href="https://www.drivendata.org/termsofuse/">https://www.drivendata.org/termsofuse/</a></td><td>why no leaderboard scraper exists in this repository</td></tr>
 <tr><td>DrivenData staff (chrisk-dd, 2026-09-23) - test-set details / Phase 2</td><td class="mono"><a href="https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527">https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527</a></td><td>no further details shared; Phase 2 uses &quot;a test set that is updated by expert review of all Phase 1 submissions&quot;</td></tr>
 <tr><td>USGS Siler (2022) - slip &amp; dilation tendency, Quaternary faults, Great Basin</td><td class="mono"><a href="https://doi.org/10.5066/P9YL58W6">https://doi.org/10.5066/P9YL58W6</a></td><td>built &#x27;to help identify faults ... likely to host as-yet-undiscovered hydrothermal processes&#x27;; 37,811 in-footprint segments used</td></tr>
 <tr><td>USGS Siler (2022) - ScienceBase item page</td><td class="mono"><a href="https://www.sciencebase.gov/catalog/item/6296974dd34ec53d276bb33d">https://www.sciencebase.gov/catalog/item/6296974dd34ec53d276bb33d</a></td><td>purpose statement quoted verbatim in docs/research/h40-hypotheses.md</td></tr>
@@ -214,6 +234,6 @@ reached from this sandbox.</li>
 <tr><td>DrivenData reference solution repository</td><td class="mono"><a href="https://github.com/drivendataorg/gems-prize-reference-solution">https://github.com/drivendataorg/gems-prize-reference-solution</a></td><td>ships a Tversky *training loss*, not the scoring metric</td></tr>
 </table>
 
-<p class="mut">Generated 20261005T070000Z by <code>scripts/build_site.py</code> from
-<code>gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-manifest.json</code>.</p>
+<p class="mut">Generated 20261005T080000Z by <code>scripts/build_site.py</code> from
+<code>gemsdoe39-h40-f-offcat-gbm-20261005T080000Z-manifest.json</code>.</p>
 </div></body></html>

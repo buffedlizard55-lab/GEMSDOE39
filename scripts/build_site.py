@@ -51,6 +51,16 @@ SOURCES = [
      "https://community.drivendata.org/t/where-do-you-draw-the-line/11536",
      '"any fault pixel not already captured by USGS/INGENIOUS" and can include '
      '"newly mapped geometry of an existing fault system"'),
+    ("DrivenData staff (chrisk-dd, 2026-10-01) - leaderboard aggregation is POOLED",
+     "https://community.drivendata.org/t/leaderboard-aggregation-pooled-over-public-test-pixels-or-mean-of-per-chunk-scores/11550",
+     '"The public leaderboard score is computed by pooling over all pixels in the public '
+     'subset and computing a single Tversky index"; "The private leaderboard score is '
+     'computed the same way. The final re-evaluation will be on the entire GeoDAWN area."'),
+    ("Official rules PDF - National Laboratory of the Rockies (NLR), Sept 2026",
+     "https://www.nlr.gov/docs/fy26osti/96647.pdf", ""),
+    ("DrivenData Terms of Use (prohibits automated access/monitoring)",
+     "https://www.drivendata.org/termsofuse/",
+     "why no leaderboard scraper exists in this repository"),
     ("DrivenData staff (chrisk-dd, 2026-09-23) - test-set details / Phase 2",
      "https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527",
      'no further details shared; Phase 2 uses "a test set that is updated by expert '
@@ -197,6 +207,20 @@ def build(manifest_path: Path):
     zeros = ROOT / zeros_rel
     nan = ROOT / nan_rel
     zi, ni = inspect(zeros, foot), inspect(nan, foot)
+    rec = m.get("recommended_twin", "nan")
+    # Links must be RELATIVE TO docs/, not to the repository root.  The manifest
+    # stores paths like "docs/downloads/x.tif" because it is written from the repo
+    # root, but this page is served from inside docs/ -- under the repository's
+    # branch-root Pages routing (root index.html redirects to docs/) AND under a
+    # docs-only artifact deployment.  "downloads/x.tif" resolves correctly in both;
+    # "docs/downloads/x.tif" 404s in both.
+    def rel(x):
+        x = str(x)
+        return x[5:] if x.startswith("docs/") else x
+    zeros_rel, nan_rel = rel(zeros_rel), rel(nan_rel)
+    rec_rel, rec_info = (nan_rel, ni) if rec == "nan" else (zeros_rel, zi)
+    alt_rel, alt_info = (zi, ni) if False else ((zi, ni) if rec == "nan" else (ni, zi))
+    fb_rel, fb_info = (zeros_rel, zi) if rec == "nan" else (nan_rel, ni)
     assert len(zi["sha256"]) == 64 and len(ni["sha256"]) == 64, "malformed digest"
 
     cal = m["calibration"]
@@ -259,7 +283,8 @@ def build(manifest_path: Path):
     ext_log = "\n".join(f"<li class=\"mono\">{esc(l)}</li>" for l in ext["log"])
     ch_log = "\n".join(f"<li class=\"mono\">{esc(l)}</li>" for l in m["channel_log"])
 
-    checks = m["submissions"]["zeros"]["checks"]
+    checks = m["submissions"][rec]["checks"]
+    checks_fb = m["submissions"]["nan" if rec == "zeros" else "zeros"]["checks"]
     chk_rows = "\n".join(f"<tr><td class=\"mono\">{esc(k)}</td>"
                          f"<td class=\"{'ok' if v else 'bad'}\">{'PASS' if v else 'FAIL'}</td></tr>"
                          for k, v in checks.items())
@@ -301,13 +326,15 @@ def build(manifest_path: Path):
 <title>GEMSDOE39 &mdash; H40 Play-Fairway Submission (DrivenData #306)</title>
 <style>{CSS}</style></head><body><div class="wrap">
 
-<a class="dl" href="{esc(zeros_rel)}" download>
-  &#11015;&nbsp; DOWNLOAD SUBMISSION &mdash; {esc(zi['name'])}
-  <small>{zi['bytes']:,} bytes &middot; {zi['positive_inside_footprint']:,} predicted pixels &middot;
-         float32 &middot; EPSG:32611 &middot; values in [0,1] &middot; SHA-256 {zi['sha256'][:16]}&hellip;</small>
+<a class="dl" href="{esc(rec_rel)}" download>
+  &#11015;&nbsp; DOWNLOAD SUBMISSION &mdash; {esc(rec_info['name'])}
+  <small>{rec_info['bytes']:,} bytes &middot; {rec_info['positive_inside_footprint']:,} predicted pixels &middot;
+         float32 &middot; EPSG:32611 &middot; values in [0,1] &middot; SHA-256 {rec_info['sha256'][:16]}&hellip;</small>
 </a>
 <span class="sub">Click once &mdash; the file downloads directly. Then follow the
-  <a href="executive-summary.html">6-step upload guide</a>.</span>
+  <a href="executive-summary.html">6-step upload guide</a>.
+  Fallback twin (only if your uploader rejects NaN):
+  <a href="{esc(fb_rel)}"><code>{esc(fb_info['name'])}</code></a>.</span>
 
 <div class="card">
 <h1>GEMSDOE39 &mdash; H40 play-fairway permeability targeting</h1>
@@ -352,6 +379,17 @@ the DOE GEMS Prize Challenge</a>. No pixel is copied from any previous submissio
    {len(checks)} checks on both twins</div>
 </div>
 </div>
+
+<div class="warn"><b>Which twin to upload, and why.</b> Submit the <b>-nan</b> twin above.
+The published format says &ldquo;data outside the bounds is null or nan&rdquo;;
+<code>sample_submission.tif</code> is itself NaN-outside; five of the owner-reported scored
+artifacts in <code>registry/live_scores.json</code> are <code>-nan</code> files (0.1855, 0.1922,
+0.2449, 0.2477, 0.2600), so NaN-outside is demonstrably accepted and scored; and the independent
+validator returns <b>{sum(checks.values())}/{len(checks)}</b> for the NaN twin against
+<b>{sum(checks_fb.values())}/{len(checks_fb)}</b> for the zeros twin. The zeros twin is kept only as a
+fallback for the <code>Predicted values must be in range [0, 1]</code> failure the owner reported.
+Two audits of this repository recommended opposite twins; the evidence above is why this one
+recommends NaN, and the disagreement is recorded rather than hidden.</div>
 
 <div class="warn"><b>No score is claimed for this artifact.</b>
 {pr['priced']['score']:.4f} is the output of a two-equation calibration against
@@ -522,6 +560,51 @@ hit rate falls monotonically with budget inside each surface family.</p>
 {chk_rows}
 </table>
 
+<h2>Reconciliation with the parallel H39X-01 audit</h2>
+<p>Two independent audits of this repository landed on the same branch. The other
+(<code>docs/research-brief.md</code>, <code>docs/hypothesis-register.md</code>,
+<code>docs/current-feed.md</code>) converged independently on the band-name defect, on the
+geodetic strain-rate bands being the most promising untapped layers, and on the live leader being
+<b>0.3262</b> rather than the 0.3195 the standing request quotes. Both audits are retained. Where
+they disagreed:</p>
+<table><tr><th>question</th><th>H39X-01 audit</th><th>H40 audit</th><th>resolution</th></tr>
+<tr><td>which twin to submit</td><td>NaN only; <code>write_submission</code> rejected zeros as non-spec</td>
+<td>zeros, on the strength of the 0.2778 attribution</td>
+<td><b>NaN.</b> The zeros call rested on attributing 0.2778 to a <code>-zeros</code> filename, and the
+GEMSDOE32 audit record labels that file <code>UNSCORED</code> in its own note string. Zeros is kept as an
+opt-in fallback behind <code>allow_non_spec_outside=True</code>.</td></tr>
+<tr><td>SPRT boundary</td><td>anytime-valid / Ville: <code>log(1/&alpha;)</code>, <code>log(&beta;)</code></td>
+<td>Wald (1945): <code>log((1&minus;&beta;)/&alpha;)</code>, <code>log(&beta;/(1&minus;&alpha;))</code>, as the charter names</td>
+<td><b>Ville is the module default</b> (stricter) and every result also reports the Wald outcome as
+<code>alt_decision</code>. The promoted artifact clears both.</td></tr>
+<tr><td>is the 0.2778 attribution safe?</td><td>no &mdash; &ldquo;do not claim that score belongs to that exact raster without an official receipt&rdquo;</td>
+<td>the calibration is anchored on it</td>
+<td><b>Both.</b> The attribution is owner-reported. The calibration is self-checking: one
+two-parameter model reproduces 0.2778 exactly <i>and</i> 0.2707 against the observed 0.2708 from a
+nested pair whose 2,545-dot difference is re-derived from the rasters. Corroborating, not a receipt.</td></tr>
+<tr><td>how many folds</td><td>four large blocks; result <code>continue</code>, promotion correctly refused</td>
+<td>24 blocks &times; 2 seeds = {hold['n_i2']} folds per instrument</td>
+<td>Both are right about their own design. <code>folds_needed()</code> is now called <b>before</b> any fold is
+scored, so the design is checked rather than discovered.</td></tr>
+</table>
+<div class="warn"><b>Multiplicity is not controlled, and this is the largest statistical caveat on the
+promotion.</b> 19 fusion variants were measured on one instrument and the best promoted. At
+&alpha; = 0.05 across 19 tries the chance of at least one spurious <code>accept_H1</code> is material.
+Mitigations in place: the grid was declared before measurement; the winner had to clear two
+different sequential tests plus a leakage gate plus a hit-rate floor; and the effect is large
+({[r for r in selrec.get('rows',[]) if r['variant']==selrec.get('winner')][0]['ratio_dti'] if selrec.get('rows') else 0:.3f}&times;
+pooled instrument DTI), not marginal. The mitigation <b>not</b> in place is a genuinely untouched
+confirmation set &mdash; none exists offline. A reviewer should attack this first.</div>
+<div class="note"><b>Newly verified from DrivenData staff this round.</b> &ldquo;The public leaderboard
+score is computed by pooling over all pixels in the public subset and computing a single Tversky
+index&hellip; The private leaderboard score is computed the same way. The final re-evaluation will be
+on the entire GeoDAWN area.&rdquo; &mdash; <code>chrisk-dd</code>, DrivenData Staff, 2026-10-01,
+<a href="https://community.drivendata.org/t/leaderboard-aggregation-pooled-over-public-test-pixels-or-mean-of-per-chunk-scores/11550/2">thread 11550</a>.
+This is what licenses the additive per-fold score delta: because the live metric is pooled, a
+fold statistic that <i>sums</i> to the pooled change tests the claim the organizer scores. It also
+means <b>|G| = {G:,.0f} is the public-subset truth count</b>; the Final Round re-evaluates over the
+whole GeoDAWN area, where |G| is larger and the same dot field scores differently.</div>
+
 <h2>Irregularities found and flagged this round</h2>
 <p>Full list with fixes: <a href="https://github.com/buffedlizard55-lab/GEMSDOE39#irregularities-found-and-flagged-this-round">README &sect; Irregularities</a>
 and <a href="research/h40-hypotheses.md">&sect;5 of the hypothesis register</a>. Headlines:</p>
@@ -588,9 +671,9 @@ recomputed from the GeoTIFF bytes at generation time.</p>
 <title>How to submit &mdash; GEMSDOE39 H40 executive summary</title>
 <style>{CSS}</style></head><body><div class="wrap">
 
-<a class="dl" href="{esc(zeros_rel)}" download>
-  &#11015;&nbsp; DOWNLOAD SUBMISSION &mdash; {esc(zi['name'])}
-  <small>{zi['bytes']:,} bytes &middot; {zi['positive_inside_footprint']:,} predicted pixels &middot; SHA-256 {zi['sha256'][:16]}&hellip;</small>
+<a class="dl" href="{esc(rec_rel)}" download>
+  &#11015;&nbsp; DOWNLOAD SUBMISSION &mdash; {esc(rec_info['name'])}
+  <small>{rec_info['bytes']:,} bytes &middot; {rec_info['positive_inside_footprint']:,} predicted pixels &middot; SHA-256 {rec_info['sha256'][:16]}&hellip;</small>
 </a>
 <span class="sub"><a href="index.html">&larr; back to the project page</a></span>
 
@@ -599,14 +682,14 @@ recomputed from the GeoTIFF bytes at generation time.</p>
 <h2>The 6 steps</h2>
 <ol>
 <li><b>Download.</b> Click the yellow button above, or open
-<a href="{esc(zeros_rel)}"><code>{esc(zeros_rel)}</code></a> directly.
-Expected size <b>{zi['bytes']:,} bytes</b>, expected SHA-256
-<span class="mono">{zi['sha256']}</span>. If your download differs, it was truncated &mdash;
+<a href="{esc(rec_rel)}"><code>{esc(rec_rel)}</code></a> directly.
+Expected size <b>{rec_info['bytes']:,} bytes</b>, expected SHA-256
+<span class="mono">{rec_info['sha256']}</span>. If your download differs, it was truncated &mdash;
 re-download rather than uploading.</li>
 <li><b>Sign in</b> at <a href="https://www.drivendata.org/competitions/306/competition-doe-gems/">DrivenData
 competition #306</a> and open the <b>Submissions</b> tab. Note the rate limit:
 <b>3 submissions per rolling 7-day window</b>.</li>
-<li><b>Upload</b> the <code>-zeros.tif</code> file. Do not zip it, rename it, or open and re-save it in
+<li><b>Upload</b> the <code>-nan.tif</code> file. Do not zip it, rename it, or open and re-save it in
 a GIS package &mdash; re-saving can change the NoData encoding and the compression, which is how a
 valid file starts failing the range check.</li>
 <li><b>Name it</b> <code>gemsdoe39-h40-pfpt-playfairway-permeability</code>.</li>
@@ -617,26 +700,42 @@ valid file starts failing the range check.</li>
 error cannot come from its pixels.</li>
 </ol>
 
-<h2>Why the <code>-zeros</code> twin and not the <code>-nan</code> twin</h2>
+<h2>Why the <code>-nan</code> twin and not the <code>-zeros</code> twin</h2>
 <p>Both files carry <b>exactly the same {zi['positive_px']:,} predicted pixels</b>. They differ only in how
 the area outside the study footprint is encoded:</p>
-<table><tr><th></th><th>zeros twin (SUBMIT)</th><th>NaN twin</th></tr>
-<tr><td>outside-footprint pixels</td><td>{zi['outside_footprint_zero']:,} set to 0.0</td>
-    <td>{ni['outside_footprint_nan']:,} set to NaN</td></tr>
-<tr><td>finite pixels</td><td>{zi['finite_px']:,} (the whole grid)</td><td>{ni['finite_px']:,} (footprint only)</td></tr>
-<tr><td>in-footprint min / max</td><td>{zi['min_finite']} / {zi['max_finite']}</td><td>{ni['min_finite']} / {ni['max_finite']}</td></tr>
-<tr><td>non-finite inside footprint</td><td class="ok">{zi['nonfinite_inside_footprint']}</td><td class="ok">{ni['nonfinite_inside_footprint']}</td></tr>
-<tr><td>out of [0,1] inside footprint</td><td class="ok">{zi['out_of_range_inside_footprint']}</td><td class="ok">{ni['out_of_range_inside_footprint']}</td></tr>
-<tr><td>bytes</td><td>{zi['bytes']:,}</td><td>{ni['bytes']:,}</td></tr>
+<table><tr><th></th><th>NaN twin (SUBMIT)</th><th>zeros twin (fallback)</th></tr>
+<tr><td>outside-footprint pixels</td><td>{ni['outside_footprint_nan']:,} set to NaN</td>
+    <td>{zi['outside_footprint_zero']:,} set to 0.0</td></tr>
+<tr><td>finite pixels</td><td>{ni['finite_px']:,} (footprint only)</td><td>{zi['finite_px']:,} (the whole grid)</td></tr>
+<tr><td>in-footprint min / max</td><td>{ni['min_finite']} / {ni['max_finite']}</td><td>{zi['min_finite']} / {zi['max_finite']}</td></tr>
+<tr><td>non-finite inside footprint</td><td class="ok">{ni['nonfinite_inside_footprint']}</td><td class="ok">{zi['nonfinite_inside_footprint']}</td></tr>
+<tr><td>out of [0,1] inside footprint</td><td class="ok">{ni['out_of_range_inside_footprint']}</td><td class="ok">{zi['out_of_range_inside_footprint']}</td></tr>
+<tr><td>independent validator</td><td class="ok">{sum(checks.values())}/{len(checks)}</td>
+    <td class="bad">{sum(checks_fb.values())}/{len(checks_fb)} &mdash; fails
+    <code>nan_only_outside_footprint</code></td></tr>
+<tr><td>bytes</td><td>{ni['bytes']:,}</td><td>{zi['bytes']:,}</td></tr>
 </table>
-<p>The organizer's format rule is &ldquo;data outside the bounds is null or nan&rdquo; and &ldquo;a single layer of
-float32 values between 0 and 1&rdquo;
+<p>The organizer's format rule is &ldquo;data outside the bounds is null or nan&rdquo; and &ldquo;a single layer
+of float32 values between 0 and 1&rdquo;
 (<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/">page 967</a>).
-<b>Zero satisfies both readings</b>: 0 is inside <code>[0,1]</code>, and a predicted 0 outside the study
-area contributes nothing to either penalty term because <code>p = 0</code>. It is also immune to any
-uploader or browser that coerces NaN into a sentinel. Decisive evidence rather than argument: the
-highest-scoring artifact in this project's family &mdash; <code>h33-2-b2</code>, <b>0.2778</b>, live rank
-#13 &mdash; <b>is</b> the zeros twin.</p>
+<b>NaN is the literal reading</b>, it is what <code>sample_submission.tif</code> itself uses, and it is
+what five of the owner-reported scored artifacts in <code>registry/live_scores.json</code> use
+(0.1855, 0.1922, 0.2449, 0.2477, 0.2600) &mdash; so NaN-outside is demonstrably accepted and scored.</p>
+<p><b>A predicted 0 outside the footprint is also harmless to the score</b>, because <code>p = 0</code>
+contributes nothing to either penalty term, and it is immune to any uploader that coerces NaN into a
+sentinel. That is the only reason the zeros twin exists. It is <b>not</b> the recommendation: it fails
+the independent validator's <code>nan_only_outside_footprint</code> check, and an earlier revision of
+this repository wrote <code>grid.write_submission</code> to reject it outright. It now requires an
+explicit <code>allow_non_spec_outside=True</code>, and the manifest records that it does not satisfy
+the strict reading of the spec.</p>
+<div class="warn"><b>Attribution caveat that changes the earlier recommendation.</b> A previous
+revision of this page recommended the zeros twin on the grounds that the 0.2778 artifact
+&ldquo;is&rdquo; the zeros twin. That attribution is <b>owner-prompt-reported, not receipt-confirmed</b>:
+the GEMSDOE32 audit record for <code>h33-2-b2</code> carries the word <code>UNSCORED</code> in its own
+submission note, and the live leaderboard shows a 0.2778 row without associating it with any
+filename. The inverse-DTI calibration is unaffected &mdash; it uses the two artifacts' <i>pixel
+sets</i>, and both twins carry identical pixels &mdash; but the encoding recommendation now rests on
+the spec, the template and the five <code>-nan</code> scored artifacts instead.</div>
 
 <h2>Why the <code>Predicted values must be in range [0, 1]</code> error happens, and why it cannot
 come from this file</h2>

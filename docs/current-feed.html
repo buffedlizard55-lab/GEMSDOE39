@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Dated official source snapshot, leaderboard facts, provenance, and verification caveats for GEMSDOE39.">
+<title>Evidence Feed | GEMSDOE39</title>
+<style>
+:root{--navy:#10233f;--ink:#172b45;--muted:#5e7188;--blue:#1768ac;--amber:#a65a00;--amber-bg:#fff4d6;--line:#d8e1eb;--page:#f4f7fb;--panel:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--ink);font:16px/1.65 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}a{color:var(--blue)}a:focus{outline:3px solid #ffca4b;outline-offset:3px}.wrap{max-width:1020px;margin:auto;padding:26px 20px 54px}header{background:var(--navy);color:white;padding:28px 0}header .wrap{padding-top:0;padding-bottom:0}.crumb{font-size:.9rem;margin-bottom:9px}h1{line-height:1.15;margin:0 0 8px;font-size:clamp(2rem,5vw,2.8rem)}header p{color:#d9e8f4;margin:0}section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:23px;margin:17px 0}h2{color:var(--navy);font-size:1.3rem;margin:0 0 12px}.alert{padding:14px 16px;border-radius:10px;margin:14px 0;background:var(--amber-bg);border:1px solid #e8ca7a;color:#604000}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;margin:10px 0}th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}th{background:#edf3f9;color:#253d59}td.num{text-align:right;font-variant-numeric:tabular-nums}.small{font-size:.92rem;color:var(--muted)}.source-list{padding-left:22px}.source-list li{margin:9px 0}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#f0f4f8;border-radius:5px;padding:2px 5px}footer{text-align:center;color:var(--muted);font-size:.9rem;padding:16px 0}
+@media(max-width:540px){section{padding:18px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="crumb"><a style="color:#cce5ff" href="index.html">← GEMSDOE39 home</a></div><h1>Dated evidence feed</h1><p>Manual official-source snapshot and provenance register · last checked 2026-10-05 UTC</p></div></header>
+<main class="wrap">
+<section>
+<h2>Official public leaderboard snapshot</h2>
+<p>The rendered official leaderboard was checked on 2026-10-05. Scores and ranks can change; these are public scores only, not private-set results.</p>
+<div class="table-wrap"><table><thead><tr><th>Rank</th><th>Participant shown</th><th class="num">Best public DW-Tversky</th></tr></thead><tbody>
+<tr><td>1</td><td>nchuzhoy</td><td class="num">0.3262</td></tr>
+<tr><td>2</td><td>kinghorton42</td><td class="num">0.3222</td></tr>
+<tr><td>3</td><td>DARD</td><td class="num">0.3195</td></tr>
+<tr><td>4</td><td>xiaofanhu</td><td class="num">0.3060</td></tr>
+<tr><td>5</td><td>alexoktaba</td><td class="num">0.3042</td></tr>
+<tr><td>13</td><td>extradr19</td><td class="num">0.2778</td></tr>
+</tbody></table></div>
+<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/" target="_blank" rel="noopener">Open the live official leaderboard ↗</a>
+<div class="alert"><strong>Attribution caveat:</strong> the official leaderboard page does not disclose the TIFF filename for each score. The supplied owner history associates 0.2778 with H33-2-B2, while the owner's GEMSDOE32 page labels that TIFF “UNSCORED.” The 0.2778 row is visible on the official page; the exact file-to-score mapping is unresolved and must not be claimed as verified.</div>
+</section>
+
+<section>
+<h2>Source register and evidence class</h2>
+<div class="table-wrap"><table><thead><tr><th>Fact used</th><th>Source</th><th>Verification status</th></tr></thead><tbody>
+<tr><td>Task, DTI metric (α=.2, β=.8; 300 m triangular support), and submission GeoTIFF requirements</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/" target="_blank" rel="noopener">Official DrivenData problem page</a></td><td>Official source opened 2026-10-05. Float32, EPSG:32611, 100 m grid, `[0,1]` in footprint, null/NaN outside bounds.</td></tr>
+<tr><td>Public ranks and scores above</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/" target="_blank" rel="noopener">Official leaderboard</a></td><td>Rendered public page snapshot on 2026-10-05; time-sensitive and not a private score.</td></tr>
+<tr><td>Submission limits and AI-use disclosure requirement</td><td><a href="https://www.nlr.gov/docs/fy26osti/96647.pdf" target="_blank" rel="noopener">Official NLR rules PDF</a></td><td>Official rules PDF reviewed 2026-10-05. This project did not upload a file.</td></tr>
+<tr><td>Core competition rasters and external mirror files</td><td><a href="https://github.com/buffedlizard55-lab/GEMSDOE39/blob/main/registry/data_manifest.json" target="_blank" rel="noopener">Repository SHA-256 manifest</a> · <a href="https://github.com/buffedlizard55-lab/GEMSDOE" target="_blank" rel="noopener">owner mirror</a></td><td>Restored from pinned owner-controlled GitHub commits and hashes match. Hashes prove mirror integrity, not organizer authentication.</td></tr>
+<tr><td>USGS GeoDAWN source for future radiometric hypothesis</td><td><a href="https://www.usgs.gov/data/geodawn-airborne-magnetic-and-radiometric-surveys-northwestern-great-basin-nevada-and" target="_blank" rel="noopener">USGS release</a> · <a href="https://doi.org/10.5066/P93LGLVQ" target="_blank" rel="noopener">DOI 10.5066/P93LGLVQ</a></td><td>Official USGS source. The local aligned/quantized derivative is owner-mirrored, not a raw direct download made for this candidate.</td></tr>
+<tr><td>Great Basin structure and geothermal context</td><td><a href="https://www.usgs.gov/publications/structural-discontinuities-and-their-control-hydrothermal-systems-great-basin-usa" target="_blank" rel="noopener">USGS publication</a></td><td>Supports geological plausibility only; does not validate the candidate.</td></tr>
+<tr><td>Known catalogue fault pixels are masked in scoring</td><td><a href="https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/2" target="_blank" rel="noopener">DrivenData staff reply</a></td><td>Staff clarification supports exact known-cell masking; it does not establish an additional 200 m mask.</td></tr>
+<tr><td>Terms on automated monitoring/copying</td><td><a href="https://www.drivendata.org/termsofuse/" target="_blank" rel="noopener">DrivenData Terms of Use</a></td><td>Manual review; page restricts robots, spiders, and automatic devices for monitoring/copying. No scheduled scraper is used.</td></tr>
+</tbody></table></div>
+</section>
+
+<section>
+<h2>Data and candidate limitations</h2>
+<ul>
+<li>The official competition data page requires login in this environment. Inputs were restored from owner-controlled mirrors at pinned commits; organizer provenance is not independently authenticated.</li>
+<li>The local feature raster has 19 tagged bands and the sample grid is 3,730 × 3,292, EPSG:32611, 100 m. These are measurements of the restored mirror, not a direct organizer-authenticated download.</li>
+<li>H39X-01's exact formula was recorded only after its four-block holdout result. The test is exploratory; its fixed SPRT settings do not retroactively preregister the formula. It returned `continue` and is not approved for a weekly slot.</li>
+<li>Exact duplicate comparison included 17 local/retrieved prior TIFFs and found no exact match. It is not an exhaustive scan of all sibling projects or public artifacts.</li>
+<li>No upload, leaderboard score, or private score is associated with the H39X-01 file.</li>
+</ul>
+<p class="small">The full Markdown source register, complete result details, and citations are in <a href="current-feed.md">current-feed.md</a>. Read the <a href="executive-summary.html">submission guide</a> before considering any later candidate.</p>
+</section>
+<footer>GEMSDOE39 · Timestamped evidence, not automated monitoring · 2026-10-05</footer>
+</main>
+</body>
+</html>

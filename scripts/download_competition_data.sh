@@ -1,19 +1,25 @@
 #!/usr/bin/env bash
-# Placeholder. Official DrivenData downloads require a competition account and
-# cannot be fetched without authentication (DrivenData ToS prohibits robots).
-#
-# To get competition data locally:
-#   Option A (authenticated browser): log into
-#     https://www.drivendata.org/competitions/306/competition-doe-gems/data/
-#     and download training_features.tif, labels.tif, sample_submission.tif into data/.
-#   Option B (owner-mirror via gh, SHA-256 pinned):
-#     python scripts/restore_data.py --group core
-#     python scripts/restore_data.py --group external
-#
-# Option B is used in CI; it requires gh to be authenticated against
-# github.com/buffedlizard55-lab (already configured in this sandbox), and
-# every byte is SHA-256 verified against registry/data_manifest.json.
+# Restore the data needed by the local pipeline from SHA-256-pinned owner mirrors.
+# The official DrivenData data page is login-gated; this script does not bypass
+# that login and does not claim the GitHub mirrors are organizer-authenticated.
 set -euo pipefail
-cd "$(dirname "$0")/.."
-echo "Use: python scripts/restore_data.py --group core && python scripts/restore_data.py --group external"
-echo "     (authenticated gh; SHA-256 pinned owner mirrors). See README."
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT"
+if [[ -n "${PYTHON:-}" ]]; then
+  PYTHON_BIN="$PYTHON"
+elif [[ -x "$ROOT/.venv/bin/python" ]]; then
+  PYTHON_BIN="$ROOT/.venv/bin/python"
+else
+  PYTHON_BIN="python3"
+fi
+command -v gh >/dev/null 2>&1 || {
+  echo "ERROR: GitHub CLI (gh) is required for the pinned owner mirrors." >&2
+  exit 1
+}
+if ! gh auth status >/dev/null 2>&1; then
+  echo "ERROR: gh is not authenticated. Use the official competition download after login, or connect GitHub in Arena." >&2
+  exit 1
+fi
+"$PYTHON_BIN" scripts/restore_data.py --group core
+"$PYTHON_BIN" scripts/restore_data.py --group external
+"$PYTHON_BIN" scripts/prepare_data.py

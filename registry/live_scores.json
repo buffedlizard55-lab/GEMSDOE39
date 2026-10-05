@@ -24,7 +24,7 @@
     "catalogue_px": 60988,
     "active_px": 5106385
   },
-  "score_provenance": "Owner-reported public-leaderboard values mirrored through the owner's sibling repositories and restored by SHA-256 pin. NOT re-scraped from drivendata.org (competition Terms of Use prohibit automated access). The live leaderboard page was read once by hand on 2026-10-05: our 0.2778 artifact is rank #13 and 0.2708 is ranks #14-#15; the live leader is 0.3262 (nchuzhoy). Consistency check: artifacts with equal n_positive_active score equally.",
+  "score_provenance": "Owner-reported public-leaderboard values mirrored through the owner's sibling repositories and restored by SHA-256 pin. NOT re-scraped from drivendata.org (competition Terms of Use prohibit automated access). The live leaderboard page was read once by hand on 2026-10-05: our 0.2778 artifact is rank #13 and 0.2708 is ranks #14-#15; the live leader is 0.3262 (nchuzhoy). Consistency check: artifacts with equal n_positive_active score equally. ATTRIBUTION CAVEAT (added 2026-10-05 after the parallel H39X-01 audit): the GEMSDOE32 audit record for h33-2-b2 carries the literal string 'UNSCORED' inside its own submission_note_zeros, and the live leaderboard shows a 0.2778 row without associating it with any filename. The 0.2778 <-> h33-2-b2 and 0.2708 <-> h27-4 pairing is therefore OWNER-REPORTED, not receipt-confirmed. The inverse-DTI calibration depends on that pairing; it is corroborated (one two-parameter model reproduces 0.2778 exactly and 0.2707 against the observed 0.2708 from a nested pair whose 2,545-dot difference is re-derived from the rasters, and a wrong pairing would be unlikely to solve that consistently) but corroboration is not a receipt.",
   "nested_pair": {
     "base": "h27-4-solo-d2-8_0.2708.tif",
     "pruned": "h33-2-b2_0.2778.tif",
@@ -244,5 +244,94 @@
       "n_outside_footprint": 196132,
       "footprint_fraction": 0.028515
     }
-  ]
+  ],
+  "aggregation": {
+    "rule": "pooled over all pixels of the public subset, single Tversky index -- NOT a mean of per-chunk indices; the private leaderboard is computed the same way; the final re-evaluation is on the entire GeoDAWN area",
+    "quote": "\"The public leaderboard score is computed by pooling over all pixels in the public subset and computing a single Tversky index.\" / \"The private leaderboard score is computed the same way. The final re-evaluation will be on the entire GeoDAWN area.\"",
+    "who": "chrisk-dd, DrivenData Staff, 2026-10-01",
+    "source": "https://community.drivendata.org/t/leaderboard-aggregation-pooled-over-public-test-pixels-or-mean-of-per-chunk-scores/11550/2",
+    "consequence": "|G| calibrated here is the PUBLIC-SUBSET truth count. It also licenses the additive per-fold score delta used by the SPRT."
+  },
+  "leaderboard_snapshot_2026_10_05": {
+    "read_by": "hand, one page read, no scraper (Terms of Use prohibit automated access)",
+    "source": "https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/",
+    "top": [
+      [
+        1,
+        "nchuzhoy",
+        0.3262
+      ],
+      [
+        2,
+        "kinghorton42",
+        0.3222
+      ],
+      [
+        3,
+        "DARD",
+        0.3195
+      ],
+      [
+        4,
+        "xiaofanhu",
+        0.306
+      ],
+      [
+        5,
+        "alexoktaba",
+        0.3042
+      ],
+      [
+        6,
+        "joeyfezster",
+        0.3021
+      ],
+      [
+        7,
+        "Batik Shirt Brothers",
+        0.2998
+      ],
+      [
+        8,
+        "ndavis7",
+        0.2888
+      ],
+      [
+        9,
+        "mzoorob",
+        0.2884
+      ],
+      [
+        10,
+        "GrigorSargsyan",
+        0.2876
+      ],
+      [
+        11,
+        "HardcoreTechGod",
+        0.2854
+      ],
+      [
+        12,
+        "op01",
+        0.2792
+      ],
+      [
+        13,
+        "extradr19",
+        0.2778
+      ],
+      [
+        14,
+        "smashi34",
+        0.2708
+      ],
+      [
+        15,
+        "smrtdoog5",
+        0.2708
+      ]
+    ],
+    "note": "the standing request quotes 0.3195 as the leader; on this snapshot 0.3195 is rank #3 and 0.3262 is rank #1. The leaderboard does not associate any score with a filename."
+  }
 }

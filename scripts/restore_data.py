@@ -72,10 +72,32 @@ def main():
             r = restore_entry(e, root)
             results.append(r)
             print(f"{r['status']:>8}  {e['dest']:60s}  {r['bytes']:>10d}B  sha={r['sha256'][:12]}")
-    receipt = {'schema_version':1,'verified_files_count':len(results),'storage_root':str(root),'files':results}
-    (ROOT/'data').mkdir(parents=True, exist_ok=True)
-    (ROOT/'data'/'restore_receipt.json').write_text(json.dumps(receipt, indent=2)+'\n')
-    print(f'Verified {len(results)} files; receipt data/restore_receipt.json')
+    # Preserve verified results from earlier --group calls while checking that
+    # each prior file still exists and matches its pinned hash. Write the receipt
+    # beneath the selected storage root, not unconditionally under ROOT/data.
+    receipt_path = root / 'restore_receipt.json'
+    merged = {}
+    if receipt_path.is_file():
+        try:
+            old = json.loads(receipt_path.read_text())
+            for item in old.get('files', []):
+                dest = root / item.get('dest', '')
+                if dest.is_file() and sha256_file(dest) == item.get('sha256'):
+                    merged[item.get('id', item.get('dest'))] = item
+        except (OSError, ValueError, TypeError):
+            merged = {}
+    for item in results:
+        merged[item['id']] = item
+    all_files = sorted(merged.values(), key=lambda item: item.get('id', ''))
+    receipt = {
+        'schema_version': 2,
+        'verified_files_count': len(all_files),
+        'storage_root': str(root),
+        'last_requested_group': args.group,
+        'files': all_files,
+    }
+    receipt_path.write_text(json.dumps(receipt, indent=2) + '\n')
+    print(f'Verified {len(results)} requested files; {len(all_files)} verified files in {receipt_path}')
 
 if __name__ == '__main__':
     main()

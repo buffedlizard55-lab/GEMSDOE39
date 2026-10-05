@@ -43,13 +43,15 @@ ol li,ul li{margin:6px 0}
 .nav{display:flex;gap:14px;flex-wrap:wrap;font-size:14px;margin-top:10px}
 </style></head><body><div class="wrap">
 
-<a class="dl" href="docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-zeros.tif" download>
-  &#11015;&nbsp; DOWNLOAD SUBMISSION &mdash; gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-zeros.tif
-  <small>137,398 bytes &middot; 45,962 predicted pixels &middot;
-         float32 &middot; EPSG:32611 &middot; values in [0,1] &middot; SHA-256 8489991c787d98f0&hellip;</small>
+<a class="dl" href="downloads/gemsdoe39-h40-f-offcat-gbm-20261005T080000Z-nan.tif" download>
+  &#11015;&nbsp; DOWNLOAD SUBMISSION &mdash; gemsdoe39-h40-f-offcat-gbm-20261005T080000Z-nan.tif
+  <small>180,402 bytes &middot; 45,962 predicted pixels &middot;
+         float32 &middot; EPSG:32611 &middot; values in [0,1] &middot; SHA-256 fbb4c10726adfffd&hellip;</small>
 </a>
 <span class="sub">Click once &mdash; the file downloads directly. Then follow the
-  <a href="executive-summary.html">6-step upload guide</a>.</span>
+  <a href="executive-summary.html">6-step upload guide</a>.
+  Fallback twin (only if your uploader rejects NaN):
+  <a href="downloads/gemsdoe39-h40-f-offcat-gbm-20261005T080000Z-zeros.tif"><code>gemsdoe39-h40-f-offcat-gbm-20261005T080000Z-zeros.tif</code></a>.</span>
 
 <div class="card">
 <h1>GEMSDOE39 &mdash; H40 play-fairway permeability targeting</h1>
@@ -88,12 +90,23 @@ the DOE GEMS Prize Challenge</a>. No pixel is copied from any previous submissio
    (14/17 folds, LLR +3.178);
    <b>normal-mean test</b> <span class="ok">accept_H1</span>
    (n=15, LLR +3.031, &sigma;=172.8);
-   bounds [-2.251, +2.890] &rarr;
+   bounds [-2.303, +2.996] &rarr;
    <b>combined accept_H1</b></div>
 <div>Format validator</div><div class="ok">PASS &mdash; all
-   11 checks on both twins</div>
+   12 checks on both twins</div>
 </div>
 </div>
+
+<div class="warn"><b>Which twin to upload, and why.</b> Submit the <b>-nan</b> twin above.
+The published format says &ldquo;data outside the bounds is null or nan&rdquo;;
+<code>sample_submission.tif</code> is itself NaN-outside; five of the owner-reported scored
+artifacts in <code>registry/live_scores.json</code> are <code>-nan</code> files (0.1855, 0.1922,
+0.2449, 0.2477, 0.2600), so NaN-outside is demonstrably accepted and scored; and the independent
+validator returns <b>12/12</b> for the NaN twin against
+<b>12/12</b> for the zeros twin. The zeros twin is kept only as a
+fallback for the <code>Predicted values must be in range [0, 1]</code> failure the owner reported.
+Two audits of this repository recommended opposite twins; the evidence above is why this one
+recommends NaN, and the disagreement is recorded rather than hidden.</div>
 
 <div class="warn"><b>No score is claimed for this artifact.</b>
 0.4848 is the output of a two-equation calibration against
@@ -221,14 +234,14 @@ crosses the break-even price. &ldquo;Priced score&rdquo; is model output from th
 <table><tr><th>channel</th><th>arm</th><th>n dots</th><th>instr. hit rate</th>
 <th>live-priced hit rate</th><th>priced score</th><th>TP<sub>w</sub></th><th>FP<sub>w</sub></th>
 <th>leakage</th><th>sign SPRT w/n</th><th>sign LLR</th><th>mean LLR</th><th>combined</th></tr>
-<tr><td><b>H40-F</b></td><td>anchor</td><td>37,654</td><td>6.488%</td><td>14.386%</td><td><b>0.4774</b></td><td>9,660</td><td>34,946</td><td>0.0106</td><td>21/29</td><td>+2.979</td><td>+2.919</td><td class="ok">accept_H1</td></tr>
+<tr><td><b>H40-F</b></td><td>anchor</td><td>37,654</td><td>6.488%</td><td>14.386%</td><td><b>0.4774</b></td><td>9,660</td><td>34,946</td><td>0.0106</td><td>22/30</td><td>+3.316</td><td>+3.557</td><td class="ok">accept_H1</td></tr>
 <tr><td><b>H40-F (PRIMARY)</b> &nbsp;<span class="pill">PRIMARY</span></td><td>priced</td><td>45,962</td><td>6.477%</td><td>14.361%</td><td><b>0.4848</b></td><td>10,656</td><td>42,662</td><td>0.0102</td><td>14/17</td><td>+3.178</td><td>+3.031</td><td class="ok">accept_H1</td></tr>
-<tr><td><b>H40-PFPT</b></td><td>anchor</td><td>37,654</td><td>6.488%</td><td>14.386%</td><td><b>0.4774</b></td><td>9,660</td><td>34,946</td><td>0.0106</td><td>21/29</td><td>+2.979</td><td>+2.919</td><td class="ok">accept_H1</td></tr>
+<tr><td><b>H40-PFPT</b></td><td>anchor</td><td>37,654</td><td>6.488%</td><td>14.386%</td><td><b>0.4774</b></td><td>9,660</td><td>34,946</td><td>0.0106</td><td>22/30</td><td>+3.316</td><td>+3.557</td><td class="ok">accept_H1</td></tr>
 <tr><td><b>H40-PFPT</b></td><td>priced</td><td>45,962</td><td>6.477%</td><td>14.361%</td><td><b>0.4848</b></td><td>10,656</td><td>42,662</td><td>0.0102</td><td>14/17</td><td>+3.178</td><td>+3.031</td><td class="ok">accept_H1</td></tr>
 <tr><td><b>H40-E</b></td><td>anchor</td><td>37,654</td><td>4.005%</td><td>8.880%</td><td><b>0.3602</b></td><td>7,184</td><td>35,982</td><td>0.0073</td><td>22/32</td><td>+2.294</td><td>+1.343</td><td class="mut">continue</td></tr>
 <tr><td><b>H40-E</b></td><td>priced</td><td>57,981</td><td>3.651%</td><td>8.096%</td><td><b>0.3681</b></td><td>8,917</td><td>55,634</td><td>0.0065</td><td>22/32</td><td>+2.294</td><td>+1.874</td><td class="mut">continue</td></tr>
-<tr><td><b>backbone</b></td><td>anchor</td><td>37,654</td><td>2.369%</td><td>5.253%</td><td><b>0.2470</b></td><td>4,846</td><td>36,665</td><td>0.0035</td><td>10/21</td><td>-2.254</td><td>-2.261</td><td class="bad">accept_H0</td></tr>
-<tr><td><b>backbone</b></td><td>priced</td><td>69,825</td><td>2.353%</td><td>5.217%</td><td><b>0.2879</b></td><td>7,612</td><td>68,004</td><td>0.0036</td><td>10/21</td><td>-2.254</td><td>-2.586</td><td class="bad">accept_H0</td></tr>
+<tr><td><b>backbone</b></td><td>anchor</td><td>37,654</td><td>2.369%</td><td>5.253%</td><td><b>0.2470</b></td><td>4,846</td><td>36,665</td><td>0.0035</td><td>10/22</td><td>-2.765</td><td>-3.252</td><td class="bad">accept_H0</td></tr>
+<tr><td><b>backbone</b></td><td>priced</td><td>69,825</td><td>2.353%</td><td>5.217%</td><td><b>0.2879</b></td><td>7,612</td><td>68,004</td><td>0.0036</td><td>10/22</td><td>-2.765</td><td>-2.586</td><td class="bad">accept_H0</td></tr>
 <tr><td><b>H40-G</b></td><td>anchor</td><td>37,654</td><td>2.114%</td><td>4.687%</td><td><b>0.2259</b></td><td>4,417</td><td>36,772</td><td>0.0028</td><td>4/12</td><td>-2.741</td><td>-2.768</td><td class="bad">accept_H0</td></tr>
 <tr><td><b>H40-G</b></td><td>priced</td><td>70,000</td><td>2.116%</td><td>4.691%</td><td><b>0.2687</b></td><td>7,095</td><td>68,358</td><td>0.0030</td><td>4/12</td><td>-2.741</td><td>-2.449</td><td class="bad">accept_H0</td></tr>
 <tr><td><b>H40-C</b></td><td>anchor</td><td>37,654</td><td>1.495%</td><td>3.315%</td><td><b>0.1698</b></td><td>3,290</td><td>37,030</td><td>0.0022</td><td>2/8</td><td>-2.392</td><td>-2.952</td><td class="bad">accept_H0</td></tr>
@@ -448,8 +461,8 @@ crosses the break-even price. &ldquo;Priced score&rdquo; is model output from th
 <div>Folds per instrument</div><div>I1 = 32, I2 = 32</div>
 <div>I2 prevalence matching</div><div>62,122 off-catalogue px &rarr;
    14,148 (target |G| = 14,143)</div>
-<div>SPRT design check</div><div>upper bound +2.8904 needs
-   9 all-wins; lower -2.2513 needs
+<div>SPRT design check</div><div>upper bound +2.9957 needs
+   9 all-wins; lower -2.3026 needs
    5 &rarr;
    <span class="ok">decidable</span> with 32 I2 folds</div>
 <div>Anchor transfer factor</div><div>0.451
@@ -504,7 +517,7 @@ hit rate falls monotonically with budget inside each surface family.</p>
 
 <h2>Written artifacts</h2>
 <table><tr><th></th><th>zeros-outside (SUBMIT THIS)</th><th>NaN-outside twin</th></tr>
-<tr><td>filename</td><td class="mono">gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-zeros.tif</td><td class="mono">gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-nan.tif</td></tr>
+<tr><td>filename</td><td class="mono">gemsdoe39-h40-f-offcat-gbm-20261005T080000Z-zeros.tif</td><td class="mono">gemsdoe39-h40-f-offcat-gbm-20261005T080000Z-nan.tif</td></tr>
 <tr><td>bytes</td><td>137,398</td><td>180,402</td></tr>
 <tr><td>SHA-256</td><td class="mono">8489991c787d98f06ac48a271a665def2cb02ca0a1fa0ccfd23ebfbe88d85d18</td><td class="mono">fbb4c10726adfffddcc912513e8e7ffd19bc0c7428d2351106f25524807f7e1a</td></tr>
 <tr><td>positive pixels</td><td>45,962</td><td>45,962</td></tr>
@@ -520,7 +533,8 @@ hit rate falls monotonically with budget inside each surface family.</p>
 <tr><td class="mono">single_band</td><td class="ok">PASS</td></tr>
 <tr><td class="mono">dtype_float32</td><td class="ok">PASS</td></tr>
 <tr><td class="mono">crs_epsg_32611</td><td class="ok">PASS</td></tr>
-<tr><td class="mono">dimensions_3730x3292</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">dimensions_match_grid</td><td class="ok">PASS</td></tr>
+<tr><td class="mono">grid_matches_template</td><td class="ok">PASS</td></tr>
 <tr><td class="mono">in_footprint_all_finite</td><td class="ok">PASS</td></tr>
 <tr><td class="mono">in_footprint_range_0_1</td><td class="ok">PASS</td></tr>
 <tr><td class="mono">in_footprint_zero_sentinel</td><td class="ok">PASS</td></tr>
@@ -529,6 +543,51 @@ hit rate falls monotonically with budget inside each surface family.</p>
 <tr><td class="mono">values_are_binary_0_or_1</td><td class="ok">PASS</td></tr>
 <tr><td class="mono">sha256_is_64_hex</td><td class="ok">PASS</td></tr>
 </table>
+
+<h2>Reconciliation with the parallel H39X-01 audit</h2>
+<p>Two independent audits of this repository landed on the same branch. The other
+(<code>docs/research-brief.md</code>, <code>docs/hypothesis-register.md</code>,
+<code>docs/current-feed.md</code>) converged independently on the band-name defect, on the
+geodetic strain-rate bands being the most promising untapped layers, and on the live leader being
+<b>0.3262</b> rather than the 0.3195 the standing request quotes. Both audits are retained. Where
+they disagreed:</p>
+<table><tr><th>question</th><th>H39X-01 audit</th><th>H40 audit</th><th>resolution</th></tr>
+<tr><td>which twin to submit</td><td>NaN only; <code>write_submission</code> rejected zeros as non-spec</td>
+<td>zeros, on the strength of the 0.2778 attribution</td>
+<td><b>NaN.</b> The zeros call rested on attributing 0.2778 to a <code>-zeros</code> filename, and the
+GEMSDOE32 audit record labels that file <code>UNSCORED</code> in its own note string. Zeros is kept as an
+opt-in fallback behind <code>allow_non_spec_outside=True</code>.</td></tr>
+<tr><td>SPRT boundary</td><td>anytime-valid / Ville: <code>log(1/&alpha;)</code>, <code>log(&beta;)</code></td>
+<td>Wald (1945): <code>log((1&minus;&beta;)/&alpha;)</code>, <code>log(&beta;/(1&minus;&alpha;))</code>, as the charter names</td>
+<td><b>Ville is the module default</b> (stricter) and every result also reports the Wald outcome as
+<code>alt_decision</code>. The promoted artifact clears both.</td></tr>
+<tr><td>is the 0.2778 attribution safe?</td><td>no &mdash; &ldquo;do not claim that score belongs to that exact raster without an official receipt&rdquo;</td>
+<td>the calibration is anchored on it</td>
+<td><b>Both.</b> The attribution is owner-reported. The calibration is self-checking: one
+two-parameter model reproduces 0.2778 exactly <i>and</i> 0.2707 against the observed 0.2708 from a
+nested pair whose 2,545-dot difference is re-derived from the rasters. Corroborating, not a receipt.</td></tr>
+<tr><td>how many folds</td><td>four large blocks; result <code>continue</code>, promotion correctly refused</td>
+<td>24 blocks &times; 2 seeds = 32 folds per instrument</td>
+<td>Both are right about their own design. <code>folds_needed()</code> is now called <b>before</b> any fold is
+scored, so the design is checked rather than discovered.</td></tr>
+</table>
+<div class="warn"><b>Multiplicity is not controlled, and this is the largest statistical caveat on the
+promotion.</b> 19 fusion variants were measured on one instrument and the best promoted. At
+&alpha; = 0.05 across 19 tries the chance of at least one spurious <code>accept_H1</code> is material.
+Mitigations in place: the grid was declared before measurement; the winner had to clear two
+different sequential tests plus a leakage gate plus a hit-rate floor; and the effect is large
+(2.173&times;
+pooled instrument DTI), not marginal. The mitigation <b>not</b> in place is a genuinely untouched
+confirmation set &mdash; none exists offline. A reviewer should attack this first.</div>
+<div class="note"><b>Newly verified from DrivenData staff this round.</b> &ldquo;The public leaderboard
+score is computed by pooling over all pixels in the public subset and computing a single Tversky
+index&hellip; The private leaderboard score is computed the same way. The final re-evaluation will be
+on the entire GeoDAWN area.&rdquo; &mdash; <code>chrisk-dd</code>, DrivenData Staff, 2026-10-01,
+<a href="https://community.drivendata.org/t/leaderboard-aggregation-pooled-over-public-test-pixels-or-mean-of-per-chunk-scores/11550/2">thread 11550</a>.
+This is what licenses the additive per-fold score delta: because the live metric is pooled, a
+fold statistic that <i>sums</i> to the pooled change tests the claim the organizer scores. It also
+means <b>|G| = 14,143 is the public-subset truth count</b>; the Final Round re-evaluates over the
+whole GeoDAWN area, where |G| is larger and the same dot field scores differently.</div>
 
 <h2>Irregularities found and flagged this round</h2>
 <p>Full list with fixes: <a href="https://github.com/buffedlizard55-lab/GEMSDOE39#irregularities-found-and-flagged-this-round">README &sect; Irregularities</a>
@@ -572,6 +631,9 @@ leaderboard were read through the page-fetch service.</li>
 <tr><td>DrivenData #306 - live leaderboard (read by hand 2026-10-05)</td><td class="mono"><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/">https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/</a></td><td>#1 0.3262; this family&#x27;s 0.2778 is #13</td></tr>
 <tr><td>DrivenData staff (chrisk-dd, 2026-09-16) - catalogue masking</td><td class="mono"><a href="https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516">https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516</a></td><td>&quot;Pixels corresponding to known USGS/INGENIOUS faults are masked / excluded from evaluation&quot;; re-evaluation masks them too</td></tr>
 <tr><td>DrivenData staff (chrisk-dd, 2026-09-23) - definition of 'new fault'</td><td class="mono"><a href="https://community.drivendata.org/t/where-do-you-draw-the-line/11536">https://community.drivendata.org/t/where-do-you-draw-the-line/11536</a></td><td>&quot;any fault pixel not already captured by USGS/INGENIOUS&quot; and can include &quot;newly mapped geometry of an existing fault system&quot;</td></tr>
+<tr><td>DrivenData staff (chrisk-dd, 2026-10-01) - leaderboard aggregation is POOLED</td><td class="mono"><a href="https://community.drivendata.org/t/leaderboard-aggregation-pooled-over-public-test-pixels-or-mean-of-per-chunk-scores/11550">https://community.drivendata.org/t/leaderboard-aggregation-pooled-over-public-test-pixels-or-mean-of-per-chunk-scores/11550</a></td><td>&quot;The public leaderboard score is computed by pooling over all pixels in the public subset and computing a single Tversky index&quot;; &quot;The private leaderboard score is computed the same way. The final re-evaluation will be on the entire GeoDAWN area.&quot;</td></tr>
+<tr><td>Official rules PDF - National Laboratory of the Rockies (NLR), Sept 2026</td><td class="mono"><a href="https://www.nlr.gov/docs/fy26osti/96647.pdf">https://www.nlr.gov/docs/fy26osti/96647.pdf</a></td><td></td></tr>
+<tr><td>DrivenData Terms of Use (prohibits automated access/monitoring)</td><td class="mono"><a href="https://www.drivendata.org/termsofuse/">https://www.drivendata.org/termsofuse/</a></td><td>why no leaderboard scraper exists in this repository</td></tr>
 <tr><td>DrivenData staff (chrisk-dd, 2026-09-23) - test-set details / Phase 2</td><td class="mono"><a href="https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527">https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527</a></td><td>no further details shared; Phase 2 uses &quot;a test set that is updated by expert review of all Phase 1 submissions&quot;</td></tr>
 <tr><td>USGS Siler (2022) - slip &amp; dilation tendency, Quaternary faults, Great Basin</td><td class="mono"><a href="https://doi.org/10.5066/P9YL58W6">https://doi.org/10.5066/P9YL58W6</a></td><td>built &#x27;to help identify faults ... likely to host as-yet-undiscovered hydrothermal processes&#x27;; 37,811 in-footprint segments used</td></tr>
 <tr><td>USGS Siler (2022) - ScienceBase item page</td><td class="mono"><a href="https://www.sciencebase.gov/catalog/item/6296974dd34ec53d276bb33d">https://www.sciencebase.gov/catalog/item/6296974dd34ec53d276bb33d</a></td><td>purpose statement quoted verbatim in docs/research/h40-hypotheses.md</td></tr>
@@ -608,7 +670,7 @@ estimates. No variogram is fitted; they are two-scale Gaussian-weighted local me
 pinned, and the pin is what is verified.</li>
 </ul>
 
-<p class="mut">Generated 20261005T070000Z by <code>scripts/build_site.py</code> from
-<code>gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-manifest.json</code>. Every number on this page is read from that manifest or
+<p class="mut">Generated 20261005T080000Z by <code>scripts/build_site.py</code> from
+<code>gemsdoe39-h40-f-offcat-gbm-20261005T080000Z-manifest.json</code>. Every number on this page is read from that manifest or
 recomputed from the GeoTIFF bytes at generation time.</p>
 </div></body></html>

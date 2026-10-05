@@ -159,10 +159,31 @@ def test_binary_emission_is_never_worse_than_scaling_down():
 
 
 # ------------------------------------------------------------------- SPRT
-def test_sprt_boundaries_are_wald():
-    d = sprt_pairwise([], p0=0.5, p1=0.7, alpha=0.05, beta=0.10)
-    assert abs(d["upper"] - math.log(0.90 / 0.05)) < 1e-12
-    assert abs(d["lower"] - math.log(0.10 / 0.95)) < 1e-12
+def test_sprt_boundaries_are_available_under_both_conventions():
+    """The repo default is the STRICTER anytime-valid (Ville) boundary.
+
+    Two audits of this repository chose different conventions.  Wald's (1945)
+    classic cutoffs log((1-beta)/alpha) / log(beta/(1-alpha)) are what the project
+    charter names; theVille/test-martingale cutoffs log(1/alpha) / log(beta) stay
+    valid under optional stopping and are strictly more conservative.  Rather than
+    pick one silently, the default is the conservative one and every result carries
+    the other convention as ``alt_decision`` -- so a promotion claimed here also
+    holds under the stricter reading.
+    """
+    v = sprt_pairwise([], p0=0.5, p1=0.7, alpha=0.05, beta=0.10)
+    assert v["boundary_method"] == "ville"
+    assert v["upper"] == pytest.approx(math.log(1 / 0.05))
+    assert v["lower"] == pytest.approx(math.log(0.10))
+    assert v["alt_boundary_method"] == "wald"
+    assert v["alt_upper"] == pytest.approx(math.log(0.90 / 0.05))
+    w = sprt_pairwise([], p0=0.5, p1=0.7, alpha=0.05, beta=0.10, boundary="wald")
+    assert w["upper"] == pytest.approx(math.log(0.90 / 0.05))
+    assert w["lower"] == pytest.approx(math.log(0.10 / 0.95))
+    # ville is stricter on both sides
+    assert v["upper"] > w["upper"] and v["lower"] < w["lower"]
+    # 8 all-wins crosses Wald's bound for a 9-win test but not Ville's 9-win test
+    assert sprt_pairwise([True] * 8, boundary="wald")["decision"] == "continue"
+    assert sprt_pairwise([True] * 9)["decision"] == "accept_H1"
 
 
 def test_sprt_stops_only_at_a_boundary_and_reports_consistent_counts():

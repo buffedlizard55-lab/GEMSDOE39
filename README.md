@@ -16,25 +16,31 @@ reproduced verbatim in [§ Permanent project charter](#permanent-project-charter
 
 | | |
 |---|---|
-| **Primary artifact (submit this one)** | [`docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-zeros.tif`](docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-zeros.tif) |
+| **Primary artifact (submit this one)** | [`docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T080000Z-nan.tif`](docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T080000Z-nan.tif) |
 | Site with the big yellow button | <https://buffedlizard55-lab.github.io/GEMSDOE39/> |
 | How to upload, step by step | [docs/executive-summary.html](docs/executive-summary.html) |
 | Submission **Name** | `gemsdoe39-h40-f-offcat-gbm` |
 | Submission **Note** | see § Submission name and note below |
-| NaN-outside twin (identical pixels) | `docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-nan.tif` |
-| Full machine-readable receipt | `docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T070000Z-manifest.json` |
+| Zeros-outside fallback (identical pixels) | `docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T080000Z-zeros.tif` |
+| Full machine-readable receipt | `docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T080000Z-manifest.json` |
 
-Both twins carry **exactly the same predicted pixels**; they differ only in how
-the area outside the study footprint is encoded (`0.0` vs `NaN`). Both satisfy the
-organizer's format rule, *"data outside the bounds is null or nan"* and *"a single
-layer of float32 values between 0 and 1"*
-([page 967](https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/)).
+Both twins carry **exactly the same 45,962 predicted pixels**; they differ only in
+how the area outside the study footprint is encoded (`NaN` vs `0.0`).
 
-**Submit the `-zeros` twin.** Reason, from evidence rather than preference: the
-highest-scoring artifact in this project's family (`h33-2-b2`, **0.2778**) is the
-`-zeros` twin, and zeros-outside cannot trigger the
-`Predicted values must be in range [0, 1]` validator error under any uploader
-that mishandles NaN.
+**Submit the `-nan` twin.** Evidence, not preference:
+
+* the published format says *"data outside the bounds is null or nan"*
+  ([page 967](https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/));
+* `sample_submission.tif` is itself NaN-outside (7,111,787 NaN cells);
+* five of the owner-reported **scored** artifacts in `registry/live_scores.json`
+  are `-nan` files (0.1855, 0.1922, 0.2449, 0.2477, 0.2600), so NaN-outside is
+  demonstrably accepted and scored;
+* the merged independent validator returns **14/14** for the NaN twin and 13/14
+  for the zeros twin (which fails `nan_only_outside_footprint`).
+
+Keep the zeros twin only as a fallback if an uploader rejects NaN with
+`Predicted values must be in range [0, 1]`. Writing it now requires an explicit
+`allow_non_spec_outside=True`, so it cannot be produced by accident.
 
 ---
 
@@ -64,11 +70,11 @@ that mishandles NaN.
 | instrument I2 truth coverage | 20.37% | 37.4% | 1.84× |
 | pooled instrument DTI (I2) | 0.0640 | **0.1391** | **2.173×** |
 | pooled instrument DTI (I1, hidden catalogue) | 0.0059 | 0.0033 | 0.56× (see caveat) |
-| leakage (dots on instrument truth) | — | 1.06% | gate is ≤2% |
-| sign SPRT vs anchor | — | `accept_H1` 21/29, LLR +2.979 | bound +2.8904 |
-| normal-mean SPRT vs anchor | — | `accept_H1`, LLR +2.919 | bound +2.8904 |
+| leakage (dots on instrument truth) | — | 1.02% | gate is ≤2% |
+| sign SPRT vs anchor | — | `accept_H1` 14/17, LLR +3.178 | bound +2.9957 (anytime-valid) |
+| normal-mean SPRT vs anchor | — | `accept_H1`, LLR +3.031 | bound +2.9957 (anytime-valid) |
 | max Jaccard vs any prior submission | — | 0.0093 | not a copy |
-| **calibrated price** | 0.2778 (measured) | **0.4848** (model) | — |
+| **calibrated price** | 0.2778 (owner-reported) | **0.4848** (model) | — |
 
 Price sensitivity — how much of the measured advantage has to survive the jump
 from the instrument to the organizer's labels:
@@ -446,6 +452,82 @@ tests/test_pipeline_smoke.py     round-1 smoke test
    ([thread 11527](https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527/7)).
    A geologically defensible submission therefore has value beyond its Phase 1
    number — which is a deliberate design input to this round, not an afterthought.
+
+
+---
+
+## Reconciliation with the parallel H39X-01 audit (merged 2026-10-05)
+
+Two independent audits of this repository landed on the same branch. The other one
+(H39X-01, commits `41de68a`…`d9777d8`, docs `docs/research-brief.md`,
+`docs/hypothesis-register.md`, `docs/current-feed.md`) reached the same core
+findings by a different route and is retained in full. Where the two disagree, both
+positions are recorded here rather than one being silently kept.
+
+**Independently converged (strong evidence — two audits, same answer):**
+
+* The hardcoded band-name list was wrong and had to be read from the raster's own
+  metadata. Both audits replaced it; `grid.py` now carries two readers
+  (`_band_names`/`read_bands` from H39X, `read_band_names`/`VERIFIED_BAND_ORDER`
+  from H40) and `read_all_bands` asserts the verified order before building
+  features.
+* The geodetic strain-rate bands (`geod_2ndinv`, `geod_shearrate`,
+  `geod_dilaterate`) were unreachable and are the most promising untapped layers.
+  H39X-01 is a strain/dilatation corridor detector; H40-D is a strain-rate
+  curvature-kink detector. They are different transforms of the same bands.
+* The live leaderboard top is **0.3262**, not the 0.3195 quoted in the standing
+  request. Both audits read the page on 2026-10-05.
+* Owner-reported scores and mirror provenance are not organizer-authenticated, and
+  every document must say so.
+
+**Disagreements, both sides recorded:**
+
+| question | H39X-01 audit | H40 audit (this round) | resolution |
+|---|---|---|---|
+| which twin to submit | NaN only; `write_submission` **rejected** zeros as non-spec | zeros, on the strength of the 0.2778 attribution | **NaN.** The zeros recommendation rested on attributing 0.2778 to a `-zeros` filename, and the GEMSDOE32 audit record labels that file `UNSCORED` in its own note string. With that attribution withdrawn, the spec, the template and five `-nan` scored artifacts all point to NaN. Zeros is retained as an opt-in fallback. |
+| SPRT boundary convention | anytime-valid / Ville: `log(1/α)`, `log(β)` | Wald (1945): `log((1−β)/α)`, `log(β/(1−α))`, as the charter names it | **Ville is the module default** (the stricter of the two) and every result also reports the Wald outcome as `alt_decision`. The promoted artifact clears **both**: sign LLR +3.178 and normal-mean LLR +3.031 against the Ville bound +2.9957. |
+| is the 0.2778 attribution safe to build on | no — "do not claim that score belongs to that exact raster without an official receipt" | the calibration is anchored on it | **Both are true and the distinction matters.** The *attribution* is owner-reported. The *calibration* is additionally self-checking: one two-parameter model reproduces 0.2778 exactly **and** 0.2707 against the observed 0.2708 from a nested pair whose 2,545-dot difference is re-derived from the rasters. A wrong pairing would be very unlikely to solve that consistently — but it is corroborating evidence, not a receipt. |
+| how many folds are enough | four large blocks; result `continue`, correctly refused promotion | 24 blocks × 2 seeds = 32 folds per instrument | Both are right about their own design. Four folds cannot cross a boundary that needs 9 all-wins; `folds_needed()` is now called **before** any fold is scored so the design is checked rather than discovered. |
+
+**Newly verified this round, from DrivenData staff (previously unavailable to either
+audit):**
+
+* **The score is pooled, not a mean of per-chunk scores.** "The public leaderboard
+  score is computed by pooling over all pixels in the public subset and computing a
+  single Tversky index… The private leaderboard score is computed the same way. The
+  final re-evaluation will be on the entire GeoDAWN area." — `chrisk-dd`,
+  DrivenData Staff, 2026-10-01,
+  [thread 11550](https://community.drivendata.org/t/leaderboard-aggregation-pooled-over-public-test-pixels-or-mean-of-per-chunk-scores/11550/2).
+  This is what licenses the H40 fold statistic: because the live metric is pooled,
+  a per-fold quantity that *sums* to the pooled change (`fold_score_delta`, exact
+  identity `D_cand·(s_cand − s_anchor)`) is a test of the claim the organizer
+  actually scores. A per-fold-DTI test is not.
+  It also refines `|G|`: **14,143 is the public-subset truth count**, and the
+  Final Round re-evaluates on the entire GeoDAWN area, where `|G|` will be larger.
+* **No further test-set detail exists to find.** "We're not sharing details about
+  the data sources, fault types, or coverage behind the test faults beyond what's
+  in the problem description." — `chrisk-dd`, 2026-09-23,
+  [thread 11527](https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527/7).
+
+**Carried over from the H39X-01 audit, unchanged and still binding:** its ten
+operating constraints (unique artifact, format before score, holdout before any
+weekly slot, SPRT not peeking, state assumptions, separate multiplicity from
+sequential stopping, no unsupported causal claims, source provenance, respect
+platform terms, core values); its protocol-deviation note that the H39X-01 recipe
+was registered *after* its holdout result and is therefore exploratory; and its AI
+disclosure requirement under the official rules.
+
+**Multiplicity, stated plainly for this round.** The H40 selection stage measured
+**19 pre-declared fusion variants on one instrument** and promoted the best. That
+is a multiplicity exposure the sign/mean SPRTs do not control for: with 19 tries at
+α = 0.05 the chance of at least one spurious `accept_H1` is material. The
+mitigations actually in place are (a) the grid was declared before measurement,
+(b) the winner had to clear *two* different sequential tests plus a leakage gate
+plus a hit-rate floor, and (c) the effect size is large (2.17× on pooled
+instrument DTI), not marginal. The mitigation that is **not** in place is a
+genuinely untouched confirmation set — there is none offline. This is the single
+largest statistical caveat on the promotion and it is the first thing a reviewer
+should attack.
 
 ---
 

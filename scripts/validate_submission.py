@@ -1,85 +1,122 @@
 #!/usr/bin/env python3
-"""Independent 12-point validation of a submission GeoTIFF.
+"""Validate a GEMS submission against the sample GeoTIFF and official format.
 
-Checks:
-  1. File is a readable GeoTIFF (rasterio).
-  2. Single band, dtype float32.
-  3. CRS EPSG:32611.
-  4. Shape (3730, 3292).
-  5. Geotransform matches the sample template exactly.
-  6. All in-footprint pixels are finite.
-  7. All in-footprint pixels are in [0, 1].
-  8. Outside-footprint pixels are NaN OR 0 (both accepted by DrivenData's validator;
-     we recommend NaN to match the sample, but the zeros variant is provided
-     for the "Predicted values must be in range [0, 1]" error some users see
-     when NaN is mishandled by a browser uploader).
-  9. Nodata set to NaN.
- 10. Reports positive-pixel count, min/max.
- 11. SHA-256 digest.
- 12. Prints a PASS / FAIL line.
+The competition problem page requires one float32 layer on the matching
+EPSG:32611 / 100 m grid, finite probabilities in [0,1] in the footprint, and
+null/NaN outside bounds. This validator uses the supplied sample raster as the
+source of truth for the grid and footprint; it will not silently validate a
+file against its own mask if the reference raster is missing.
 """
 from __future__ import annotations
-import argparse, hashlib, json, sys
+
+import argparse
+import hashlib
+import sys
 from pathlib import Path
+
 import numpy as np
 import rasterio
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("file")
-    ap.add_argument("--reference", default=str(ROOT / "data" / "sample_submission.tif"))
-    args = ap.parse_args()
-    p = Path(args.file)
-    ref = Path(args.reference)
-    checks = []
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1 << 20), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
-    def chk(name, ok, detail=""):
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("file", help="GeoTIFF submission to check")
+    parser.add_argument(
+        "--reference",
+        default=str(ROOT / "data" / "sample_submission.tif"),
+        help="Competition sample GeoTIFF (default: data/sample_submission.tif)",
+    )
+    args = parser.parse_args()
+    path = Path(args.file)
+    ref_path = Path(args.reference)
+    checks: list[tuple[str, bool, str]] = []
+
+    def check(name: str, ok: bool, detail: str = "") -> None:
         checks.append((name, bool(ok), detail))
         print(("PASS" if ok else "FAIL"), name, detail)
 
-    if not p.exists():
-        chk("file_exists", False, str(p)); return 1
-    try:
-        with rasterio.open(p) as s:
-            a = s.read(1)
-            chk("tiff_open", True)
-            chk("single_band", s.count == 1, f"count={s.count}")
-            chk("dtype_float32", s.dtypes[0] == "float32", s.dtypes[0])
-            chk("crs_epsg32611", str(s.crs).upper().startswith("EPSG:32611"), str(s.crs))
-            chk("shape_3730x3292", s.height == 3730 and s.width == 3292, (s.height, s.width))
-            if ref.exists():
-                with rasterio.open(ref) as r:
-                    chk("transform_matches", tuple(s.transform)[:6] == tuple(r.transform)[:6],
-                        tuple(s.transform)[:6])
-                    foot = np.isfinite(r.read(1))
-            else:
-                # fallback: use file's own finite mask
-                foot = np.isfinite(a)
-            fin = np.isfinite(a[foot])
-            chk("finite_inside_footprint", fin.all(), f"{fin.sum()}/{foot.sum()} finite")
-            inrng = fin & (a[foot] >= 0) & (a[foot] <= 1)
-            chk("range_01_inside", inrng.all(),
-                f"min={float(np.nanmin(a[foot])):.4f} max={float(np.nanmax(a[foot])):.4f}")
-            outside = a[~foot]
-            ok_out = bool(np.isnan(outside).all() or (outside == 0).all() or outside.size == 0)
-            chk("outside_nan_or_zero", ok_out,
-                f"nan={int(np.isnan(outside).sum())} zero={int((outside==0).sum())} other={int((~np.isnan(outside)&(outside!=0)).sum())}")
-            chk("nodata_nan", s.nodata is None or (isinstance(s.nodata, float) and np.isnan(s.nodata)),
-                f"nodata={s.nodata}")
-            pos = int(((a > 0) & foot).sum())
-            print(f"  positive_pixels_inside: {pos}")
-    except Exception as e:
-        chk("read/parse", False, str(e))
+    if not path.is_file():
+        check("file_exists", False, str(path))
         return 1
-    h = hashlib.sha256(p.read_bytes()).hexdigest()
-    print(f"  sha256: {h}")
-    print(f"  bytes:  {p.stat().st_size:,}")
-    ok = all(c[1] for c in checks)
-    print("PASS" if ok else "FAIL")
-    return 0 if ok else 1
+    if not ref_path.is_file():
+        check("reference_exists", False, f"{ref_path} (restore core data or pass --reference)")
+        return 1
+
+    try:
+        with rasterio.open(ref_path) as ref:
+            ref_meta = {
+                "crs": ref.crs,
+                "width": ref.width,
+                "height": ref.height,
+                "transform": tuple(ref.transform)[:6],
+                "bounds": tuple(ref.bounds),
+            }
+            sample = ref.read(1)
+            footprint = np.isfinite(sample)
+        with rasterio.open(path) as src:
+            array = src.read(1)
+            check("readable_geotiff", src.driver == "GTiff", f"driver={src.driver}")
+            check("single_band", src.count == 1, f"count={src.count}")
+            check("float32", src.dtypes == ("float32",), f"dtypes={src.dtypes}")
+            check("epsg_32611", src.crs is not None and src.crs.to_epsg() == 32611, f"crs={src.crs}")
+            check("crs_matches_sample", src.crs == ref_meta["crs"], f"crs={src.crs}")
+            check(
+                "shape_matches_sample",
+                src.width == ref_meta["width"] and src.height == ref_meta["height"],
+                f"shape={(src.height, src.width)} expected={(ref_meta['height'], ref_meta['width'])}",
+            )
+            check(
+                "transform_matches_sample",
+                tuple(src.transform)[:6] == ref_meta["transform"],
+                f"transform={tuple(src.transform)[:6]}",
+            )
+            check("bounds_match_sample", tuple(src.bounds) == ref_meta["bounds"], f"bounds={tuple(src.bounds)}")
+            check(
+                "resolution_100m",
+                abs(src.transform.a) == 100.0 and abs(src.transform.e) == 100.0,
+                f"pixel_size=({src.transform.a},{src.transform.e})",
+            )
+            check(
+                "nodata_nan",
+                src.nodata is not None and bool(np.isnan(src.nodata)),
+                f"nodata={src.nodata}",
+            )
+
+        # Validate all prediction cells. NaN is allowed only outside the sample footprint.
+        inside = array[footprint]
+        finite_inside = np.isfinite(inside)
+        in_range = finite_inside & (inside >= 0.0) & (inside <= 1.0)
+        outside = array[~footprint]
+        check("finite_inside_footprint", bool(finite_inside.all()), f"{int(finite_inside.sum()):,}/{int(footprint.sum()):,}")
+        check(
+            "range_0_to_1_inside_footprint",
+            bool(in_range.all()),
+            f"min={float(np.nanmin(inside)):.8g} max={float(np.nanmax(inside)):.8g}",
+        )
+        check("nan_only_outside_footprint", bool(np.isnan(outside).all()), f"outside_nan={int(np.isnan(outside).sum()):,}/{outside.size:,}")
+        check("no_infinity_anywhere", not bool(np.isinf(array).any()), f"infinities={int(np.isinf(array).sum())}")
+        positive = int(np.count_nonzero((array > 0.0) & footprint))
+        print(f"  positive_pixels_inside: {positive:,}")
+        print(f"  sha256: {sha256_file(path)}")
+        print(f"  bytes: {path.stat().st_size:,}")
+    except Exception as exc:
+        check("read_and_audit", False, f"{type(exc).__name__}: {exc}")
+        return 1
+
+    passed = sum(ok for _, ok, _ in checks)
+    failed = len(checks) - passed
+    print(f"Result: {'PASS' if failed == 0 else 'FAIL'} ({passed}/{len(checks)} checks passed)")
+    return 0 if failed == 0 else 1
 
 
 if __name__ == "__main__":
