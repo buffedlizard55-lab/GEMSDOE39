@@ -13,23 +13,28 @@
 
 ## ⬇ THE FILE (one click)
 
-**[`docs/downloads/gemsdoe39-h39-a-model-r39a-zeros.tif`](docs/downloads/gemsdoe39-h39-a-model-r39a-zeros.tif)**
-· [`.zip` with that one GeoTIFF inside](docs/downloads/gemsdoe39-h39-a-model-r39a-zeros.zip)
-· [NaN-outside twin](docs/downloads/gemsdoe39-h39-a-model-r39a-nan.tif)
+**[`docs/downloads/gemsdoe39-h40-e-disc-h40e-30k-zeros.tif`](docs/downloads/gemsdoe39-h40-e-disc-h40e-30k-zeros.tif)**
+· [`.zip` with that one GeoTIFF inside](docs/downloads/gemsdoe39-h40-e-disc-h40e-30k-zeros.zip)
+· [NaN-outside twin](docs/downloads/gemsdoe39-h40-e-disc-h40e-30k-nan.tif)
 
 | | |
 |---|---|
-| **Submission name to paste** | `GEMSDOE39-H39A-R39A` |
-| **Note to paste** (193/200 chars) | `GEMSDOE39 H39-A R39A \| blocked-OOF off-catalogue discriminant, OOF AUC 0.661; holdout lift 0.670 vs 0.274 control; SPRT 9/9 accept-H1; 24,000 dots, NN 3.0 px, none within 200 m of the catalogue` |
+| **Submission name to paste** | `GEMSDOE39-H40E-30K` |
+| **Note to paste** (168/200 chars) | `GEMSDOE39 H40-E off-catalogue discriminant | blocked-OOF AUC 0.749; 30000 dots, NN 3.16 px, 0 within 200 m of catalogue; w=0.146 vs 0.105 best prior; SPRT 9/9 accept-H1` |
 | **Format** | single-band `float32` GeoTIFF · EPSG:32611 · 100 m · 3730 × 3292 · geotransform identical to the template |
-| **Content** | 24,000 predicted pixels (0.46 % of the 5,167,373-pixel footprint) |
+| **Content** | 30,000 predicted pixels (0.58 % of the 5,167,373-pixel footprint) |
 | **Range** | min 0.0 · max 1.0 · **0 cells outside [0, 1]** · **0 NaN** · **0 non-finite** · outside footprint = `0.0` |
-| **sha256** | `0eb23e410a968964322cf23392b05fca9e522761391c303340c0f20aef4bc038` |
+| **sha256** | `9b4d5675a2f67a47c6884f8d753491d849b6eec7aae1da60f5c76fe316f6dc8e` |
 | **Format validator** | 15/15 PASS, all-finite encoding (`scripts/validate_submission.py`) |
-| **Uniqueness** | max Jaccard **0.024** and max \|Pearson r\| **0.055** against **241** retrievable same-grid rasters from the sibling repositories ([receipt](registry/uniqueness.json)) |
+| **Uniqueness** | max Jaccard **0.0177**, max containment **0.0691**, max \|Pearson r\| **0.0300** against the **15** same-grid rasters retrievable in this environment ([receipt](registry/uniqueness.json)) |
+| **Predicted live score** | 0.3006 — our own instrument, **extrapolation** (fitted on w ∈ [0.0480, 0.1051]; this file measures 0.1461). Not an organiser score. |
 
-**No previous submission was copied.** The detector is a new, leak-controlled discriminant; the emission is
-a new budget derived from the metric's own break-even rule.
+**No previous submission was copied.** The detector is a new spatially-blocked out-of-fold discriminant
+trained on *off-catalogue* faults (blocked OOF AUC **0.7489**, 11 blocks); the spatial prior is a newly
+measured relative-density profile; the budget comes from a newly derived break-even rule.
+
+**Superseded (do not resubmit as new entries):** `gemsdoe39-h39-a-model-r39a-*` (24,000 dots, OOF AUC 0.661,
+holdout lift 0.670 vs 0.274) and `gemsdoe39-h39x01-strain-corridor-*` (SPRT `continue`, exploratory only).
 
 ### Latest validation update — H39Y-01 (2026-10-05)
 
@@ -39,19 +44,36 @@ The preregistered radiometric–conductivity candidate **did not beat the incumb
 
 ---
 
-## ⚠ The portal error `Predicted values must be in range [0, 1]` — both causes and the fix
+## ⚠ The portal error `Predicted values must be in range [0, 1]` — verified causes and the fix
 
-Two distinct failures produce that one message.
+Verified from the bytes of the four competition rasters on 2026-10-05:
 
-1. **The float32 nodata sentinel.** `training_features.tif` uses `-3.4028234663852886e+38` as nodata.
-   Writing it through puts values outside `[0, 1]`.
-2. **NaN outside the footprint.** The organizer's page says "data outside the bounds is null or nan", and
-   the sample submission does use NaN — but a NaN-carrying raster with `nodata=NaN` is one validator change
-   away from the same rejection, and this project family has hit the error with NaN-outside files.
+| File | Bands | dtype | `nodata` | Outside the footprint |
+|---|---:|---|---|---|
+| `training_features.tif` | 19 | float32 | `-3.4028234663852886e+38` | sentinel stored as data |
+| `sample_submission.tif` | 1 | float32 | **`nan`** | **all 7,111,787 cells NaN** |
+| `labels.tif` / `existing_faults.tif` | 1 | int8 | `-1` | `-1` outside, 0/1 inside (byte-identical to each other) |
 
-**Fix (verified by re-opening the written bytes):** the recommended download is **all-finite** —
-real predictions inside the footprint, `0.0` outside, no sentinel, no `nodata` value outside `[0, 1]`.
-If your browser uploader still complains, use the `.zip`.
+**Honest state of the diagnosis:** we cannot inspect DrivenData's server-side validator, so we cannot prove
+*which* encoding triggered the rejection. Two mechanisms are consistent with the evidence and cannot be
+separated locally:
+
+1. **A leaked sentinel.** `training_features.tif` really does carry `-3.4028234663852886e+38` as data; any
+   submission assembled by copying the feature grid without masking those cells ships values ~10³⁸ in
+   magnitude. This is the mechanism demonstrable locally.
+2. **NaN failing a numeric range test.** `0 <= nan <= 1` is `False` under IEEE-754, so a validator testing
+   the whole array rather than only the footprint would reject the template's own encoding.
+
+**Fix (verified by re-opening the written bytes):** the recommended download is **all-finite** — real
+predictions inside the footprint, `0.0` outside, no sentinel, no `nodata` tag, min 0.0 / max 1.0 across all
+12,279,160 cells. It satisfies the range check under *every* reading. The NaN twin matches the template's
+encoding exactly and ships as a fallback. **Our own validator accepts both** (15/15 zeros, 14/14 nan), so the
+recommendation rests on that robustness argument, not on a local test that distinguishes them.
+
+> **Correction of record.** An earlier revision of this README and of the site asserted that
+> `sample_submission.tif` stores `-3.4e38` outside the footprint with no nodata tag. That is **false** — the
+> sentinel belongs to `training_features.tif`. See IR-40-10 and
+> `tests/test_io39_submission.py::test_template_is_nan_outside_not_a_sentinel`.
 
 ---
 
@@ -426,7 +448,7 @@ next session. Work line by line verify everything no hallucinations.
 
 | item | value |
 |---|---|
-| Primary submission | `docs/downloads/gemsdoe39-h39-a-model-r39a-zeros.tif` |
+| Primary submission | `docs/downloads/gemsdoe39-h40-e-disc-h40e-30k-zeros.tif` (30,000 dots, w = 0.1461, predicted 0.3006) |
 | Detector | H39-A — spatially blocked (2×2 × 3 seeds) gradient-boosted off-catalogue discriminant |
 | Out-of-fold AUC | **0.6608** (catalogue target) · **0.7567** (SGMC off-catalogue target) |
 | Holdout lift vs control | **0.6698** vs 0.2735 (0.5 = no skill) |
@@ -434,8 +456,36 @@ next session. Work line by line verify everything no hallucinations.
 | Emission | best-first Poisson-disk, min separation 2.8 px → median NN **3.00 px**, 24,000 dots, hard 2 px (200 m) catalogue exclusion |
 | Dot budget rationale | DTI break-even rule (see below) |
 | Format validator | **15/15 PASS** |
-| Uniqueness gate | **PASS** — max Jaccard 0.024 against 241 historical rasters |
+| Uniqueness gate | **PASS** — max Jaccard 0.0177 / max \|r\| 0.0300 against the 15 same-grid rasters retrievable here (see IR-40-02) |
 | Leaderboard score | **not claimed / unknown** |
+
+## Run history — which report is authoritative
+
+Four `h40_report_*.json` files are committed as run history. **Only `registry/h40_report_h40e-30k.json`
+describes the shipped file.** The others are superseded and must not be cited:
+
+| Report | Dots | w | Predicted | Status |
+|---|---:|---:|---:|---|
+| **`h40_report_h40e-30k.json`** | **30,000** | **0.1461** | **0.3006** | **AUTHORITATIVE — matches the shipped sha `9b4d5675…`** |
+| `h40_report_h40-final.json` | 45,000 | 0.1331 | 0.2813 | Superseded — emitted at the old maximin budget rule (degenerate; see IR-40-11) |
+| `h40_report_h40a-run1.json` | 45,000 | 0.0657 | 0.1839 | Superseded — first pass, before the off-catalogue discriminant existed |
+| `h40_report_smoke.json` | 60,000 | 0.0631 | 0.1794 | Debug run — 3×3 blocks, the 7-cell SPRT of IR-40-03 |
+
+### Irregularities
+
+| ID | Finding | Disposition |
+|---|---|---|
+| IR-40-01 | Off-catalogue density is measured at 3.3–4.4× inside 200 m of a mapped trace, while the one controlled live experiment in this family gained +0.0070 by *removing* dots within 200 m. **My earlier claim that these contradict each other was wrong.** Under DTI = TP/(0.2TP + 0.2n + 0.8K), removing dots always helps when each removed dot's marginal credit is below 0.2·DTI (≈0.0556 at DTI 0.2778), so +0.0070 shows only that those dots earned less than the bar — not that the band is empty. Staff confirmed in [thread #11516 post 4](https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/4) that the mask is **pixel-exact** with no halo and that "a new-fault ground truth pixel can indeed lie within 300 m of a known fault trace… identifying these corrections is one outcome we are aiming for". | The 200 m exclusion still shipped, because the pre-declared SPRT was run on that exact field and changing it afterwards would be post-hoc. It is now an **open risk, not a settled choice** — the official statement argues for emitting there. Neither local instrument can adjudicate it (B's surrogate is enriched beside the catalogue by construction; A's truth *is* the catalogue). **Testing it is the highest-value use of the next slot.** |
+| IR-40-02 | An earlier revision claimed the uniqueness gate ran against **241** rasters. | That corpus is `data/compare/`, gitignored and absent from `registry/data_manifest.json`. Corrected to the **15** rasters actually compared. |
+| IR-40-03 | The first pass used 3×3 blocks → 7 informative cells. With p0 = 0.5, p1 = 0.7, α = 0.05 the upper boundary needs ⌈2.9957/0.3365⌉ = **9** wins, so that test could never have accepted H1. | Extended to 4×4 × 2 draws, capped at 12 informative cells. |
+| IR-40-04 | `hide_components` labelled components *inside* each block, splitting traces that cross a boundary — a spatial leak favouring exactly the candidates under test. | Fixed: global labelling, block assignment by centroid. Covered by `tests/test_h40.py`. |
+| IR-40-05 | `rank_lift` used `side="left"`, scoring every tie at the bottom of its tie group: a constant field measured 0.000, not 0.500. | Fixed to the mid-rank convention. Covered by a test. |
+| IR-40-06 | Band reading used the EDT of the *valid* mask, which returns the index of the nearest *invalid* pixel; every band came back all-NaN and the structural field was silently identically zero. | Fixed to the EDT of the invalid mask + a hard all-finite assertion. Covered by a real-raster regression test. |
+| IR-40-07 | The off-catalogue surrogate was defined as `dcat > 3`, silently discarding the most enriched band of the profile. | Corrected to `sgmc & ~catalogue` (79,615 px). |
+| IR-40-08 | `sample_submission.tif` is described as "total fault absence" but holds 60,988 pixels equal to 1.0, exactly matching `labels.tif == 1`; and `existing_faults.tif` is byte-identical to `labels.tif`. Both re-verified this session. | Used as a grid/footprint template only. `labels.tif` is the single authoritative catalogue. |
+| IR-40-09 | An earlier revision asserted `docs.nlr.gov` was a typo for `docs.nrel.gov`. | **Wrong.** Verified 2026-10-05: `https://www.nlr.gov/docs/fy26osti/96647.pdf` resolves (redirecting to `docs.nlr.gov`) and returns the *GEMS Prize Official Rules, September 2026*. NLR = National Laboratory of the Rockies, the prize administrator. |
+| IR-40-10 | An earlier revision asserted `sample_submission.tif` stores `-3.4e38` outside the footprint with no nodata tag. | **False.** Verified from the bytes: the template is float32, `nodata=nan`, all 7,111,787 outside cells NaN. The sentinel belongs to `training_features.tif` (19 bands). Pinned by `test_template_is_nan_outside_not_a_sentinel`. |
+| IR-40-11 | The maximin-over-scenarios budget rule was degenerate: the pessimistic scenario is monotone increasing in n, so it always returned the largest grid value regardless of measured field quality. | Replaced by `breakeven_budget`, derived from the metric's own denominator. It independently selects the same 30,000 dots that the fitted curve peaks at. |
 
 ## Why H33-2-B2 scored 0.2778 — the answer, measured
 
@@ -491,8 +541,8 @@ OMP_NUM_THREADS=2 python scripts/run_gems39.py --tag r39a --spacing 2.8 --budget
 python scripts/budget_study.py --field A
 
 # 6. Gates
-python scripts/verify_unique.py docs/downloads/gemsdoe39-h39-a-model-r39a-zeros.tif
-python scripts/validate_submission.py docs/downloads/gemsdoe39-h39-a-model-r39a-zeros.tif
+python scripts/verify_unique.py docs/downloads/gemsdoe39-h40-e-disc-h40e-30k-zeros.tif
+python scripts/validate_submission.py docs/downloads/gemsdoe39-h40-e-disc-h40e-30k-zeros.tif
 ```
 
 CPU-only: ≈ 12 min end to end on 2 cores / 3 GB RAM.

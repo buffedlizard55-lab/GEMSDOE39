@@ -56,7 +56,25 @@ def main():
     av = a[foot].astype(np.float64)
 
     rows = []
-    files = sorted(list((DATA / "compare").glob("*.tif")) + list((DATA / "scored").glob("*.tif")))
+    # The zeros/nan twins of the *same* run are the same submission in two
+    # encodings, so comparing against them is vacuous (Jaccard 1.0 by
+    # construction).  Strip the encoding suffix before deciding identity.
+    def stem(pth):
+        n = pth.name[:-4] if pth.name.endswith(".tif") else pth.name
+        for suf in ("-zeros", "-nan", "_zeros", "_nan"):
+            if n.endswith(suf):
+                return n[: -len(suf)]
+        return n
+
+    self_stem = stem(cand_path)
+    # Our own previously shipped submissions matter most: a "unique submission"
+    # that reproduces an earlier file from this repository is not unique at all.
+    files = sorted(p for p in set(
+        list((DATA / "compare").glob("*.tif"))
+        + list((DATA / "scored").glob("*.tif"))
+        + [p for p in (ROOT / "docs" / "downloads").glob("*.tif")
+           if p.resolve() != cand_path.resolve()])
+        if stem(p) != self_stem)
     for p in files:
         try:
             with rasterio.open(p) as s:

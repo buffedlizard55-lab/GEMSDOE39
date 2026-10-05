@@ -101,3 +101,65 @@ def test_sha256_is_stable_and_matches_a_known_digest(tmp_path):
     p.write_bytes(struct.pack("<f", 0.5))
     assert io39.sha256(p) == io39.sha256(p)
     assert len(io39.sha256(p)) == 64
+
+
+# ---------------------------------------------------------------------------
+# Regression tests for the 2026-10-05 documentation correction.
+#
+# An earlier revision asserted that `sample_submission.tif` stores the
+# -3.4e38 sentinel outside the footprint with no nodata tag.  That is false:
+# the sentinel belongs to `training_features.tif`, and the template is
+# NaN-outside with nodata=nan.  These tests pin the verified facts so the
+# wrong claim cannot silently return, and pin the property that actually
+# makes the shipped file safe under the portal's "[0, 1]" range check.
+# ---------------------------------------------------------------------------
+
+SHIPPED_ZEROS = ROOT / "docs/downloads/gemsdoe39-h40-e-disc-h40e-30k-zeros.tif"
+SHIPPED_NAN = ROOT / "docs/downloads/gemsdoe39-h40-e-disc-h40e-30k-nan.tif"
+SAMPLE = ROOT / "data/sample_submission.tif"
+FEATURES = ROOT / "data/training_features.tif"
+
+
+@pytest.mark.skipif(not SAMPLE.exists(), reason="competition raster not restored")
+def test_template_is_nan_outside_not_a_sentinel():
+    with rasterio.open(SAMPLE) as ds:
+        assert ds.count == 1 and ds.dtypes[0] == "float32"
+        # The template's own convention, read from the file rather than assumed.
+        assert np.isnan(ds.nodata), f"expected nodata=nan, got {ds.nodata!r}"
+        band = ds.read(1)
+    assert not np.isfinite(band).all(), "template must be NaN outside the footprint"
+    fin = band[np.isfinite(band)]
+    assert fin.min() >= 0.0 and fin.max() <= 1.0
+
+
+@pytest.mark.skipif(not FEATURES.exists(), reason="competition raster not restored")
+def test_the_sentinel_belongs_to_the_features_raster():
+    with rasterio.open(FEATURES) as ds:
+        assert ds.count == 19
+        assert np.isclose(ds.nodata, -3.4028234663852886e+38, rtol=1e-12), ds.nodata
+
+
+@pytest.mark.skipif(not SHIPPED_ZEROS.exists(), reason="submission not generated")
+@pytest.mark.skipif(not SAMPLE.exists(), reason="competition raster not restored")
+def test_shipped_file_is_all_finite_and_in_range_everywhere():
+    """The property that makes the zeros encoding robust: the range check
+    holds under *every* reading of it, inside and outside the footprint."""
+    with rasterio.open(SHIPPED_ZEROS) as ds:
+        a = ds.read(1)
+        assert ds.count == 1 and ds.dtypes[0] == "float32"
+        assert ds.nodata is None, "no nodata tag may be written"
+        assert a.shape == (3730, 3292)
+    assert np.isfinite(a).all(), "no NaN and no infinity anywhere in the file"
+    assert a.min() >= 0.0 and a.max() <= 1.0
+    assert int((a == 1.0).sum()) == 30_000
+    assert set(np.unique(a).tolist()) <= {0.0, 1.0}
+
+
+@pytest.mark.skipif(not SHIPPED_ZEROS.exists() or not SHIPPED_NAN.exists(),
+                    reason="submission not generated")
+def test_the_two_encodings_agree_on_the_prediction():
+    with rasterio.open(SHIPPED_ZEROS) as ds:
+        z = ds.read(1)
+    with rasterio.open(SHIPPED_NAN) as ds:
+        n = ds.read(1)
+    assert np.array_equal(z == 1.0, np.nan_to_num(n) == 1.0)

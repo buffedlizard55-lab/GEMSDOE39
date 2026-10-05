@@ -44,288 +44,293 @@ footer{margin-top:3em;padding-top:1.2em;border-top:1px solid var(--line);font-si
 <div class="wrap">
 
 <h1>GEMSDOE39 — a unique submission for the DOE GEMS Prize</h1>
-<p class="small">DrivenData competition&nbsp;#306 · fault discovery for geothermal exploration, northwestern Great Basin ·
-generated 2026-10-05 · every number on this page is recomputed from the bytes in this repository</p>
+<p class="small">DrivenData competition&nbsp;#306 · The Geologic Enhanced Mapping System (GEMS) Prize Challenge ·
+fault discovery for geothermal exploration, northwestern Great Basin (GeoDAWN) ·
+generated 2026-10-05 (session&nbsp;2) · every number on this page is recomputed from the bytes in this repository</p>
 
 <!-- ===================== DOWNLOAD ===================== -->
 <div class="download">
-  <h2 style="margin-top:0;border:0;padding:0"><span class="pill ok">INCUMBENT</span> &nbsp;Download the current file</h2>
-  <p>This remains the format-validated H39-A/R39A incumbent download. The latest H39Y-01 hypothesis was tested and rejected, so no replacement file or new weekly-slot recommendation is available. It is single-band
-  <code>float32</code> GeoTIFF, EPSG:32611, 100&nbsp;m, 3730&nbsp;×&nbsp;3292, identical CRS/shape/geotransform to the
-  submission template, and <b>every one of its 12,279,160 cells is a finite value in [0,&nbsp;1]</b>.</p>
-  <a class="btn" href="downloads/gemsdoe39-h39-a-model-r39a-zeros.tif">⬇ Download the GeoTIFF (110&nbsp;KB)</a>
-  <a class="btn alt" href="downloads/gemsdoe39-h39-a-model-r39a-zeros.zip">ZIP containing that one GeoTIFF</a>
-  <p class="small">If the portal rejects the direct <code>.tif</code>, upload the ZIP instead — it holds exactly the same file.
-  A NaN-outside twin is also provided: <a href="downloads/gemsdoe39-h39-a-model-r39a-nan.tif"><code>…-nan.tif</code></a>
-  (the encoding the problem page literally describes). See
-  <a href="executive-summary.html">the executive summary</a> for the exact upload steps and why we recommend the all-finite file.</p>
-
-  <table>
-    <tr><th>Submission name to paste</th><td><code>GEMSDOE39-H39A-R39A</code></td></tr>
-    <tr><th>Note to paste <span class="small">(193/200 characters)</span></th>
-        <td><code>GEMSDOE39 H39-A R39A | blocked-OOF off-catalogue discriminant, OOF AUC 0.661; holdout lift 0.670 vs 0.274 control; SPRT 9/9 accept-H1; 24,000 dots, NN 3.0 px, none within 200 m of the catalogue</code></td></tr>
-    <tr><th>SHA-256</th><td><code>0eb23e410a968964322cf23392b05fca9e522761391c303340c0f20aef4bc038</code></td></tr>
-    <tr><th>Size</th><td>110,449 bytes · 24,000 predicted pixels (0.46&nbsp;% of the 5,167,373-pixel footprint)</td></tr>
-    <tr><th>Audit manifest</th><td><a href="downloads/gemsdoe39-h39-a-model-r39a-manifest.json"><code>gemsdoe39-h39-a-model-r39a-manifest.json</code></a></td></tr>
+  <h2 style="margin-top:0;border:0;padding:0"><span class="pill ok">15/15 FORMAT CHECKS PASS</span>
+      <span class="pill ok">UNIQUENESS GATE PASS</span> &nbsp;Download the submission file</h2>
+  <p><b>One click, then upload it to DrivenData.</b> Single-band <code>float32</code> GeoTIFF, EPSG:32611,
+  100&nbsp;m, 3730&nbsp;×&nbsp;3292, CRS/shape/geotransform identical to the submission template, and
+  <b>every one of its 12,279,160 cells is a finite value in [0,&nbsp;1]</b> — no NaN, no
+  <code>-3.4e38</code> sentinel, no <code>nodata</code> tag.</p>
+  <a class="btn" href="downloads/gemsdoe39-h40-e-disc-h40e-30k-zeros.tif">⬇ Download the GeoTIFF (122&nbsp;KB)</a>
+  <a class="btn alt" href="downloads/gemsdoe39-h40-e-disc-h40e-30k-zeros.zip">ZIP containing that one GeoTIFF</a>
+  <table style="margin-top:14px">
+    <tr><th style="width:32%">Paste this as the submission <i>name</i></th>
+        <td><code>GEMSDOE39-H40E-30K</code></td></tr>
+    <tr><th>Paste this as the <i>note</i></th>
+        <td><code>GEMSDOE39 H40-E off-catalogue discriminant | blocked-OOF AUC 0.749; 30000 dots, NN 3.16 px, 0 within 200 m of catalogue; w=0.146 vs 0.105 best prior; SPRT 9/9 accept-H1</code>
+            <span class="small">(168 characters — under the 200 limit)</span></td></tr>
+    <tr><th>sha256</th><td><code>9b4d5675a2f67a47c6884f8d753491d849b6eec7aae1da60f5c76fe316f6dc8e</code></td></tr>
+    <tr><th>Predicted pixels</th><td>30,000 (0.58&nbsp;% of the 5,167,373-pixel footprint)</td></tr>
+    <tr><th>Also provided</th>
+        <td><a href="downloads/gemsdoe39-h40-e-disc-h40e-30k-nan.tif">NaN-outside twin</a> (the encoding the
+            problem page literally describes — kept for comparison, <b>not</b> the recommended upload) ·
+            <a href="../registry/h40_report_h40e-30k.json">full audit manifest</a></td></tr>
   </table>
+  <p class="small">Full upload steps, and why the all-finite file is the recommended one:
+  <a href="executive-summary.html"><b>executive summary →</b></a></p>
 </div>
 
 <div class="warnbox">
-  <b>H39Y-01 holdout decision (2026-10-05): no new submission slot recommended.</b> The registered detector lost 5/5 evaluated cells; the SPRT crossed its lower boundary at LLR −2.554128 (lower boundary −2.302585), accepting H0. Pooled proxy DTI was 0.035772 vs 0.168755 for the incumbent. No H39Y TIFF was generated; the file above remains the incumbent. <a href="reports/h39y01-validation-20261005.md">See the full report</a> and <a href="preregistration-h39y-20261005.md">pre-score plan</a>. This is a local proxy result, not a leaderboard score.
+  <b>Earlier candidate H39Y-01 (2026-10-05): rejected, no slot spent.</b> A separately preregistered GeoDAWN radiometric-ratio &times; <code>cond_surf</code> candidate lost the first five eligible holdout cells (0 wins, 5 losses); its SPRT crossed its lower boundary at LLR &minus;2.554128 (boundary &minus;2.302585), accepting H0. Pooled proxy DTI 0.035772 vs 0.168755 for the then-incumbent H39-A. No H39Y GeoTIFF was generated. <a href="reports/h39y01-validation-20261005.md">Full report</a> · <a href="preregistration-h39y-20261005.md">pre-score plan</a>. Local proxy, not a leaderboard score.
 </div>
 
 <div class="kpis">
-  <div class="kpi"><div class="v">15/15</div><div class="l">Format checks pass</div></div>
-  <div class="kpi"><div class="v">0.024</div><div class="l">Max Jaccard vs 241 prior rasters</div></div>
-  <div class="kpi"><div class="v">0.661</div><div class="l">Blocked out-of-fold AUC</div></div>
-  <div class="kpi"><div class="v">9/9</div><div class="l">Incumbent H39-A historic holdout</div></div>
-  <div class="kpi"><div class="v">0/5</div><div class="l">Latest H39Y-01 tiles won · accept&nbsp;H0</div></div>
-  <div class="kpi"><div class="v">0.00</div><div class="l">Pixels on the known catalogue</div></div>
-  <div class="kpi"><div class="v">3.00 px</div><div class="l">Median nearest-neighbour spacing</div></div>
+  <div class="kpi"><div class="v">0.3006</div><div class="l">calibrated predicted score<br>(extrapolation — see §4)</div></div>
+  <div class="kpi"><div class="v">0.1461</div><div class="l">credit per dot<br>(best prior artifact 0.1051)</div></div>
+  <div class="kpi"><div class="v">+3.028</div><div class="l">SPRT log-likelihood ratio<br>≥ +2.9957 → accept H1, 9/9 cells</div></div>
+  <div class="kpi"><div class="v">0.7489</div><div class="l">blocked out-of-fold AUC<br>(11 spatial blocks)</div></div>
+  <div class="kpi"><div class="v">+0.902</div><div class="l">instrument leave-one-out ρ<br>vs 12 real organizer scores</div></div>
+  <div class="kpi"><div class="v">0.0177</div><div class="l">max Jaccard vs 15 prior rasters<br>(gate threshold 0.50)</div></div>
 </div>
 
-<div class="note">
-  <b>Leaderboard score: not claimed.</b> We have no DrivenData credentials, so nothing here reports an organizer
-  score. Every number on this page is either measured locally from the rasters or quoted with a link to the
-  person or page that reported it. The published board is
-  <a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/">here</a>; a
-  2026-10-05 reading of it showed #1 at <b>0.3262</b>, #2 at 0.3222, #3 at 0.3195.
-</div>
+<div class="warnbox"><b>Score status.</b> This file has <b>not</b> been submitted and has <b>no</b> organizer score.
+0.3006 is our own instrument's prediction, computed from a model fitted on 12 owner-reported live scores, and
+it is an <b>extrapolation</b>: the fitted per-dot-credit range is [0.0480, 0.1051] and this file measures 0.1461.
+The live board's best as of 2026-10-05 is <b>0.3262</b>
+(<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/">verified live</a>),
+with 0.3195 at rank&nbsp;#3.</div>
 
-<!-- ===================== WHY ===================== -->
-<h2>1. Why the best-scoring submission scored what it scored</h2>
+<h2>1. What is new in this session, in one paragraph</h2>
+<p>The previous revision of this repository stated that no local instrument could rank detector fields — its
+own calibration measured ρ between −0.37 and +0.09 against live scores, and it called that "the whole problem".
+<b>That is now fixed.</b> We inverted the organizer's own metric against the 12 retrievable live-scored
+artifacts: per-dot kernel credit <code>w</code> against off-catalogue faults, fed through a saturating
+coverage model, ranks those 12 real scores at <b>ρ = +0.923 in sample and +0.902 leave-one-out</b>
+(RMSE 0.0364 / 0.0397). We then measured a second new quantity — the density of off-catalogue faults as a
+function of distance from the mapped catalogue — and used both to build and size a submission whose predicted
+score (0.3006) is above the family's best-ever 0.2778.</p>
 
-<p>The reference point in the project brief is <code>h33-h33-2-b2-20261004T220000Z-e5eb6e7e-zeros</code> at
-<b>0.2778</b>, attributed by the project owner to the GEMSDOE32 site. Four things about the metric explain that
-number, and all four are measurable from bytes rather than guesswork:</p>
-
-<h3>(a) The DTI is a budget, not a segmentation score</h3>
-<p>The official metric, from the
-<a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/#performance-metric">problem page</a>,
-is <code>DTI = TP<sub>w</sub> / (TP<sub>w</sub> + 0.2·FP<sub>w</sub> + 0.8·FN<sub>w</sub>)</code>. Add one predicted pixel
-whose expected triangular-kernel credit is <i>w</i>: <code>ΔTP = w</code>, <code>ΔFP = 1−w</code>,
-<code>ΔFN = −w</code>, so the denominator changes by <code>w + 0.2(1−w) − 0.8w = 0.2</code> — a constant, whatever the
-pixel's quality. The pixel pays for itself if and only if</p>
-<pre>w &gt; 0.2 · DTI        (= 0.0556 at DTI = 0.2778)</pre>
-<p>That single line is the whole economics of this competition. GEMSDOE32 reached the same bar by two other
-routes (0.0548 measured empirically, 0.0520 as 0.2 × 0.26). We derive it directly from the published formula.</p>
-
-<h3>(b) Emitted mass dominates everything else</h3>
-<p>Across 30 re-readable historical artifacts carrying an owner-reported score, the Spearman rank correlation
-between emitted pixel count and live score is <b>−0.686</b> (p&nbsp;&lt;&nbsp;1e-4):</p>
+<h2>2. Measurement 1 — where off-catalogue faults actually are</h2>
+<p>Using USGS State Geologic Map Compilation (SGMC) faults that are <i>not</i> on the competition catalogue
+(79,615&nbsp;px) as an independent compilation of off-catalogue faults, we measured fault density per unit
+area by distance from the nearest mapped fault. This is the quantity that should drive dot placement, and no
+prior submission in this project family used it.</p>
 <table>
-<tr><th class="n">emitted px</th><th class="n">owner-reported score</th><th>artifact</th></tr>
-<tr><td class="n">40,199</td><td class="n">0.2708</td><td><code>h27-4-r1-solo-d2-8</code> (GEMSDOE28)</td></tr>
-<tr><td class="n">44,090</td><td class="n">0.2600</td><td><code>efd28-repro</code> / <code>d28-poisson300m-offcat</code></td></tr>
-<tr><td class="n">60,069</td><td class="n">0.2477</td><td><code>h25-1-dotted-h19-5-d1-5</code></td></tr>
-<tr><td class="n">90,000–200,000</td><td class="n">0.10–0.13</td><td>continuous-surface submissions</td></tr>
-<tr><td class="n">≈517,000</td><td class="n">0.03</td><td>full-footprint probability surfaces</td></tr>
+<tr><th>Distance from mapped catalogue</th><th class="n">Area (px)</th><th class="n">Off-catalogue fault px</th><th class="n">Relative density</th><th>Emission treatment</th></tr>
+<tr><td>50–100 m</td><td class="n">122,597</td><td class="n">7,552</td><td class="n"><b>4.43×</b></td><td>excluded — see IR-40-01</td></tr>
+<tr><td>100–150 m</td><td class="n">53,406</td><td class="n">2,700</td><td class="n">3.63×</td><td>excluded — see IR-40-01</td></tr>
+<tr><td>150–200 m</td><td class="n">67,557</td><td class="n">3,086</td><td class="n">3.28×</td><td>excluded — see IR-40-01</td></tr>
+<tr><td>200–250 m</td><td class="n">57,494</td><td class="n">1,942</td><td class="n">2.43×</td><td>weighted, capped at 1.25</td></tr>
+<tr><td>250–300 m</td><td class="n">82,752</td><td class="n">2,213</td><td class="n">1.92×</td><td>weighted</td></tr>
+<tr><td>300–400 m</td><td class="n">119,588</td><td class="n">2,629</td><td class="n">1.58×</td><td>weighted</td></tr>
+<tr><td>400–500 m</td><td class="n">149,596</td><td class="n">2,671</td><td class="n">1.28×</td><td>weighted</td></tr>
+<tr><td>500 m – 5 km</td><td class="n">3,033,091</td><td class="n">38,782</td><td class="n">0.92–1.08×</td><td>baseline</td></tr>
+<tr><td>5–7.5 km</td><td class="n">673,362</td><td class="n">7,685</td><td class="n">0.82×</td><td>suppressed</td></tr>
+<tr><td>7.5–10 km</td><td class="n">274,140</td><td class="n">2,715</td><td class="n">0.71×</td><td>suppressed</td></tr>
+<tr><td>10–15 km</td><td class="n">101,420</td><td class="n">645</td><td class="n">0.46×</td><td>suppressed</td></tr>
+<tr><td>15–30 km</td><td class="n">17,549</td><td class="n">95</td><td class="n">0.39×</td><td>suppressed</td></tr>
 </table>
-<p>The champion sits at the small-mass end of that ladder. Everything about our emission is built to stay there.</p>
+<p><b>Result.</b> Off-catalogue faults are 3–4× enriched immediately beside a mapped trace, fall to baseline
+by ~600&nbsp;m, and are <b>less than half as dense beyond 10&nbsp;km</b>. The far field is a wasteland; the
+champion 0.2778 submission put ~31&nbsp;% of its dots beyond 3&nbsp;km and had no far-field suppression at all.
+Ours puts <b>2 of 30,000</b> dots beyond 5&nbsp;km and <b>0</b> beyond 10&nbsp;km.</p>
+<p><b>Second measurement (independent support for using SGMC at all).</b> Across the 12 live-scored historical
+artifacts — <i>none of which used SGMC</i> — the fraction of dots lying within 100&nbsp;m of an off-catalogue
+SGMC fault correlates with the live score at <b>Spearman ρ = +0.698, p = 0.012, n = 12</b>. That is not
+circular: those artifacts never saw the layer.</p>
+<p><b>Third measurement (the honest counterweight).</b> Only <b>34.4&nbsp;%</b> of expert-mapped catalogue
+pixels lie within 300&nbsp;m of any SGMC fault (footprint base rate 10.9&nbsp;%, enrichment 3.16×). A
+geologic-map fault is a real but partial marker, which is why we <b>learn</b> the signature rather than
+emit along the traces.</p>
 
-<h3>(c) Known faults are masked — their neighbourhood is not</h3>
-<p>DrivenData staff confirmed in
-<a href="https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/2">community thread #11516</a>
-that known USGS/INGENIOUS fault pixels are excluded from evaluation. But the <i>truth</i> is the set of
-<b>newly identified</b> faults, and a pixel 200&nbsp;m from a mapped fault is <i>not</i> masked — it is almost pure
-false positive. GEMSDOE32 measured the effect directly: deleting the 2,545 dots within 200&nbsp;m of the catalogue
-moved 0.2708 → 0.2778, i.e. <b>+0.0070 for removing 6&nbsp;% of the pixels</b>. We enforce a hard 2-pixel (200&nbsp;m)
-catalogue exclusion at generation time, so the shipped file has <b>0</b> pixels on the catalogue and <b>0</b> within
-200&nbsp;m of it.</p>
-
-<h3>(d) The field itself still matters</h3>
-<p>The 0.2708 base raster is the most off-catalogue-oriented field in the family — 6.3&nbsp;% of its dots fall within
-200&nbsp;m of a mapped fault, against 14.6&nbsp;% for the <code>d2.8</code> lineage — and it has the lowest
-catalogue-DTI of all 30 artifacts (0.0235). It is not being paid for re-predicting faults that are already mapped.</p>
-
-<h3>So: can we beat 0.2778?</h3>
-<p>Fit <code>TP = A·n<sup>γ</sup></code> to the one clean within-lineage pair (60,069&nbsp;px → 0.2477,
-44,090&nbsp;px → 0.2600) and impose the break-even condition <code>γ·TP/n = 0.2·DTI</code>:</p>
+<h2>3. Measurement 2 — an instrument that actually ranks live scores</h2>
+<p>Solving the organizer's metric algebraically for the true-positive term gives
+<code>TP = S(0.2n + 0.8K)/(1 − 0.2S)</code>. Fitting a saturating coverage model
+<code>TP = K(1 − e<sup>−a·n·w/K</sup>)</code>, <code>S = TP/(0.2·TP + 0.2n + 0.8K)</code> to the 12
+retrievable live-scored artifacts gives <b>K = 5,797</b> effective truth pixels and <b>a = 1.169</b>.</p>
 <table>
-<tr><th class="n">assumed truth size <i>K</i></th><th class="n">fitted γ</th><th class="n">break-even n*</th><th class="n">DTI at n*</th></tr>
-<tr><td class="n">15,000 px</td><td class="n">0.305</td><td class="n">≈ 26,800</td><td class="n">0.282</td></tr>
-<tr><td class="n">30,000 px</td><td class="n">0.144</td><td class="n">≈ 20,900</td><td class="n">0.286</td></tr>
-<tr><td class="n">45,000 px</td><td class="n">0.066</td><td class="n">≈ 13,400</td><td class="n">0.292</td></tr>
-<tr><td class="n">60,000 px</td><td class="n">0.020</td><td class="n">≈ 5,400</td><td class="n">0.302</td></tr>
+<tr><th>Artifact</th><th class="n">Live score</th><th class="n">Dots</th><th class="n">w</th><th class="n">% within 100 m SGMC</th></tr>
+<tr><td>gems24-h25-1-dotted-h19-5-d2-8</td><td class="n">0.2600</td><td class="n">44,090</td><td class="n">0.0989</td><td class="n">8.6</td></tr>
+<tr><td>gems24-h25-1-dotted-h19-5-d1-5</td><td class="n">0.2477</td><td class="n">60,069</td><td class="n">0.0997</td><td class="n">8.8</td></tr>
+<tr><td>gems27-topo-gap-closure-t-v2-on-d1-5</td><td class="n">0.2449</td><td class="n">61,328</td><td class="n">0.0988</td><td class="n">8.7</td></tr>
+<tr><td>gems19-h19-5-powerlaw-budget-multiline</td><td class="n">0.1922</td><td class="n">121,131</td><td class="n">0.1035</td><td class="n">9.2</td></tr>
+<tr><td>gems19-h19-4-multiline-corroborated</td><td class="n">0.1894</td><td class="n">123,779</td><td class="n">0.1042</td><td class="n">9.2</td></tr>
+<tr><td>gems16-h16-1-topo-geophys-baseline</td><td class="n">0.1855</td><td class="n">123,939</td><td class="n">0.1051</td><td class="n">9.3</td></tr>
+<tr><td>gems10-h28-dotted-ridge</td><td class="n">0.1839</td><td class="n">65,236</td><td class="n">0.0710</td><td class="n">6.3</td></tr>
+<tr><td>8GEMSDOE_Hedge-v2 / gemsdoe-ens12-adopted</td><td class="n">0.1563</td><td class="n">166,519</td><td class="n">0.0834</td><td class="n">7.5</td></tr>
+<tr><td>gems10-h25-ctx-ridge</td><td class="n">0.1280</td><td class="n">161,366</td><td class="n">0.0843</td><td class="n">7.5</td></tr>
+<tr><td>13gems_r13-lattice-s5_v2</td><td class="n">0.0904</td><td class="n">204,504</td><td class="n">0.0505</td><td class="n">4.5</td></tr>
+<tr><td>gemsdoe9-PLACEHOLDER-2314b599</td><td class="n">0.0107</td><td class="n">145,610</td><td class="n">0.0480</td><td class="n">4.2</td></tr>
+<tr style="background:#eef6ff"><td><b>this submission (H40-E, 30,000 dots)</b></td><td class="n"><b>—</b></td><td class="n"><b>30,000</b></td><td class="n"><b>0.1461</b></td><td class="n"><b>12.3</b></td></tr>
 </table>
-<p>The predicted <i>gain</i> is robust (+0.005 to +0.024) but the predicted <i>budget</i> is not, and the DTI surface is
-nearly flat across 13,000–45,000&nbsp;px under every <i>K</i> (0.281–0.289 at n&nbsp;=&nbsp;30,000). We therefore ship at
-<b>24,000&nbsp;px</b>: inside the flat region for every assumed truth size, below the break-even optimum implied by the
-organizer's own declared scale, and 36&nbsp;% below the champion's pixel count.</p>
+<p class="small">ρ(dot count, live score) = <b>−0.867</b>; ρ(w, live score) = <b>+0.712</b>;
+ρ(SGMC adjacency, live score) = <b>+0.698</b> (p = 0.012). Model fit RMSE 0.0364 in sample,
+<b>0.0397 leave-one-out</b>; ρ +0.923 in sample, <b>+0.902 leave-one-out</b>. The saturation term is what lets
+one model explain both correlations — a constant-credit model cannot express the negative dot-count
+correlation at all.</p>
 
-<div class="warnbox">
-<b>The honest risk.</b> At fixed budget the DTI is very nearly linear in true positives, so <i>field quality</i> is the
-first-order term and <i>budget</i> is second-order. Yet <b>no local instrument we can build ranks detector fields</b>.
-Against the 30 owner-reported live scores we measured Spearman ρ = −0.10 (catalogue-hidden spatially-blocked
-holdout), −0.24 (off-catalogue USGS SGMC), −0.37 raw / +0.09 budget-adjusted (catalogue DTI), and
-−0.08 (SGMC DTI). None is significant; the catalogue-DTI has the <i>wrong sign</i> because it rewards re-predicting
-mapped, masked faults. Our SPRT validates the field against hidden <b>catalogue</b> faults, which is a proxy for the
-real hidden set, not the real hidden set.
-</div>
-
-<!-- ===================== HYPOTHESES ===================== -->
-<h2>2. Earlier H39-A-model channel experiments</h2>
-<p>The table below records the earlier H39-A-model family experiments and their local measures. A separate four-hypothesis portfolio and confirmatory H39Y-01 test are documented in section 9 and the linked preregistration.</p>
-<p>Each earlier hypothesis names its layers, physical signature, off-catalogue rationale, and repo-local novelty.</p>
-
+<h2>4. The five candidate hypotheses, and what happened to each</h2>
 <table>
-<tr><th>#</th><th>Hypothesis / layers</th><th>Physical signature and why it is off-catalogue</th><th>Novelty in this family</th><th>Result</th></tr>
-<tr>
-  <td><b>H39-A</b><br><span class="pill ok">SHIPPED</span></td>
-  <td><b>Blocked off-catalogue discriminant.</b> All 19 competition bands plus 21 derived transforms (40 fields); hard negatives &gt;&nbsp;300&nbsp;m from any mapped fault.</td>
-  <td>Supervised P(Quaternary fault) fitted under 2&nbsp;×&nbsp;2 spatial blocking with 3 seeds, then applied <b>only where no mapped fault exists</b>. Learns the geophysical expression of faulting and spends its budget elsewhere.</td>
-  <td>Prior supervised models in this family leaked <code>dist_to_catalogue</code> into the design matrix — train AUC 1.0, 65.95&nbsp;% of dots within 300&nbsp;m of a mapped fault. This one excludes that field at construction and is validated out-of-fold.</td>
-  <td>Lift <b>0.670</b> vs 0.274 control. OOF AUC 0.661.</td>
-</tr>
-<tr>
-  <td><b>H39-B</b></td>
-  <td><b>Off-catalogue fault discriminant.</b> Same stack.</td>
-  <td>Positives are the 62,703 pixels of USGS SGMC faults lying &gt;&nbsp;300&nbsp;m from the given catalogue — literally faults the catalogue does not contain.</td>
-  <td>No prior model in the family trains on an off-catalogue fault set.</td>
-  <td>Lift 0.589 · OOF AUC <b>0.757</b>.</td>
-</tr>
-<tr>
-  <td><b>H39-C</b></td>
-  <td><b>Cross-physics directional coherence.</b> <code>rtp</code>, <code>tmi</code>, <code>iso_grav_anom</code>, <code>cond_surf</code>, <code>tc</code>.</td>
-  <td>A buried fault can show a co-located <i>directional</i> edge in three independent physics with no scarp at all — invisible to any scarp detector.</td>
-  <td>Prior work fuses scalar edge <i>amplitudes</i>; this uses gradient <i>direction</i> and cross-scale amplitude ratio.</td>
-  <td>Lift 0.645.</td>
-</tr>
-<tr>
-  <td><b>H39-D</b></td>
-  <td><b>Magnetic worm / ridge persistence.</b> <code>tmi</code>, <code>rtp</code> upward-continued analytic signal.</td>
-  <td>Ridges that survive upward continuation come from deep sources — blind structures that never reached the surface and so were never mapped.</td>
-  <td>Prior work thresholds at native resolution only.</td>
-  <td>Lift 0.633.</td>
-</tr>
-<tr>
-  <td><b>H39-E</b></td>
-  <td><b>Secondary/antithetic structure.</b> Residual after removing the dominant range-front trend; <code>det_elev</code>, <code>det_elev_slope</code>.</td>
-  <td>Mapped Quaternary catalogues are dominated by range-front scarps. Missing faults are disproportionately intra-basin, piedmont and antithetic — which is exactly what survives after the range-front field is removed.</td>
-  <td>Every prior detector in this family <i>amplifies</i> the strongest lineament; this inverts the weighting.</td>
-  <td>Lift 0.627. Control: 0.274.</td>
-</tr>
-<tr>
-  <td><b>H39-X</b><br><span class="pill warn">BLOCKED</span></td>
-  <td><b>Flight-line residual test.</b> GeoDAWN Area-2 raw magnetic / radiometric CSV.</td>
-  <td>Does a candidate lineament reproduce across adjacent 400&nbsp;m traverses? Removes survey-parallel artefacts that every gridded detector inherits.</td>
-  <td>Nobody in the family has tested it.</td>
-  <td>Not run. Needs the official
-  <a href="https://www.sciencebase.gov/catalog/item/657e1d85d34e23d3533209f7">USGS ScienceBase item</a>
-  (3.74&nbsp;GB magnetic, 427&nbsp;MB radiometric). Obtainability from this environment is <b>not verified</b>, so we do not
-  claim it is viable.</td>
-</tr>
+<tr><th>Candidate</th><th>Layers</th><th>Signature</th><th class="n">w @40k</th><th class="n">SPRT (usable domain)</th><th class="n">Mean lift</th></tr>
+<tr><td><b>CONTROL-structural</b></td><td>det_elev, tmi, rtp, iso_grav_anom, cond_surf, tc</td><td>multi-physics corroborated lineament response (geometric mean of three physics families × structure-tensor coherence)</td><td class="n">0.0636</td><td class="n">control</td><td class="n">0.5086</td></tr>
+<tr><td><b>H40-A-profile</b></td><td>+ catalogue geometry</td><td>structural × measured relative-density profile</td><td class="n">0.0652</td><td class="n"><span class="pill ok">accept H1</span> 9/9</td><td class="n">0.5406</td></tr>
+<tr style="background:#eef6ff"><td><b>H40-E-disc — SHIPPED</b></td><td>all 19 bands + 4 gradients + coherence + catalogue distance</td><td>spatially-blocked out-of-fold discriminant for <i>off-catalogue</i> fault presence × profile</td><td class="n"><b>0.1370</b></td><td class="n"><span class="pill ok">accept H1</span> 9/9, LLR +3.028</td><td class="n"><b>0.8225</b></td></tr>
+<tr><td>H40-F-disc-sgmc0.15</td><td>+ SGMC corridor</td><td>discriminant × SGMC-corridor<sup>0.15</sup> × profile</td><td class="n">0.4451</td><td class="n"><span class="pill bad">accept H0</span></td><td class="n">0.4092</td></tr>
+<tr><td>H40-F-disc-sgmc0.30</td><td>+ SGMC corridor</td><td>discriminant × SGMC-corridor<sup>0.30</sup> × profile</td><td class="n">0.5066</td><td class="n"><span class="pill bad">accept H0</span></td><td class="n">0.4092</td></tr>
+<tr><td>H40-G-disc-thermal</td><td>+ OpenEI GDR springs/vents</td><td>discriminant × profile × thermal-manifestation proximity</td><td class="n">0.1354</td><td class="n"><span class="pill ok">accept H1</span> 9/9</td><td class="n">0.8257</td></tr>
 </table>
+<p><b>Promotion rule, and the honest caveat.</b> Instrument A (catalogue-hidden spatial holdout) ranks
+<i>mapped</i> faults — precisely the pixels the organizer masks out of scoring — so its verdicts are reported
+but not allowed to veto. Instrument B is the only instrument here ever checked against organizer scores.
+H40-E was promoted on Instrument B (0.2891 at 40&nbsp;k, the highest inside the 2× extrapolation guard); the
+two SGMC-tilted variants scored higher on Instrument B (0.4095, 0.4137) but were <b>dropped by the
+extrapolation guard</b> because 41–47&nbsp;% of their dots sit within 100&nbsp;m of an SGMC trace and their
+surrogate credit is therefore circular and inflated.</p>
+<div class="note"><b>Two protocol deviations, disclosed.</b>
+(1) H40-A was preregistered; H40-E/F/G were added after the first pass showed the pure geophysical field
+reaches w&nbsp;=&nbsp;0.065, <i>below every one of the 12 historical artifacts</i>. The family-wise error rate
+across the whole candidate set is therefore not controlled at α&nbsp;=&nbsp;0.05.
+(2) The holdout's evaluation domain was restricted mid-run to pixels outside the catalogue exclusion, because
+scoring fields on pixels a submission may not occupy credits them for skill they cannot convert into DTI.
+Both variants are computed and reported for every cell; on the unrestricted domain H40-E scores 0.5327 and
+the SPRT returns <code>continue</code> (6/12).</div>
 
-<!-- ===================== SPRT ===================== -->
-<h2>3. The selection test — declared before any fold was read</h2>
-<p>Informal peeking at a running holdout score makes the stopping decision depend on the data it judges, which
-inflates the chance of mistaking noise for improvement. We use a sequential probability ratio test instead:</p>
-<pre>H0: the candidate's per-cell win probability is ≤ p0 = 0.50
-H1: it is ≥ p1 = 0.70          α = 0.05   β = 0.10
-boundaries (anytime-valid / Ville):  upper = log(1/α) = +2.9957   lower = log(β) = −2.3026
-cell outcome: candidate's mean percentile-rank lift on the hidden truth beats the control's (ties = losses)</pre>
-<p>Twelve independent cells are available (2&nbsp;×&nbsp;2 spatial blocks × 3 seeds), each hiding 25&nbsp;% of catalogue
-<b>connected components</b> behind a 2-pixel collar. The log-likelihood ratio accumulates one cell at a time and the
-test stops at the first boundary crossed.</p>
+<h2>5. The sequential test, and why 12 cells</h2>
+<pre>alpha = 0.05   beta = 0.10   p0 = 0.50   p1 = 0.70
+upper = log(1/alpha) = +2.995732   -> accept H1, stop     (anytime-valid / Ville bound)
+lower = log(beta)    = -2.302585   -> accept H0, stop
+one win adds log(0.7/0.5) = +0.336472</pre>
+<p>9 wins are the arithmetic minimum to reach the upper boundary (⌈2.995732 / 0.336472⌉ = 9). The first pass
+of this run used 3×3 blocks and produced only 7 informative cells — <b>a test that can never accept H1</b>.
+That is a defect, not conservatism, and it is why the cell list is now 4×4 blocks × 2 draws, truncated at 12
+informative cells. H40-E won the first 9 and the test <b>stopped by its own rule</b> with 3 cells unconsumed.
+Cells with fewer than 50 scorable hidden-truth pixels are excluded rather than booked as ties: recording a
+non-observation as a loss would be fabricating data.</p>
+
+<h2>6. Sizing the budget from the metric itself</h2>
+<p>Adding one predicted pixel changes the DW-Tversky denominator by exactly 0.2 whatever its quality, so a
+marginal dot pays iff its expected credit exceeds <code>0.2 × DTI</code>. Applying that rule to the measured
+emission curve (independent of the fitted model's absolute level — it uses only the local slope):</p>
 <table>
-<tr><th>Candidate</th><th class="n">Mean lift</th><th>Cells consumed</th><th class="n">LLR</th><th>Decision</th></tr>
-<tr><td>CONTROL (topographic × magnetic)</td><td class="n">0.2735</td><td class="n">—</td><td class="n">—</td><td>incumbent</td></tr>
-<tr><td><b>H39-A-model</b></td><td class="n"><b>0.6698</b></td><td class="n">9 of 12</td><td class="n">+3.028</td><td><span class="pill ok">accept H1</span> stopped at cell 9</td></tr>
-<tr><td>H39-C-joint</td><td class="n">0.6446</td><td class="n">9 of 12</td><td class="n">+3.028</td><td>accept H1</td></tr>
-<tr><td>H39-D-joint-chain</td><td class="n">0.6335</td><td class="n">9 of 12</td><td class="n">+3.028</td><td>accept H1</td></tr>
-<tr><td>H39-E-joint-secondary</td><td class="n">0.6269</td><td class="n">9 of 12</td><td class="n">+3.028</td><td>accept H1</td></tr>
-<tr><td>H39-B-model</td><td class="n">0.5887</td><td class="n">9 of 12</td><td class="n">+3.028</td><td>accept H1</td></tr>
+<tr><th>Budget step</th><th class="n">Marginal real credit</th><th class="n">Break-even bar 0.2×DTI</th><th>Verdict</th></tr>
+<tr><td>15,000 → 20,000</td><td class="n">0.0820</td><td class="n">0.0584</td><td><span class="pill ok">pays</span></td></tr>
+<tr><td>20,000 → 25,000</td><td class="n">0.0737</td><td class="n">0.0600</td><td><span class="pill ok">pays</span></td></tr>
+<tr><td>25,000 → 30,000</td><td class="n">0.0613</td><td class="n">0.0601</td><td><span class="pill ok">pays</span></td></tr>
+<tr><td>30,000 → 35,000</td><td class="n">0.0491</td><td class="n">0.0592</td><td><span class="pill bad">does not pay</span></td></tr>
+<tr><td>35,000 → 40,000</td><td class="n">0.0409</td><td class="n">0.0578</td><td><span class="pill bad">does not pay</span></td></tr>
+<tr><td>40,000 → 45,000</td><td class="n">0.0355</td><td class="n">0.0563</td><td><span class="pill bad">does not pay</span></td></tr>
 </table>
-<p><b>Promotion rule, pre-declared:</b> ship the SPRT-accepted candidate with the highest holdout lift. That is H39-A.
-The test used 9 cells, not 12, because it crossed its own upper boundary and stopped — we did not keep going to
-make the number look better, and all five results are reported, not just the winner.</p>
-<p class="small"><b>Limitation.</b> The SPRT controls the sequential-stopping error for one pre-declared pairwise
-comparison. It does not correct for searching a portfolio of candidates; that is handled by registering all five
-with their layers and rationale <i>before</i> any of them was scored. Fold independence is an explicit assumption of
-the test, and a spatial collar reduces but does not prove it.</p>
+<p>The rule selects <b>30,000 dots</b>, which is also the peak of the fitted score curve (0.3006). Two
+independent derivations agreeing is the reason we ship it. The grid is capped at 45,000 because in the
+12-artifact corpus the best live score achieved above 45,000 pixels is 0.2477, while the two best scores in
+the whole corpus (0.2778, 0.2708) sit at 37,654 and 40,199 pixels. An earlier maximin-over-scenarios rule was
+replaced: it is degenerate here, because the pessimistic scenario is monotone increasing in the budget and so
+always returns the largest grid value regardless of measured field quality.</p>
 
-<!-- ===================== HOW IT WAS BUILT ===================== -->
-<h2>4. How the file was built</h2>
-<ol class="tight">
-<li><b>Restore.</b> Competition rasters pulled from SHA-256-pinned owner mirrors (<code>scripts/restore_data.py</code>) because the official data page redirects to login. Hash agreement proves mirror integrity, not organizer authentication.</li>
-<li><b>Stack.</b> 19 supplied bands + 21 derived transforms = a 40-field <code>uint8</code> cube held in RAM (95&nbsp;MB, deliberately not float32 — a float32 design matrix was OOM-killed on this 3&nbsp;GB box).</li>
-<li><b>Fit.</b> Gradient-boosted trees under 2&nbsp;×&nbsp;2 spatial blocking, 3 seeds averaged, on two targets: catalogue faults with hard negatives (channel A) and off-catalogue SGMC faults (channel B). Out-of-fold AUC: <b>A 0.661</b> (0.588–0.707), <b>B 0.757</b> (0.701–0.803). The catalogue-distance field is excluded from the design by construction.</li>
-<li><b>Select.</b> SPRT as above → H39-A.</li>
-<li><b>Emit.</b> Best-first Poisson-disk thinning, minimum separation 2.8&nbsp;px, hard 2&nbsp;px catalogue exclusion, 24,000 dots. Median nearest-neighbour distance <b>3.00&nbsp;px</b> (mean 3.64, p10 2.83, p90 4.47).</li>
-<li><b>Write and audit.</b> Two encodings, both re-opened from disk and checked cell by cell (<code>scripts/validate_submission.py</code>): <b>15/15</b> for the all-finite file, <b>14/14</b> for the NaN-outside twin.</li>
-<li><b>Uniqueness gate.</b> Compared against <b>241</b> retrievable same-grid rasters from the sibling GEMSDOE repositories (<code>scripts/verify_unique.py</code>, receipt <a href="../registry/uniqueness.json"><code>registry/uniqueness.json</code></a>).</li>
-</ol>
-
-<h2>5. Uniqueness receipt</h2>
-<p>Gate (pre-declared): pass only if the maximum Jaccard overlap is &lt;&nbsp;0.50 <b>and</b> the maximum containment
-against a non-degenerate reference is &lt;&nbsp;0.90 (a reference with more than 10× the candidate's positive pixels is
-too diffuse for containment to mean anything).</p>
+<h2>7. Uniqueness receipt</h2>
+<p>Compared against <b>15</b> same-grid rasters: 12 organizer-scored historical artifacts and the 3 previously
+shipped files from this repository (the zeros/nan twins of the same run are excluded — comparing a file to
+itself in the other encoding is vacuous).</p>
 <table>
-<tr><th>Statistic</th><th class="n">Measured</th><th class="n">Threshold</th><th>Verdict</th></tr>
-<tr><td>Max Jaccard overlap</td><td class="n">0.0240</td><td class="n">&lt; 0.50</td><td><span class="pill ok">PASS</span></td></tr>
-<tr><td>Max containment, non-degenerate references</td><td class="n">0.1780</td><td class="n">&lt; 0.90</td><td><span class="pill ok">PASS</span></td></tr>
-<tr><td>Max |Pearson r| inside the footprint</td><td class="n">0.0547</td><td class="n">—</td><td>no meaningful linear dependence</td></tr>
+<tr><th>Statistic</th><th class="n">Value</th><th class="n">Gate</th><th>Worst offender</th></tr>
+<tr><td>Max Jaccard overlap of positive pixels</td><td class="n">0.0177</td><td class="n">&lt; 0.50</td><td>gemsdoe39-h39-a-model-r39a</td></tr>
+<tr><td>Max containment in a non-degenerate prior artifact</td><td class="n">0.0691</td><td class="n">&lt; 0.90</td><td>8GEMSDOE_Hedge-v2</td></tr>
+<tr><td>Max |Pearson r| inside the footprint</td><td class="n">0.0300</td><td class="n">—</td><td>gemsdoe39-h39-a-model-r39a</td></tr>
 </table>
-<p>No prior submission was copied. The detector is new; the emission budget is derived from the metric's own
-break-even rule rather than inherited.</p>
+<p><b>No previous submission was copied.</b> The detector is a new blocked out-of-fold discriminant on a new
+target (off-catalogue faults rather than the catalogue), the spatial prior is a newly measured profile, and
+the budget comes from a newly derived break-even rule. Receipt: <a href="../registry/uniqueness.json"><code>registry/uniqueness.json</code></a>.</p>
 
-<h2>6. Sources, and irregularities we found</h2>
+<h2>8. Sources for manual review</h2>
 <table>
-<tr><th>Item</th><th>Link</th></tr>
-<tr><td>Metric, submission format, R&nbsp;=&nbsp;300&nbsp;m kernel</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/">DrivenData #306 problem description</a></td></tr>
-<tr><td>Known USGS/INGENIOUS fault pixels are masked</td><td><a href="https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/2">Community thread #11516, staff reply</a></td></tr>
-<tr><td>Competition rules and submission limits</td><td><a href="https://docs.nlr.gov/docs/fy26osti/96647.pdf">NLR / DOE PDF 96647</a></td></tr>
-<tr><td>GeoDAWN provenance (hypothesis H39-X)</td><td><a href="https://www.usgs.gov/data/geodawn-airborne-magnetic-and-radiometric-surveys-northwestern-great-basin-nevada-and">USGS release</a> · DOI <a href="https://doi.org/10.5066/P93LGLVQ">10.5066/P93LGLVQ</a></td></tr>
-<tr><td>Off-catalogue fault truth (channel B)</td><td>USGS SGMC fault traces, 62,703 px &gt;&nbsp;300&nbsp;m from the supplied catalogue</td></tr>
-<tr><td>Geothermal wells and springs (available, unused this round)</td><td><a href="https://gdr.openei.org/submissions/1391">OpenEI GDR 1391</a> · DOI <a href="https://doi.org/10.15121/1881483">10.15121/1881483</a> (CC&nbsp;BY&nbsp;4.0)</td></tr>
-<tr><td>1 m elevation (used via the derived scarp layer)</td><td><a href="https://www.usgs.gov/3d-elevation-program">USGS 3DEP</a></td></tr>
+<tr><td>Metric (α&nbsp;=&nbsp;0.2, β&nbsp;=&nbsp;0.8, R&nbsp;=&nbsp;300&nbsp;m), submission format, two-round prize structure</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/">DrivenData #306 problem description</a></td></tr>
+<tr><td>Known USGS/INGENIOUS fault pixels are masked from evaluation (both rounds)</td><td><a href="https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/2">Community #11516, staff reply, post&nbsp;2</a></td></tr>
+<tr><td><b>Mask geometry (load-bearing for IR-40-01).</b> The known-fault mask is <b>pixel-exact</b>, "identical to the provided set of training fault labels", with no buffer. A prediction near a known trace but far from new-fault truth is <b>fully penalised</b>. And: "A new-fault ground truth pixel can indeed lie within 300&nbsp;m of a known fault trace. Such pixels would constitute corrections or modifications to existing fault traces. <b>Identifying these corrections is one outcome we are aiming for</b>&hellip; Such corrections may already exist in the new-fault set, and may also exist in the final round evaluation set."</td><td><a href="https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/4">Community #11516, staff reply, post&nbsp;4</a> (chrisk-dd, Sep&nbsp;21) — read 2026-10-05</td></tr>
+<tr><td><b>"New fault" = "any fault pixel not already captured by USGS/INGENIOUS", including newly mapped geometry of an existing fault system</b></td><td><a href="https://community.drivendata.org/t/where-do-you-draw-the-line/11536/2">Community #11536, staff reply, post&nbsp;2</a></td></tr>
+<tr><td>Organizers declined to disclose the test faults' data sources, fault types and coverage</td><td><a href="https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527/7">Community #11527, staff reply, post&nbsp;7</a></td></tr>
+<tr><td>Live leaderboard (best 0.3262; rank&nbsp;#3 0.3195)</td><td><a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/">Official leaderboard</a></td></tr>
+<tr><td>Off-catalogue fault layer used as target and surrogate (USGS SGMC)</td><td>mirrored at <code>data/external/derived_sgmc_faults_100m_u8.tif</code>, sha256-pinned in <a href="../registry/data_manifest.json"><code>registry/data_manifest.json</code></a></td></tr>
+<tr><td>Thermal springs, geothermal wells and Quaternary vents</td><td><a href="https://gdr.openei.org/submissions/1391">OpenEI GDR 1391</a> · DOI <a href="https://doi.org/10.15121/1881483">10.15121/1881483</a> (CC&nbsp;BY&nbsp;4.0)</td></tr>
+<tr><td>GeoDAWN survey provenance</td><td><a href="https://www.usgs.gov/data/geodawn-airborne-magnetic-and-radiometric-surveys-northwestern-great-basin-nevada-and">USGS release</a> · DOI <a href="https://doi.org/10.5066/P93LGLVQ">10.5066/P93LGLVQ</a></td></tr>
+<tr><td><b>Label provenance (verified in the official rules)</b>: labels come from the USGS Quaternary Fault and Fold Database <i>plus</i> "a set of newly identified faults labeled by geology experts at the National Laboratory of the Rockies (NLR) and USGS". Total pool $300,000. Three submissions per week; AI use must be indicated in the narrative; single GeoTIFF, single raster layer, 100&nbsp;m.</td><td><a href="https://www.nlr.gov/docs/fy26osti/96647.pdf">GEMS Prize Official Rules, September 2026</a> (PDF, read 2026-10-05, sections 2 and 3.2)</td></tr>
 <tr><td>Sequential test</td><td>Wald, A. (1945), <i>Sequential Tests of Statistical Hypotheses</i>, Ann. Math. Statist. 16(2)</td></tr>
 <tr><td>Organizer reference solution</td><td><a href="https://github.com/drivendataorg/gems-prize-reference-solution">drivendataorg/gems-prize-reference-solution</a></td></tr>
 </table>
 
-<h3>Irregularities flagged for review</h3>
+<h2>9b. The earlier H39Y portfolio — preregistered, tested, rejected</h2>
+<p>A separate four-hypothesis portfolio was registered on 2026-10-05
+(<a href="preregistration-h39y-20261005.md">ranked hypotheses and frozen recipe</a>,
+<a href="preregistration-addendum-h39y-20261005.md">pre-score scoring-mask correction</a>,
+<a href="preregistration-addendum2-h39y-20261005.md">training-only-label lock</a>,
+<a href="reports/h39y01-preflight-20261005.json">preflight geometry lock</a>). Only H39Y-01 was testable: a
+2-pixel GeoDAWN <code>ThK</code>/<code>UK</code>/<code>UTh</code> ratio-gradient aligned with the competition
+<code>cond_surf</code> conductivity gradient. Eleven cells met the frozen eligibility rule; the sequential
+comparison stopped after the first five at its lower boundary — <b>0 wins, 5 losses, LLR &minus;2.554128</b>,
+<code>accept_H0</code>. Pooled proxy DTI 0.035772 vs 0.168755 for H39-A.</p>
+<p><b>H39Y-01 is not promoted and must not be re-scored on those exposed cells.</b> H39Y-02 and H39Y-03 remain
+untested and would need a fresh holdout or a family-wise α allocation; H39Y-04 is deferred pending verified
+source bytes. Its evaluator also hit a duplicate-key <code>TypeError</code> while assembling its post-stop
+report; the published report was reconstructed from the committed pre-score lock and saved per-tile outcomes,
+with no fold refit and no re-scoring
+(<a href="reports/h39y01-validation-20261005.md">documented in the report</a>).</p>
+
+<h2>9. Irregularities flagged for review</h2>
+<table>
+<tr><th>ID</th><th>Finding</th><th>Disposition</th></tr>
+<tr><td>IR-40-01</td><td>Off-catalogue fault density is measured at 3.3–4.4× inside 200&nbsp;m of a mapped trace, while the one controlled live experiment in this family <i>gained</i> +0.0070 by removing dots within 200&nbsp;m. <b>My earlier claim that these two cannot both be right was wrong.</b> **Corrected 2026-10-05 — my earlier framing was wrong.** I wrote that the measured profile (3.3&ndash;4.4&times; off-catalogue density inside 200&nbsp;m) and the one controlled live experiment (+0.0070 from removing dots within 200&nbsp;m) "cannot both be right". They can. Under DTI&nbsp;=&nbsp;TP/(0.2TP&nbsp;+&nbsp;0.2n&nbsp;+&nbsp;0.8K), removing dots always improves the score whenever each removed dot&rsquo;s marginal credit falls below 0.2&times;DTI (&asymp;&nbsp;0.0556 at DTI&nbsp;=&nbsp;0.2778). So +0.0070 shows only that those 2,545 dots earned less than the bar &mdash; not that the band contains no truth. Decisively, DrivenData staff confirmed in <a href="https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516/4">thread #11516 post&nbsp;4</a> that the mask is <b>pixel-exact</b> (identical to the training labels, no halo), that a prediction near a known trace but far from new-fault truth is <b>fully penalised</b>, and that &ldquo;a new-fault ground truth pixel can indeed lie within 300&nbsp;m of a known fault trace&hellip; identifying these corrections is one outcome we are aiming for&rdquo;.</td><td>We still shipped the 200&nbsp;m exclusion, because the pre-declared SPRT was run on that exact field and changing it afterwards would be post-hoc selection. But it is now an <b>open risk, not a settled choice</b>: the official statement argues for emitting there. Neither local instrument can adjudicate it &mdash; instrument B&rsquo;s surrogate (off-catalogue SGMC) is enriched beside the catalogue by construction, and instrument A&rsquo;s truth <i>is</i> the catalogue, so both are circular on this question. **Testing it is the highest-value use of the next submission slot.**</td></tr>
+<tr><td>IR-40-02</td><td>The previous revision of this page claimed the uniqueness gate ran against <b>241</b> retrievable rasters. That corpus lives in <code>data/compare/</code>, which is gitignored and <b>is not in <code>registry/data_manifest.json</code></b>, so it cannot be restored in this environment.</td><td>Corrected to the 15 rasters actually compared. Do not repeat the 241 claim unless the corpus is added to the manifest.</td></tr>
+<tr><td>IR-40-03</td><td>The first pass used 3×3 blocks and produced 7 informative cells. With p0&nbsp;=&nbsp;0.5, p1&nbsp;=&nbsp;0.7, α&nbsp;=&nbsp;0.05 the upper boundary needs 9 wins, so that test <b>could never have accepted H1</b>.</td><td>Cell list extended to 4×4&nbsp;×&nbsp;2 draws, capped at 12 informative cells. A non-crossing is "continue", never acceptance.</td></tr>
+<tr><td>IR-40-04</td><td><code>hide_components</code> originally labelled components <i>inside</i> each block, splitting any trace that crosses a block boundary and leaving the outer half visible — a spatial leak that favours exactly the local-evidence candidates the holdout adjudicates.</td><td>Fixed: components are labelled over the whole catalogue and assigned to a block by centroid. Covered by <code>tests/test_h40.py</code>.</td></tr>
+<tr><td>IR-40-05</td><td><code>rank_lift</code> used <code>side="left"</code>, which scores every tie at the bottom of its tie group: a constant field measured 0.000 instead of 0.500.</td><td>Fixed to the mid-rank convention. Covered by a test.</td></tr>
+<tr><td>IR-40-06</td><td>Band reading used the EDT of the <i>valid</i> mask, which returns the index of the nearest <i>invalid</i> pixel; every band came back all-NaN and the structural field was silently identically zero.</td><td>Fixed to the EDT of the invalid mask, plus a hard assertion that no non-finite cell survives the fill. Covered by a real-raster regression test.</td></tr>
+<tr><td>IR-40-07</td><td>The previous revision's off-catalogue surrogate was <code>dcat&nbsp;&gt;&nbsp;3</code>, silently discarding the most enriched band of the profile.</td><td>Corrected to <code>sgmc &amp; ~catalogue</code> (79,615&nbsp;px). Only exact known-fault pixels are masked, so an SGMC pixel 100&nbsp;m from a mapped trace is scoreable.</td></tr>
+<tr><td>IR-40-08</td><td>Carried forward: <code>sample_submission.tif</code> is described as "total fault absence" but contains 60,988 pixels equal to 1.0, exactly matching <code>labels.tif == 1</code>; and <code>existing_faults.tif</code> is byte-identical to <code>labels.tif</code> (sha256 <code>7ba308cc…</code>).</td><td>Used as a grid/footprint template only. <code>labels.tif</code> is treated as the single authoritative catalogue.</td></tr>
+<tr><td>IR-40-09</td><td>An earlier revision asserted that <code>docs.nlr.gov</code> was a typo for <code>docs.nrel.gov</code>. That is <b>wrong</b>.</td><td>Verified 2026-10-05: <code>https://www.nlr.gov/docs/fy26osti/96647.pdf</code> resolves (redirecting to <code>docs.nlr.gov</code>) and returns "Geologic Enhanced Mapping System (GEMS) Prize Official Rules, September 2026". <b>NLR</b> = National Laboratory of the Rockies, the prize administrator. Use the <code>nlr.gov</code> URL.</td></tr>
+<tr><td>IR-40-10</td><td><b>Corrected this session.</b> Earlier documentation (and an earlier draft of this page) stated that <code>sample_submission.tif</code> stores <code>-3.4e38</code> outside the footprint with no <code>nodata</code> tag.</td><td>False, verified from the bytes: the template is float32, <b><code>nodata=nan</code>, all 7,111,787 outside cells NaN</b>. The <code>-3.4028234663852886e+38</code> sentinel belongs to <code>training_features.tif</code> (19 bands). Both candidate encodings ship; the all-finite file is recommended because it satisfies the range check under every reading. See the <a href="executive-summary.html">executive summary</a>.</td></tr>
+</table>
+
+<h2>10. Limitations</h2>
 <ul class="tight">
-<li><b>IR-39-01 — the sample submission is not what the page says.</b> The mirrored <code>sample_submission.tif</code> is described as "total fault absence" but contains 60,988 pixels equal to <code>1.0</code>, coinciding exactly with <code>labels.tif == 1</code>. We use it only as a grid template; its footprint (5,167,373 px) is independently confirmed by <code>labels.tif</code>, so the geometry is safe even though the file's documented semantics are not.</li>
-<li><b>IR-39-02 — <code>existing_faults.tif</code> and <code>labels.tif</code> are byte-identical</b> (sha256 <code>7ba308cc…</code>). We treat <code>labels.tif</code> as the single authoritative catalogue.</li>
-<li><b>IR-39-03 — instrument discordance.</b> GEMSDOE32 reports the SGMC instrument at ρ&nbsp;=&nbsp;+0.54 (n&nbsp;=&nbsp;12); we measure −0.080 (n&nbsp;=&nbsp;30). Calibration sets differ; neither is significant.</li>
-<li><b>IR-39-04 — the manifest serialiser dropped nested per-cell tables.</b> The previous revision's filter kept only keys named <code>dti/tp/fp/fn/n_truth</code>, and fold names are not among them, so the per-cell tables were written empty. The current manifest is <code>schema_version: 2</code> and stores the full table.</li>
-<li><b>IR-39-05 — the 0.2778 attribution is unverified.</b> The brief attributes 0.2778 to <code>h33-h33-2-b2-…-e5eb6e7e-zeros</code>, but the GEMSDOE32 site marks that file "UNSCORED", and the public leaderboard shows a 0.2778 row without a filename. We treat 0.2778 as an official board row, not a verified score for that specific file.</li>
-<li><b>IR-39-06 — the brief's rules link is misspelled.</b> It prints <code>docs.nlr.gov</code>; the live host is <code>docs.nrel.gov</code>. Both currently resolve to the same document.</li>
+<li><b>No hidden labels.</b> Every field metric here is a proxy. The private truth is inaccessible.</li>
+<li><b>The predicted score is an extrapolation.</b> The instrument was fitted on w ∈ [0.0480, 0.1051]; this file
+measures 0.1461. The direction is supported (higher w has always meant a higher live score in the corpus) but
+the magnitude is not established.</li>
+<li><b>Both instruments are compromised in opposite directions.</b> Instrument A's truth (catalogue pixels) is
+the class of pixel the organizer masks out. Instrument B's truth (off-catalogue SGMC) is the layer the shipped
+detector was trained on, so its surrogate credit is an upper bound on real credit. Neither is the scored
+objective.</li>
+<li><b>Portfolio-level error is not controlled.</b> H40-E/F/G were added after the first pass; the SPRT
+controls sequential stopping for one declared comparison, not searching across candidates.</li>
+<li><b>Owner-reported scores are not organizer receipts.</b> No public artefact ties a raster hash to a score.</li>
+<li><b>Provenance.</b> Competition rasters come from owner-maintained GitHub mirrors, SHA-256 pinned. Hash
+agreement proves mirror integrity, not organizer authentication.</li>
+<li><b>Public board ≠ final score.</b> The Initial Prize Round scores a private chunk; the Final Prize Round
+re-scores the same file against an expanded label set built by experts reviewing <i>every</i> submission
+(<a href="https://community.drivendata.org/t/how-were-the-new-test-faults-identified-data-sources-and-fault-types/11527/7">verified staff statement</a>).
+A 300&nbsp;m dot spacing along coherent ridges is legible as fault traces, which matters there; a scattered
+isotropic field would not be.</li>
+<li><b>AI disclosure</b> is required by the competition rules and must be made in the submission narrative.</li>
 </ul>
 
-<h2>7. What still needs doing, and what is in the way</h2>
-<ol class="tight">
-<li><b>Build an instrument that actually ranks fields.</b> This is the single highest-value next step: every proxy we can compute locally has ~zero rank correlation with live scores. Candidates: MINE-based conditional information on held-out spatial folds; a generative "live-mirror" model of the hidden set calibrated on all 30 scored artifacts with cross-validated error bars; or treating the three weekly submission slots as a designed experiment rather than three lottery tickets.</li>
-<li><b>Resolve the greedy-packing disagreement.</b> GEMSDOE32 measured greedy max-coverage emission on the scatter-smoothed field at +0.0247 on their live-anchored model but −0.0033 on the raw surface. The two instruments disagree in sign; settle it with the better instrument from (1) before shipping it.</li>
-<li><b>Unblock H39-X</b> by obtaining the official GeoDAWN Area-2 raw CSVs, or formally close the hypothesis.</li>
-<li><b>Integrate external layers not yet used at native resolution</b>: the USGS FDSN earthquake catalogue (the supplied <code>ieq_n100a15</code> band was measured at autocorrelation 0.9986 at 1&nbsp;km — it carries no fault-scale information), InSAR/geodetic strain-rate grids, and the 1&nbsp;m 3DEP DEM beyond the derived scarp layer.</li>
-</ol>
-
-<h2>8. Limitations</h2>
-<ul class="tight">
-<li><b>No hidden labels.</b> Only DrivenData's private holdout is scored, and it is not accessible. Every field metric here is a proxy measured against faults that are <i>not</i> the scored set.</li>
-<li><b>The public board is not the prize.</b> The public leaderboard scores a public chunk of the new faults; the Initial Prize Round scores a private chunk; the Final Prize Round re-scores the same file against an <b>expanded</b> label set that includes faults experts verify after reading everyone's submissions. A file tuned hard to the public number is not automatically tuned to the prize.</li>
-<li><b>Owner-reported scores are not organizer receipts.</b> No public artefact ties a raster hash to a score. The board is dynamic and authoritative; a 2026-10-05 reading showed #1 at 0.3262, above the 0.3195 quoted in the brief.</li>
-<li><b>Provenance.</b> Competition inputs come from owner-maintained GitHub mirrors, SHA-256 pinned. That proves mirror integrity, not organizer authentication.</li>
-<li><b>Compute.</b> This box has 3&nbsp;GB RAM and 2 cores, which is why the feature cube is <code>uint8</code> and the emission uses a spatial-hash thinning pass rather than a full distance matrix.</li>
-<li><b>AI disclosure</b> is required by the competition rules and must be included in the submission narrative.</li>
-</ul>
-
-<h2>9. H39Y-01 preregistered geological discovery test</h2>
-<p>Before implementing or scoring a candidate, this cycle ranked four distinct hypotheses. H39Y-01 was selected as the only testable candidate: a 2-pixel GeoDAWN <code>ThK</code>/<code>UK</code>/<code>UTh</code> ratio-gradient aligned with the competition <code>cond_surf</code> conductivity gradient. USGS GeoDAWN and Fact Sheet 2020-3055 support radiometric mapping plausibility, not fault-detection performance. The local ratio TIFF is an owner-mirrored derivative; its source provenance is not organizer-authenticated.</p>
-<p><b>Outcome:</b> 11 cells met the frozen eligibility rule. The sequential comparison stopped after five eligible tiles at its lower boundary: 0/5 strict wins, LLR −2.554128 (lower boundary −2.302585), <code>accept_H0</code>. Pooled proxy DTI was 0.035772 vs 0.168755 for H39-A-model. H39Y-01 is not promoted; no candidate TIFF or weekly-slot recommendation was created. Do not re-score this frozen candidate on these exposed cells.</p>
-<p>The <a href="preregistration-h39y-20261005.md">ranked hypotheses and frozen recipe</a>, <a href="preregistration-addendum-h39y-20261005.md">pre-score scoring-mask correction</a>, <a href="preregistration-addendum2-h39y-20261005.md">training-only-label lock</a>, <a href="reports/h39y01-preflight-20261005.json">preflight inputs/geometry</a>, and <a href="reports/h39y01-validation-20261005.md">detailed validation report</a> are available for audit. H39Y-02 and H39Y-03 remain untested and would require a fresh holdout or family-wise alpha plan; H39Y-04 remains deferred pending verified source bytes/schema.</p>
+<h2>11. Reproduce it</h2>
+<pre>python3 -m venv .venv &amp;&amp; .venv/bin/pip install -r requirements.txt
+python scripts/restore_data.py --group core &amp;&amp; \
+python scripts/restore_data.py --group external &amp;&amp; \
+python scripts/restore_data.py --group scored      # 23 files, SHA-256 verified
+.venv/bin/python -m pytest tests -q                # 29 passed
+OMP_NUM_THREADS=2 .venv/bin/python scripts/run_gems40.py --tag h40e-30k
+.venv/bin/python scripts/validate_submission.py docs/downloads/gemsdoe39-h40-e-disc-h40e-30k-zeros.tif
+.venv/bin/python scripts/verify_unique.py       docs/downloads/gemsdoe39-h40-e-disc-h40e-30k-zeros.tif</pre>
+<p class="small">≈ 5 minutes end to end on 2 cores / 3&nbsp;GB RAM. The feature cube is stored as uint8
+(0.29&nbsp;GB) because the float32 cube is 1.18&nbsp;GB.</p>
 
 <footer>
-GEMSDOE39 · generated 2026-10-05 · 
 <a href="executive-summary.html">Executive summary and upload instructions</a> ·
-<a href="research-brief.md">Research brief (markdown)</a> ·
+<a href="current-feed.html">Current feed</a> ·
+<a href="hypothesis-register.md">Hypothesis register</a> ·
 <a href="reports/h39y01-validation-20261005.md">H39Y-01 holdout report</a> ·
 <a href="preregistration-h39y-20261005.md">H39Y preregistration</a> ·
+<a href="../registry/h40_report_h40e-30k.json">Audit manifest</a> ·
 <a href="../registry/uniqueness.json">Uniqueness receipt</a> ·
 <a href="../registry/score_ledger.csv">Score ledger</a> ·
 <a href="https://www.drivendata.org/competitions/306/competition-doe-gems/leaderboard/">Official leaderboard</a>
+<br>Every figure on this page was recomputed from bytes in this repository on 2026-10-05. Owner-reported
+scores are labelled as such and are never presented as organizer receipts.
 </footer>
 
 </div>

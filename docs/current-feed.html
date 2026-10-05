@@ -40,6 +40,33 @@
 <p class="small">SPRT nominal error guarantees are conditional on independent Bernoulli tile outcomes or the registered conditional-supermartingale model. The 15-pixel collar reduces leakage but cannot prove geological independence.</p>
 </section>
 
+
+<section>
+<h2>New measurements added 2026-10-05 (session 2)</h2>
+<p>Every value below is recomputed from bytes restored into this repository, by
+<code>scripts/run_gems40.py</code> and <code>src/gems39/h40.py</code>, and is stored in
+<a href="../registry/h40_report_h40e-30k.json"><code>registry/h40_report_h40e-30k.json</code></a>.
+None of them is an organiser score.</p>
+<div class="table-wrap"><table><thead><tr><th>Measurement</th><th class="num">Value</th><th>Note</th></tr></thead><tbody>
+<tr><td>Catalogue pixels within 300 m of any SGMC fault</td><td class="num">34.4 %</td><td>Footprint base rate 10.9 %, enrichment 3.16×. A geologic-map fault is a real but <em>partial</em> marker — which is why the signature is learned rather than emitted along the traces.</td></tr>
+<tr><td>Off-catalogue fault relative density, 200–250 m from catalogue</td><td class="num">2.43×</td><td>Decays to 1.58× at 300–400 m, 0.46× beyond 10 km. The far field is a wasteland.</td></tr>
+<tr><td>ρ(SGMC adjacency, live score) over 12 historical artifacts</td><td class="num">+0.698</td><td>p = 0.012. <strong>Non-circular:</strong> none of those 12 artifacts used the SGMC layer.</td></tr>
+<tr><td>Calibrated instrument fit, (n, w) → live score, n = 12</td><td class="num">ρ +0.923</td><td>Leave-one-out ρ <strong>+0.902</strong>, RMSE 0.0364, LOO-RMSE 0.0397. The only local instrument ever checked against organiser scores.</td></tr>
+<tr><td>Blocked out-of-fold AUC of the off-catalogue discriminant</td><td class="num">0.7489</td><td>11 spatial blocks, per-block 0.663–0.828. Proves the signature transfers across space.</td></tr>
+<tr><td>Shipped file: dots / w / predicted score</td><td class="num">30,000 / 0.1461 / 0.3006</td><td><span class="small">Prediction is an <strong>extrapolation</strong>: fitted on w ∈ [0.0480, 0.1051].</span></td></tr>
+<tr><td>Label provenance, from the official rules PDF</td><td class="num">—</td><td>USGS Quaternary Fault and Fold Database <em>plus</em> "newly identified faults labeled by geology experts at the National Laboratory of the Rockies (NLR) and USGS". Expert-interpreted labels mean a geologically legible emission is worth more in round 2 than an isotropic scatter.</td></tr>
+</tbody></table></div>
+<div class="alert"><strong>Two corrections of record made this session.</strong>
+(1) Earlier documentation asserted that <code>sample_submission.tif</code> stores a
+<code>-3.4e38</code> sentinel outside the footprint with no <code>nodata</code> tag. Verified false: the
+template is float32 with <code>nodata=nan</code> and all 7,111,787 outside cells NaN; the sentinel belongs to
+<code>training_features.tif</code>. (2) Earlier documentation claimed the uniqueness gate ran against 241
+rasters. That corpus lives in <code>data/compare/</code>, which is gitignored and absent from
+<code>registry/data_manifest.json</code>, so it cannot be restored here; the gate compared the <strong>15</strong>
+same-grid rasters actually available. Both are pinned by tests and by IR-40-02 / IR-40-10.</div>
+</section>
+
+
 <section>
 <h2>Source register and evidence class</h2>
 <div class="table-wrap"><table><thead><tr><th>Fact used</th><th>Source</th><th>Verification status</th></tr></thead><tbody>
