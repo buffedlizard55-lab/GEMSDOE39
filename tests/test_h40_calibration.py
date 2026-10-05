@@ -1,4 +1,4 @@
-"""Verification tests for the H40 round.
+"""Verification tests for the H40 inverse-DTI calibration round.
 
 Every test here pins a claim made in the documentation to a number that is
 recomputed from bytes on disk or from the organizer's own published metric

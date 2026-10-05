@@ -334,5 +334,50 @@ scores are labelled as such and are never presented as organizer receipts.
 </footer>
 
 </div>
+
+<section id="h40f-addendum" style="border:1px solid #d8c48a;background:#fdf8ea;border-radius:8px;padding:18px 22px;margin:34px 0">
+<h2 style="margin-top:0">Addendum: a second H40 candidate was generated on this branch and is <em>not</em> the recommended upload</h2>
+<p>A parallel audit on this branch produced
+<code>docs/downloads/gemsdoe39-h40-f-offcat-gbm-20261005T080000Z-nan.tif</code>
+(45,962 dots, SHA-256 <code>fbb4c10726adfffddcc912513e8e7ffd19bc0c7428d2351106f25524807f7e1a</code>,
+14/14 format checks, max Jaccard 0.0093 against 22 mirrored artifacts, byte-reproducible).
+It is kept with its full audit trail
+(<a href="downloads/gemsdoe39-h40-f-offcat-gbm-20261005T080000Z-manifest.json">manifest</a>,
+<a href="research/h40-hypotheses.md">hypothesis register</a>) and it is
+<strong>explicitly not recommended</strong>. The reason is a measurement:</p>
+<ul>
+<li>It was selected on <strong>DTI against off-catalogue USGS SGMC faults</strong>. That
+instrument has a partial Spearman of <strong>+0.010 (p = 0.960)</strong> against live score once the
+budget confound is removed (<code>registry/instrument_calibration.json</code>, 30 artifacts × 12
+cells), reproduced independently from <code>registry/forensics_artifacts.csv</code> as
+<strong>−0.080 (p = 0.674)</strong>. It carries no signal.</li>
+<li>The corpus is blunt: the artifact with the <em>highest</em> <code>dti_sgmc_off</code> (0.4542)
+scored <strong>0.0297</strong>, while the two highest live scorers (0.2708, 0.2600) sit near the
+<em>bottom</em> of that instrument at 0.0963 and 0.0953.</li>
+<li><code>n_pos</code> is the strongest predictor and it is <strong>negative</strong> (−0.686,
+p = 2.9e−5). At 45,962 dots this candidate moves against it; the recommended file uses 30,000.</li>
+<li>Its spatial fold holdout removes <em>training</em> leakage but cannot remove <em>population</em>
+leakage: a discriminant trained on SGMC-off faults scores well against SGMC-off faults whether or
+not that is what the organizer labels. The extrapolation guard on this page's own calibration
+dropped its SGMC-trained discriminants for exactly that reason.</li>
+</ul>
+<p>What survives from that audit and is now part of this repository: the
+<strong>inverse-DTI calibration</strong> identifying |G| = 14,143 [13,987–14,434] from the nested
+pair 40,199 → 0.2708 / 37,654 → 0.2778; the proof that <strong>binary {0,1} emission is
+optimal</strong>; the additive per-fold score statistic licensed by the staff confirmation that
+scoring is <strong>pooled</strong>; Wald's <strong>normal-mean SPRT</strong> so fold magnitudes are
+not discarded; six defect fixes in shared code; and the seven-hypothesis H40 register with its
+negative results. Full accounting:
+<a href="https://github.com/buffedlizard55-lab/GEMSDOE39#merged-contribution-the-h40-f-candidate-and-why-it-is-not-the-recommended-upload">README § Merged contribution</a>.</p>
+<p><strong>One recommendation on this page is reversed by that audit, on evidence.</strong>
+<code>gemsdoe9-PLACEHOLDER-2314b599.tif</code> carries <strong>196,132 finite non-zero pixels
+outside the footprint</strong> with <code>nodata=None</code> and still received an organizer score
+(0.0107), while <code>8GEMSDOE_Hedge-v2</code> and the <code>gems10-*</code> artifacts are all-NaN
+outside and also scored. <strong>Both outside-encodings are demonstrably accepted</strong>, so the
+tiebreaker is which is safer against the error actually reported —
+<code>Predicted values must be in range [0, 1]</code> — and an all-finite [0,1] file cannot trigger
+that under any implementation. That confirms this page's zeros recommendation.</p>
+</section>
+
 </body>
 </html>
