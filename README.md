@@ -4,7 +4,7 @@
 
 ## Current deliverable (2026-10-05)
 
-**A new, locally generated, format-verified GeoTIFF is available at** [`docs/downloads/gemsdoe39-h39x01-strain-corridor-20261005T023209Z-d2f7e140-nan.tif`](docs/downloads/gemsdoe39-h39x01-strain-corridor-20261005T023209Z-d2f7e140-nan.tif). It is a fresh geodetic-strain/dilatation candidate; no prior prediction pixels were copied. Its audit manifest is next to the TIFF. The [live project site](https://buffedlizard55-lab.github.io/GEMSDOE39/) (source: [docs/index.html]) has the prominent download button; the [executive submission guide](docs/executive-summary.html) explains format, upload steps, and why this candidate is not currently approved.
+**A new, locally generated, format-verified GeoTIFF is available at** [`docs/downloads/gemsdoe39-h39x01-strain-corridor-20261005T023209Z-d2f7e140-nan.tif`](docs/downloads/gemsdoe39-h39x01-strain-corridor-20261005T023209Z-d2f7e140-nan.tif). It is a fresh geodetic-strain/dilatation candidate; no prior prediction pixels were copied. Its audit manifest is next to the TIFF. The [live GEMS download site](https://buffedlizard55-lab.github.io/GEMSDOE39/docs/) (source file: `docs/index.html`) has the prominent download button; the [executive submission guide](docs/executive-summary.html) explains format, upload steps, and why this candidate is not currently approved.
 
 - 44,090 positive pixels; single-band float32; EPSG:32611; 3,730×3,292; 100 m; exact sample geotransform.
 - Every in-footprint value is finite and in `[0,1]`; all 7,111,787 cells outside the sample footprint are NaN; nodata is NaN.
